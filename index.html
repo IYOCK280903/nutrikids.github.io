@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriKids - Sahabat Bunda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 text-gray-800 font-sans">
+
+    <header class="bg-white shadow-md p-6 text-center border-b-4 border-blue-400">
+        <h1 class="text-3xl font-bold text-blue-600">NutriKids</h1>
+        <p class="text-gray-500">Pantau Tumbuh Kembang Si Kecil</p>
+    </header>
+
+    <main class="max-w-md mx-auto p-6">
+        <div class="bg-white rounded-3xl p-6 shadow-xl mb-6">
+            <h2 class="text-xl font-bold mb-4 text-center text-blue-500">Kalkulator Gizi Anak</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Berat Badan (kg)</label>
+                    <input type="number" id="berat" placeholder="Contoh: 12" class="w-full border-2 border-blue-100 p-3 rounded-xl focus:border-blue-400 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Tinggi Badan (cm)</label>
+                    <input type="number" id="tinggi" placeholder="Contoh: 90" class="w-full border-2 border-blue-100 p-3 rounded-xl focus:border-blue-400 outline-none">
+                </div>
+                <button onclick="hitung()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition shadow-lg">
+                    Cek Hasil Sekarang
+                </button>
+            </div>
+        </div>
+
+        <div id="hasilBox" class="hidden bg-green-100 p-5 rounded-2xl text-center border-2 border-green-300">
+            <p id="hasilTeks" class="text-green-800 font-medium"></p>
+        </div>
+    </main>
+
+    <script>
+        function hitung() {
+            const bb = document.getElementById('berat').value;
+            const tb = document.getElementById('tinggi').value;
+            const box = document.getElementById('hasilBox');
+            const teks = document.getElementById('hasilTeks');
+
+            if(bb && tb) {
+                const imt = (bb / ((tb/100) * (tb/100))).toFixed(1);
+                box.classList.remove('hidden');
+                teks.innerHTML = "Hasil IMT si Kecil: <b>" + imt + "</b><br>Pastikan Bunda konsultasi ke bidan jika hasil di bawah 13 atau di atas 18 ya!";
+            } else {
+                alert("Bunda, isi berat dan tinggi badan dulu ya!");
+            }
+        }
+    </script>
+</body>
+</html>
