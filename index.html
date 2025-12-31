@@ -1,57 +1,478 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriKids - Sahabat Bunda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-blue-50 text-gray-800 font-sans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriKids - Sahabat Bunda Pantau Tumbuh Kembang Si Kecil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- libraries for export functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+      </div>
 
-    <header class="bg-white shadow-md p-6 text-center border-b-4 border-blue-400">
-        <h1 class="text-3xl font-bold text-blue-600">NutriKids</h1>
-        <p class="text-gray-500">Pantau Tumbuh Kembang Si Kecil</p>
-    </header>
+      <div class="container hero-content">
+        <div class="hero-left">
+          <span class="badge"> ✨ Sahabat Bunda & Si Kecil </span>
+          <h1>
+            Pantau Tumbuh Kembang <span class="highlight">Si Kecil</span> dengan
+            NutriKids
+          </h1>
+          <p class="hero-description">
+            HAI BUNDA! Yuk, pastikan si kecil tumbuh sehat dan cerdas dengan
+            memantau status gizi dan mencegah gizi buruk.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="scrollToCalculator()">
+              📈 Cek Gizi Sekarang
+            </button>
+            <button id="learnBtn" class="btn btn-secondary">Pelajari Gizi</button>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-circle">
+            <div class="heart-icon">❤️</div>
+          </div>
+          <div class="floating-emoji emoji-1">🍎</div>
+          <div class="floating-emoji emoji-2">🥛</div>
+          <div class="floating-emoji emoji-3">🥦</div>
+          <div class="floating-emoji emoji-4">🍊</div>
+        </div>
+      </div>
+    </section>
 
-    <main class="max-w-md mx-auto p-6">
-        <div class="bg-white rounded-3xl p-6 shadow-xl mb-6">
-            <h2 class="text-xl font-bold mb-4 text-center text-blue-500">Kalkulator Gizi Anak</h2>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold mb-1">Berat Badan (kg)</label>
-                    <input type="number" id="berat" placeholder="Contoh: 12" class="w-full border-2 border-blue-100 p-3 rounded-xl focus:border-blue-400 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-1">Tinggi Badan (cm)</label>
-                    <input type="number" id="tinggi" placeholder="Contoh: 90" class="w-full border-2 border-blue-100 p-3 rounded-xl focus:border-blue-400 outline-none">
-                </div>
-                <button onclick="hitung()" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition shadow-lg">
-                    Cek Hasil Sekarang
-                </button>
+    <!-- Stunting Info Section -->
+    <section id="stunting" class="stunting-info">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">⚠️ Informasi Penting</span>
+          <h2>Apa Itu <span class="text-danger">Zat Gizi</span>?</h2>
+          <p class="section-description">
+            Zat gizi memiliki banyak peranan yang sangat penting dalam
+            pertumbuhan dan perkembangan tubuh dimana gizi diperoleh dari
+            makanan yang berbeda-beda, sehingga dalam pemberian makanan pada
+            anak pada fase tumbuh kembang harus mendapatkan perhatian yang besar
+            baik terhadap nilai gizi pada makanannyan, dan dampak yang dapat
+            terjadi akibat kesalahan dalam pemberian makanan adalah wasting
+            karena kekurangan zat gizi dan overweight karena kelebihan zat gizi.
+          </p>
+        </div>
+
+        <!-- The detailed impact and prevention sections have been removed as requested. -->
+      </div>
+    </section>
+
+    <!-- Learn Nutrition Modal (hidden by default) -->
+    <div id="learnModal" class="modal hidden">
+      <div class="modal-backdrop" onclick="closeLearnNutrition()"></div>
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeLearnNutrition()">×</button>
+        <div class="modal-body">
+          <h2 class="modal-title">Pemahaman Tentang Status Gizi Anak</h2>
+          <div class="modal-columns">
+            <div class="col">
+              <div class="mod-block">
+                <div class="mod-icon">🩺</div>
+                <h3>Gizi Buruk (Wasting)</h3>
+                <p>
+                  Gizi buruk atau wasting merupakan masalah gizi yang dapat terjadi pada
+                  anak dengan asupan kurang atau tidak tercukupi dapat ditandai dengan
+                  badan kurus karena berat badan anak rendah jika dibandingkan dengan
+                  tinggi badanya. Anak dapat dikatakan wasting jika z-score BB/TB kurang
+                  dari -2 SD. dan kurang dari -3 SD untuk severe wasting. Anak dengan
+                  wasting dapat mengakibatkan risiko mengalami ketertinggalan tumbuh
+                  kembang, penurunan fungsi sistem imunitas, peningkatan keparahan dan
+                  kerentanan terhadap penyakit menular, serta peningkatan risiko
+                  kematian.
+                </p>
+              </div>
+
+              <div class="mod-block">
+                <div class="mod-icon">✅</div>
+                <h3>Gizi Normal</h3>
+                <p>
+                  Gizi normal, kategori status gizi yang dianjurkan. Gizi normal pada
+                  balita didefinisikan secara antropometri sebagai kondisi di mana
+                  z-score berada dalam rentang -2 SD hingga +1 SD dan proporsi tubuh
+                  ideal yang berarti asupan pada anak cukup untuk memenuhi kebutuhannya
+                  yang berada pada fase tumbuh kembang.
+                </p>
+              </div>
             </div>
+
+            <div class="col">
+              <div class="mod-block">
+                <div class="mod-icon">⚖️</div>
+                <h3>Gizi Lebih / Overweight & Obesitas</h3>
+                <p>
+                  Gizi Lebih atau overweight & obesitas merupakan kategori status gizi
+                  yang disebabkan oleh lebihnya asupan zat gizi dalam makanan yang
+                  berakibat peningkatan berat badan serta proporsi tubuh yang besar
+                  karena lemak; gizi lebih dapat dilihat berdasarkan perhitungan
+                  BB/TB +2 SD hingga +3 SD dan obesitas >+3 SD. Gizi lebih dapat
+                  beresiko berakibat sindrom metabolik dini seperti hipertensi dan
+                  resistensi insulin.
+                </p>
+              </div>
+
+              <div class="mod-block">
+                <div class="mod-icon">🔍</div>
+                <h3>Penyebab dan Dampak Jangka Panjang</h3>
+                <p>
+                  Ketiga kategori status gizi ini dapat dipengaruhi faktor langsung
+                  yaitu asupan makanan yang tidak adekuat dalam gizi makro yakni energi,
+                  karbohidrat, protein, dan lemak dan mikro yaitu vitamin dan mineral.
+                  Karena zat gizi yang diperoleh tubuh dari asupan makan dibutuhkan
+                  untuk melakukan kegiatan dan memelihara kesehatan jangka panjang
+                  dapat mengakibatkan perubahan jaringan dan massa tubuh, yang
+                  selanjutnya berefek pada penurunan berat badan atau peningkatan berat
+                  badan berlebih.
+                </p>
+                <p>
+                  Tumbuh kembang yang terjadi pada saat balita akan berdampak pada
+                  individu di masa yang selanjutnya yang disebut golden age. Jika anak
+                  mengalami ketidaksesuaian atau kegagalan tumbuh kembang yang tidak
+                  teridentifikasi dan tidak mendapat tindakan yang baik, maka anak tidak
+                  dapat mencapai pertumbuhan yang maksimal. Hal tersebut dapat
+                  berdampak pada berkurangnya kualitas generasi penerus bangsa di masa
+                  depan.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculator Section -->
+    <section id="calculator" class="calculator-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🧮 Gratis & Mudah</span>
+          <h2>Kalkulator <span class="text-primary">Gizi Anak</span></h2>
+          <p class="section-description">
+            Cek status gizi si kecil dengan mengisi data di bawah ini
+          </p>
         </div>
 
-        <div id="hasilBox" class="hidden bg-green-100 p-5 rounded-2xl text-center border-2 border-green-300">
-            <p id="hasilTeks" class="text-green-800 font-medium"></p>
+        <div class="calculator-card">
+          <div class="calculator-header">
+            <div class="calculator-icon">👶</div>
+            <div>
+              <h3>Data Si Kecil</h3>
+              <p>Isi dengan data terbaru ya Bunda</p>
+            </div>
+          </div>
+
+          <div class="calculator-form">
+            <div class="form-group">
+              <label>Nama Si Kecil <span class="required">*</span></label>
+              <input
+                type="text"
+                id="childName"
+                placeholder="Contoh: Aisyah"
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Jenis Kelamin <span class="required">*</span></label>
+              <div class="gender-buttons">
+                <button
+                  type="button"
+                  class="gender-btn active"
+                  data-gender="boy"
+                  onclick="selectGender('boy')"
+                >
+                  <span class="gender-emoji">👦</span>
+                  <span>Laki-laki</span>
+                </button>
+                <button
+                  type="button"
+                  class="gender-btn"
+                  data-gender="girl"
+                  onclick="selectGender('girl')"
+                >
+                  <span class="gender-emoji">👧</span>
+                  <span>Perempuan</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="measure-info">
+              <button type="button" id="toggleMeasure" class="info-btn">ℹ️ Cara menimbang & mengukur tinggi</button>
+              <div id="measureInstructions" class="info-box hidden">
+                <ul>
+                  <li>Pakai pakaian minimal dan ringan saat menimbang.</li>
+                  <li>Timbang di pagi hari setelah buang air dan sebelum makan jika memungkinkan.</li>
+                  <li>Gunakan alas datar untuk menimbang dan mengukur tinggi; kepala tegak dan tumit menempel dinding untuk tinggi.</li>
+                  <li>Gunakan timbangan dan penggaris/alat ukur yang stabil; catat hingga 0.1 kg / 0.1 cm bila memungkinkan.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Usia (bulan) <span class="required">*</span></label>
+                <input
+                  type="number"
+                  id="childAge"
+                  placeholder="24"
+                  class="form-input"
+                />
+              </div>
+              <div class="form-group">
+                <label>Berat (kg) <span class="required">*</span></label>
+                <input
+                  type="number"
+                  id="childWeight"
+                  placeholder="12.5"
+                  step="0.1"
+                  class="form-input"
+                />
+                <div class="validation-msg" id="weightError"></div>
+              </div>
+              <div class="form-group">
+                <label>Tinggi (cm) <span class="required">*</span></label>
+                <input
+                  type="number"
+                  id="childHeight"
+                  placeholder="90"
+                  step="0.1"
+                  class="form-input"
+                />
+                <div class="validation-msg" id="heightError"></div>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="btn btn-primary btn-large"
+                onclick="calculateZScore()"
+              >
+                📈 Hitung Sekarang
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline hidden"
+                id="resetBtn"
+                onclick="resetForm()"
+              >
+                Reset
+              </button>
+            </div>
+
+            <!-- Result -->
+            <div id="result" class="result-box hidden"></div>
+
+            <!-- Post-result actions: export, share, reminder -->
+            <div id="postActions" class="post-actions hidden">
+              <button type="button" class="btn btn-outline" id="exportPdfBtn">📄 Ekspor ke PDF</button>
+              <button type="button" class="btn btn-outline" id="exportImgBtn">🖼️ Ekspor Gambar</button>
+              <button type="button" class="btn btn-outline" id="shareWaBtn">💬 Bagikan via WhatsApp</button>
+              <button type="button" class="btn btn-primary" id="setReminderBtn">⏰ Set Reminder Posyandu</button>
+              <div id="reminderStatus" class="reminder-status"></div>
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
+    </section>
 
-    <script>
-        function hitung() {
-            const bb = document.getElementById('berat').value;
-            const tb = document.getElementById('tinggi').value;
-            const box = document.getElementById('hasilBox');
-            const teks = document.getElementById('hasilTeks');
+    <!-- Nutrition Tips Section -->
+    <section id="tips" class="nutrition-tips">
+      <div class="container">
+        <div class="section-header">
+          <h2>Panduan <span class="text-success">Nutrisi Seimbang</span></h2>
+          <p class="section-description">
+            Berikan nutrisi terbaik untuk tumbuh kembang optimal si kecil
+          </p>
+        </div>
 
-            if(bb && tb) {
-                const imt = (bb / ((tb/100) * (tb/100))).toFixed(1);
-                box.classList.remove('hidden');
-                teks.innerHTML = "Hasil IMT si Kecil: <b>" + imt + "</b><br>Pastikan Bunda konsultasi ke bidan jika hasil di bawah 13 atau di atas 18 ya!";
-            } else {
-                alert("Bunda, isi berat dan tinggi badan dulu ya!");
-            }
-        }
-    </script>
-</body>
+        <div class="food-groups">
+          <div class="food-card blue">
+            <div class="food-emoji">🥛</div>
+            <h3>Protein & Susu</h3>
+            <ul class="food-list">
+              <li>Telur</li>
+              <li>Ikan</li>
+              <li>Ayam</li>
+              <li>Susu</li>
+              <li>Yogurt</li>
+            </ul>
+          </div>
+          <div class="food-card green">
+            <div class="food-emoji">🥦</div>
+            <h3>Sayuran</h3>
+            <ul class="food-list">
+              <li>Wortel</li>
+              <li>Brokoli</li>
+              <li>Bayam</li>
+              <li>Tomat</li>
+              <li>Labu</li>
+            </ul>
+          </div>
+          <div class="food-card red">
+            <div class="food-emoji">🍎</div>
+            <h3>Buah-buahan</h3>
+            <ul class="food-list">
+              <li>Pisang</li>
+              <li>Apel</li>
+              <li>Jeruk</li>
+              <li>Pepaya</li>
+              <li>Alpukat</li>
+            </ul>
+          </div>
+          <div class="food-card yellow">
+            <div class="food-emoji">🍚</div>
+            <h3>Karbohidrat</h3>
+            <ul class="food-list">
+              <li>Nasi</li>
+              <li>Kentang</li>
+              <li>Ubi</li>
+              <li>Roti</li>
+              <li>Oatmeal</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Age-based Guidelines -->
+        <div class="age-guidelines">
+          <h3 class="subsection-title">Panduan Nutrisi Berdasarkan Usia</h3>
+          <div class="age-grid">
+            <div class="age-card">
+              <div class="age-emoji">🍼</div>
+              <span class="age-badge">0-6 Bulan</span>
+              <h4>ASI Eksklusif</h4>
+              <p>Hanya berikan ASI tanpa makanan atau minuman lain</p>
+            </div>
+            <div class="age-card">
+              <div class="age-emoji">🥄</div>
+              <span class="age-badge">6-12 Bulan</span>
+              <h4>ASI + MPASI</h4>
+              <p>Mulai kenalkan makanan pendamping ASI dengan tekstur lembut</p>
+            </div>
+            <div class="age-card">
+              <div class="age-emoji">🍽️</div>
+              <span class="age-badge">12-24 Bulan</span>
+              <h4>Makanan Keluarga</h4>
+              <p>Anak sudah bisa makan makanan keluarga dengan porsi kecil</p>
+            </div>
+            <div class="age-card">
+              <div class="age-emoji">🥗</div>
+              <span class="age-badge">2-5 Tahun</span>
+              <h4>Gizi Seimbang</h4>
+              <p>Berikan makanan bervariasi dengan porsi yang cukup</p>
+            </div>
+          </div>
+
+          <div class="consultation-box">
+            <span class="consultation-icon">👨‍⚕️</span>
+            <div>
+              <h4>Konsultasi dengan Ahli</h4>
+              <p>
+                Setiap anak memiliki kebutuhan nutrisi yang berbeda.
+                Konsultasikan dengan dokter anak atau ahli gizi untuk
+                mendapatkan panduan yang sesuai dengan kondisi si kecil.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Articles Placeholder -->
+    <section id="artikel" class="articles-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Artikel <span class="text-primary">Kesehatan</span></h2>
+          <p class="section-description">Kumpulan artikel singkat seputar gizi dan tumbuh kembang. Konten sedang dikembangkan dan akan segera tersedia di sini.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consultation Placeholder -->
+    <section id="konsultasi" class="consult-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Konsultasi <span class="text-success">Ahli</span></h2>
+          <p class="section-description">Butuh saran lebih lanjut? Hubungi kami via email: <a href="mailto:info@nutrikids.id">info@nutrikids.id</a> atau gunakan nomor di footer untuk konsultasi.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <span class="logo-icon">❤️</span>
+              <h3>NutriKids</h3>
+            </div>
+            <p>
+              Sahabat Bunda dalam memantau tumbuh kembang si kecil. Bersama
+              cegah stunting untuk generasi Indonesia yang sehat dan cerdas.
+            </p>
+            <div class="social-links">
+              <button class="social-btn">📘</button>
+              <button class="social-btn">📷</button>
+              <button class="social-btn">🐦</button>
+              <button class="social-btn">📺</button>
+            </div>
+          </div>
+
+          <div class="footer-links">
+            <h4>Menu Cepat</h4>
+            <ul>
+              <li><a href="#stunting">• Tentang Gizi</a></li>
+              <li><a href="#calculator">• Kalkulator Gizi</a></li>
+              <li><a href="#tips">• Tips Nutrisi</a></li>
+              <li><a href="#artikel">• Artikel Kesehatan</a></li>
+              <li><a href="#konsultasi">• Konsultasi Ahli</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-contact">
+            <h4>Hubungi Kami</h4>
+            <div class="contact-item">
+              <span class="contact-icon">✉️</span>
+              <span>info@nutrikids.id</span>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📞</span>
+              <span>0813-5372-7786</span>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📍</span>
+              <span>Yogyakarta, Indonesia</span>
+            </div>
+            <div class="disclaimer-box">
+              <p>
+                <strong>Disclaimer:</strong> Informasi di website ini hanya
+                untuk edukasi. Konsultasikan dengan tenaga kesehatan
+                profesional.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>
+            © 2025 NutriKids. Dibuat dengan ❤️ untuk generasi Indonesia yang
+            sehat
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
 </html>
