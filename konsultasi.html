@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsultasi Ahli - NutriKids</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #1b6bec, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .contact-icon {
+            transition: all 0.3s ease;
+        }
+        .contact-card:hover .contact-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+            <nav class="hidden md:flex gap-6 text-sm font-bold text-slate-600">
+                
+            </nav>
+            <a href="index.html" class="bg-slate-800 text-white px-5 py-2 rounded-2xl text-sm font-bold hover:bg-slate-700 transition">Kembali</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 mt-12 mb-20">
+        <div class="text-center mb-12">
+            <span class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">💬 Layanan Dukungan</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mt-4 leading-tight">
+                Konsultasi dengan <span class="text-blue-600">Ahli Gizi</span>
+            </h1>
+            <p class="text-slate-500 mt-4 max-w-lg mx-auto italic">
+                "Bunda tidak sendirian. Kami siap membantu memantau tumbuh kembang Si Kecil lebih mendalam."
+            </p>
+        </div>
+
+        <div class="grid gap-6">
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-card p-8 shadow-xl hover:shadow-2xl transition contact-card border-none">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mb-6 contact-icon">📧</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Hubungi via Email</h3>
+                    <p class="text-blue-600 font-bold text-lg mb-4">info@nutrikids.id</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Kirim pertanyaan tentang gizi anak, hasil pemeriksaan, atau konsultasi umum kapan saja.</p>
+                </div>
+
+                <div class="glass-card p-8 shadow-xl hover:shadow-2xl transition contact-card border-none">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 contact-icon">📞</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Layanan Telepon</h3>
+                    <p class="text-blue-600 font-bold text-lg mb-4">0821-4495-4323</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Hubungi kami pada jam kerja (06.00 - 23.59 WIB) untuk konsultasi langsung via suara ya ❤️.</p>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 shadow-xl flex flex-col md:flex-row items-center gap-8 border-none">
+                <div class="w-20 h-20 bg-orange-100 text-orange-600 rounded-[2rem] flex items-center justify-center text-4xl shrink-0">📍</div>
+                <div class="text-center md:text-left">
+                    <h3 class="text-xl font-bold text-slate-800 mb-1">Lokasi Kantor Kami</h3>
+                    <p class="text-slate-600 font-medium mb-2 text-lg">KPK BOYS HOME🚀Yogyakarta,Indonesia</p>
+                    <p class="text-sm text-slate-400">Silakan buat janji temu terlebih dahulu melalui email atau WhatsApp untuk kunjungan langsung.Kami siap melayani dengan sepenuh hati🙏</p>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-2 border-dashed border-amber-200 p-8 rounded-[2.5rem] flex gap-6 items-start">
+                <div class="text-3xl">⚠️</div>
+                <div>
+                    <h4 class="font-extrabold text-amber-800 text-lg mb-1">Pesan Penting untuk Bunda</h4>
+                    <p class="text-sm text-amber-700 leading-relaxed font-medium">
+                        Informasi di NutriKids bersifat edukatif. Untuk kondisi medis darurat, diagnosis penyakit, atau penanganan klinis, 
+                        harap <b>selalu prioritaskan pemeriksaan langsung</b> ke dokter spesialis anak, bidan, atau Puskesmas terdekat.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center text-slate-400 text-xs mt-10">
+        &copy; 2026 NutriKids Indonesia - Sahabat Tumbuh Kembang Si Kecil
+    </footer>
+
+</body>
+</html>

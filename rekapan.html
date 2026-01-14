@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rekapan Data Posyandu - NutriKids</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8fafc;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 2rem;
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #1b6bec, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body class="pb-20">
+    <header
+      class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100"
+    >
+      <div
+        class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+        <nav class="hidden md:flex gap-6 text-sm font-bold text-slate-600">
+          <a href="index.html" class="hover:text-blue-600">Kembali ke Awal</a>
+          <a href="konsultasi.html" class="hover:text-blue-600">Konsultasi</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 mt-10">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-extrabold text-slate-800">
+          Rekapan Data Bulanan
+        </h2>
+        <p class="text-slate-500">
+          Kelola dan unduh laporan hasil pemeriksaan Posyandu
+        </p>
+      </div>
+
+      <div class="glass-card p-8 shadow-xl mb-8 border border-white">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label
+              class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2"
+              >Nama Posyandu</label
+            >
+            <input
+              type="text"
+              id="searchPosyandu"
+              placeholder="Cari Posyandu..."
+              class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2"
+              >Pilih Bulan</label
+            >
+            <select
+              id="filterBulan"
+              class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-blue-500 outline-none transition"
+            >
+              <option value="">Semua Bulan</option>
+              <option value="0">Januari</option>
+              <option value="1">Februari</option>
+              <option value="2">Maret</option>
+              <option value="3">April</option>
+              <option value="4">Mei</option>
+              <option value="5">Juni</option>
+              <option value="6">Juli</option>
+              <option value="7">Agustus</option>
+              <option value="8">September</option>
+              <option value="9">Oktober</option>
+              <option value="10">November</option>
+              <option value="11">Desember</option>
+            </select>
+          </div>
+          <div class="flex items-end gap-2">
+            <button
+              onclick="exportToExcel()"
+              class="flex-1 bg-emerald-500 text-white p-4 rounded-2xl font-bold hover:bg-emerald-600 transition shadow-lg shadow-emerald-100"
+            >
+              📗 Excel
+            </button>
+            <button
+              onclick="exportToWord()"
+              class="flex-1 bg-blue-500 text-white p-4 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg shadow-blue-100"
+            >
+              📘 Word
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card shadow-2xl overflow-hidden border border-white">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left" id="rekapanTable">
+            <thead class="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th class="p-6 text-xs font-black text-slate-400 uppercase">
+                  Tanggal
+                </th>
+                <th class="p-6 text-xs font-black text-slate-400 uppercase">
+                  Posyandu
+                </th>
+                <th class="p-6 text-xs font-black text-slate-400 uppercase">
+                  Nama Anak
+                </th>
+                <th
+                  class="p-6 text-xs font-black text-slate-400 uppercase text-center"
+                >
+                  BB/TB
+                </th>
+                <th class="p-6 text-xs font-black text-slate-400 uppercase">
+                  Status Gizi
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              id="tableBody"
+              class="divide-y divide-slate-50 text-slate-700"
+            ></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="p-20 text-center hidden">
+          <div class="text-6xl mb-4">📂</div>
+          <p class="text-slate-400 font-medium">
+            Belum ada data untuk periode ini.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Simulasi Data (Ganti dengan localStorage.getItem jika sudah ada)
+      let dataRekapan =
+        JSON.parse(localStorage.getItem("allNutriResults")) || [];
+
+      function renderTable() {
+        const searchQuery = document
+          .getElementById("searchPosyandu")
+          .value.toLowerCase();
+        const filterBulan = document.getElementById("filterBulan").value;
+        const tableBody = document.getElementById("tableBody");
+        const emptyState = document.getElementById("emptyState");
+
+        tableBody.innerHTML = "";
+
+        const filteredData = dataRekapan.filter((item) => {
+          const date = new Date(item.tanggal);
+          const matchesSearch = item.namaPosyandu
+            .toLowerCase()
+            .includes(searchQuery);
+          const matchesMonth =
+            filterBulan === "" || date.getMonth().toString() === filterBulan;
+          return matchesSearch && matchesMonth;
+        });
+
+        if (filteredData.length === 0) {
+          emptyState.classList.remove("hidden");
+        } else {
+          emptyState.classList.add("hidden");
+          filteredData.forEach((item) => {
+            const row = `
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="p-6 text-sm font-semibold">${item.tanggal}</td>
+                            <td class="p-6 text-sm">${item.namaPosyandu}</td>
+                            <td class="p-6 text-sm font-bold text-blue-600">${item.namaAnak}</td>
+                            <td class="p-6 text-sm text-center">${item.bb}kg / ${item.tb}cm</td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase" 
+                                      style="background: ${item.color}20; color: ${item.color}">
+                                    ${item.status}
+                                </span>
+                            </td>
+                        </tr>`;
+            tableBody.innerHTML += row;
+          });
+        }
+      }
+
+      // Export Excel
+      function exportToExcel() {
+        const ws = XLSX.utils.table_to_sheet(
+          document.getElementById("rekapanTable")
+        );
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Rekap_Gizi");
+        XLSX.writeFile(wb, "Rekapan_NutriKids.xlsx");
+      }
+
+      // Export Word (Sederhana)
+      function exportToWord() {
+        const content = document.getElementById("rekapanTable").outerHTML;
+        const blob = new Blob(["\ufeff", content], {
+          type: "application/msword",
+        });
+        saveAs(blob, "Rekapan_NutriKids.doc");
+      }
+
+      document
+        .getElementById("searchPosyandu")
+        .addEventListener("input", renderTable);
+      document
+        .getElementById("filterBulan")
+        .addEventListener("change", renderTable);
+
+      window.onload = renderTable;
+    </script>
+  </body>
+</html>

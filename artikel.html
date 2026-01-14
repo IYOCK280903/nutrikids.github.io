@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Artikel - NutriKids</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nutri-primary': '#1b6bec',
+                        'nutri-secondary': '#8b5cf6',
+                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 500px; /* Sesuaikan dengan panjang konten */
+            padding-bottom: 1.5rem;
+        }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen">
+
+    <nav class="top-nav small solid">
+        <div class="container nav-inner">
+            <div class="brand">NutriKids</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="learn.html">Pelajari Gizi</a>
+                <a href="calculator.html">Kalkulator</a>
+                <a href="tips.html">Tips</a>
+                <a href="artikel.html" class="active">Artikel</a>
+                <a href="rekapan.html">Rekapan</a>
+                <a href="konsultasi.html">Konsultasi</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6 fade-in">
+        <header class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-2">Artikel Kesehatan & Gizi</h1>
+            <p class="text-slate-500 text-sm">Wawasan penting untuk Bunda dan Kader dalam menjaga tumbuh kembang si kecil.</p>
+        </header>
+
+        <div class="space-y-4">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left hover:bg-blue-50 transition-colors" onclick="toggleAccordion(this)">
+                    <span class="font-bold text-slate-800 md:text-lg">1. Membaca Hasil Kalkulator Gizi</span>
+                    <svg class="w-6 h-6 text-nutri-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div class="accordion-content px-6 text-slate-600 leading-relaxed">
+                    <p class="mb-4">Setelah mengisi usia, berat, dan tinggi anak, kalkulator akan menampilkan status gizi dan IMT perkiraan. Gunakan status tersebut sebagai deteksi dini, bukan diagnosis akhir.</p>
+                    <div class="bg-blue-50 p-4 rounded-2xl text-sm border-l-4 border-nutri-primary">
+                        Bunda bisa membuka halaman <b>Pelajari Gizi</b> untuk arti status, dan <b>Tips</b> untuk panduan makan.
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left hover:bg-blue-50 transition-colors" onclick="toggleAccordion(this)">
+                    <span class="font-bold text-slate-800 md:text-lg">2. Peran Posyandu Mencegah Gizi Buruk</span>
+                    <svg class="w-6 h-6 text-nutri-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div class="accordion-content px-6 text-slate-600 leading-relaxed">
+                    <p class="mb-4">Posyandu adalah garis depan pemantauan balita. Dengan penimbangan rutin, masalah gizi terdeteksi lebih cepat. Kader berperan memastikan data tercatat rapi di NutriKids.</p>
+                    <p>Gunakan fitur <b>Rekapan</b> untuk menyimpan riwayat kunjungan agar bisa dikonsultasikan ke Puskesmas jika diperlukan.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left hover:bg-blue-50 transition-colors" onclick="toggleAccordion(this)">
+                    <span class="font-bold text-slate-800 md:text-lg">3. Mencegah Gizi Lebih (Obesitas)</span>
+                    <svg class="w-6 h-6 text-nutri-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div class="accordion-content px-6 text-slate-600 leading-relaxed">
+                    <p class="mb-4">Gizi lebih meningkatkan risiko penyakit di masa depan. Mulailah dengan membatasi minuman manis dan gorengan. Ganti dengan camilan buah segar.</p>
+                    <p class="italic text-sm text-nutri-primary font-medium">"Perubahan kecil yang dilakukan seluruh anggota keluarga akan terasa lebih ringan bagi anak."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="calculator.html" class="btn btn-primary py-4 flex items-center justify-center gap-2">
+                <span>📈</span> Kalkulator Gizi
+            </a>
+            <div class="flex gap-2">
+                <a href="learn.html" class="btn btn-outline flex-1 py-4 text-sm">📚 Pelajari Gizi</a>
+                <a href="tips.html" class="btn btn-outline flex-1 py-4 text-sm">🥗 Tips Nutrisi</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleAccordion(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('svg');
+            
+            // Tutup semua accordion lain
+            document.querySelectorAll('.accordion-content').forEach(acc => {
+                if (acc !== content) {
+                    acc.classList.remove('open');
+                    acc.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+                }
+            });
+
+            // Toggle yang diklik
+            content.classList.toggle('open');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>

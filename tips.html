@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tips Nutrisi Pintar - NutriKids</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans min-h-screen">
+    <div class="grid-bg"></div>
+<style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        .tab-active { background-color: #1b6bec; color: white; transform: translateY(-2px); }
+        .gradient-text { background: linear-gradient(90deg, #1b6bec, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="pb-20">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+            
+        </div>
+    </header>
+         
+    <main class="max-w-4xl mx-auto p-6 mt-10">
+        <div id="smart-advice-card" class="mb-10 hidden">
+            <div class="glass-card p-6 border-l-8 border-emerald-400 shadow-xl bg-white/80">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="text-4xl">✨</span>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Analisis Khusus <span id="display-child-name" class="highlight">Anak</span></h2>
+                        <p class="text-xs text-slate-500">Berdasarkan data pemeriksaan terakhir</p>
+                    </div>
+                </div>
+                <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Status Gizi (Z-Score)</p>
+                        <span id="display-zscore" class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded-full text-slate-600">0.00 SD</span>
+                    </div>
+                    <p id="display-status" class="text-2xl font-black uppercase tracking-tight mb-2"></p>
+                    <div id="status-recommendation" class="text-slate-600 text-sm leading-relaxed border-t border-slate-200/50 pt-3 mt-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <header class="mb-8">
+            <h1 class="text-3xl font-extrabold text-slate-800 mb-2">Panduan Gizi Berdasarkan <span class="highlight">Usia</span></h1>
+            <p class="text-slate-500 text-sm">Tips nutrisi terbaik yang disesuaikan dengan tahap pertumbuhan Si Kecil.</p>
+        </header>
+
+        <div class="flex overflow-x-auto gap-3 pb-4 no-scrollbar mb-8">
+            <button id="tab-btn-0-6" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '0-6')">0-6 Bulan</button>
+            <button id="tab-btn-6-12" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '6-12')">6-12 Bulan</button>
+            <button id="tab-btn-12-24" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '12-24')">12-24 Bulan</button>
+            <button id="tab-btn-2-5" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '2-5')">2-5 Tahun</button>
+        </div>
+
+        <div id="content-area" class="space-y-6">
+            <div id="content-0-6" class="tab-content hidden">
+                <div class="glass-card p-8 border-l-8 !border-blue-400 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl">🍼</span>
+                        <h3 class="text-xl font-bold">Usia 0-6 Bulan: ASI Eksklusif</h3>
+                    </div>
+                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
+                        <li><b>Hanya ASI:</b> Bayi cukup mendapatkan ASI saja tanpa air putih, madu, atau pisang.</li>
+                        <li><b>Sesuai Permintaan:</b> Susui bayi sesering mungkin, minimal 8-12 kali dalam 24 jam.</li>
+                        <li><b>Tanda Bahaya:</b> Jika bayi lemas atau malas menyusu, segera konsultasi ke tenaga kesehatan.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="content-6-12" class="tab-content hidden">
+                <div class="glass-card p-8 border-l-8 !border-emerald-400 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl">🥣</span>
+                        <h3 class="text-xl font-bold">Usia 6-12 Bulan: Mulai MPASI</h3>
+                    </div>
+                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
+                        <li><b>Menu Gizi Seimbang:</b> Pastikan mengandung Protein Hewani (telur/ikan) untuk cegah stunting.</li>
+                        <li><b>Tekstur:</b> Mulai dari bubur kental (lumat) lalu naik tekstur secara bertahap.</li>
+                        <li><b>Frekuensi:</b> Makan utama 2-3 kali sehari ditambah selingan 1-2 kali.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="content-12-24" class="tab-content hidden">
+                <div class="glass-card p-8 border-l-8 !border-amber-400 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl">🍗</span>
+                        <h3 class="text-xl font-bold">Usia 12-24 Bulan: Makanan Keluarga</h3>
+                    </div>
+                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
+                        <li><b>Menu Keluarga:</b> Si Kecil sudah bisa makan menu yang sama dengan keluarga (kurangi garam/gula berlebih).</li>
+                        <li><b>Protein Hewani:</b> Sangat penting untuk pertumbuhan fisik dan kecerdasan otak.</li>
+                        <li><b>Susu:</b> ASI tetap dilanjutkan hingga usia 2 tahun.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="content-2-5" class="tab-content hidden">
+                <div class="glass-card p-8 border-l-8 !border-purple-400 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl">🥦</span>
+                        <h3 class="text-xl font-bold">Usia 2-5 Tahun: Pola Makan Sehat</h3>
+                    </div>
+                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
+                        <li><b>Variasi Menu:</b> Biasakan makan sayur dan buah setiap hari agar anak tidak bosan.</li>
+                        <li><b>Batasi Gula:</b> Kurangi jajanan manis, minuman kemasan, dan gorengan berlebih.</li>
+                        <li><b>Aktivitas:</b> Ajak anak lebih aktif bergerak untuk menjaga berat badan ideal.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center space-y-4">
+            <a href="calculator.html" class="btn-primary w-full md:w-auto px-10 py-4 shadow-lg inline-block">
+                🔄 Hitung Ulang Data Gizi
+            </a>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">NutriKids © 2026 - Standar Antropometri Kemenkes</p>
+        </div>
+    </main>
+
+    <script>
+        function initTipsPage() {
+            // Ambil data profil dasar dan hasil kalkulator
+            const dataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
+            const giziResult = JSON.parse(localStorage.getItem('lastNutriResult')) || null;
+
+            // Jika ada data profil, aktifkan kartu analisis pintar
+            if (dataAnak) {
+                document.getElementById('smart-advice-card').classList.remove('hidden');
+                document.getElementById('display-child-name').innerText = dataAnak.namaAnak;
+                
+                // Pilih tab otomatis berdasarkan usia yang diinput
+                const age = parseInt(dataAnak.usia);
+                if (age <= 6) autoSelectTab('0-6');
+                else if (age <= 12) autoSelectTab('6-12');
+                else if (age <= 24) autoSelectTab('12-24');
+                else autoSelectTab('2-5');
+            } else {
+                // Jika tidak ada data, default ke tab 0-6
+                autoSelectTab('0-6');
+            }
+
+            // Jika ada hasil perhitungan gizi, berikan rekomendasi spesifik
+            if (giziResult) {
+                const statusEl = document.getElementById('display-status');
+                const adviceEl = document.getElementById('status-recommendation');
+                const zscoreEl = document.getElementById('display-zscore');
+
+                statusEl.innerText = giziResult.status;
+                zscoreEl.innerText = giziResult.zscore + " SD";
+
+                if (giziResult.status.includes("LEBIH")) {
+                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-blue-500";
+                    adviceEl.innerHTML = "⚠️ <b>Rekomendasi:</b> Perhatikan porsi makan dan ajak Si Kecil lebih aktif bergerak. Batasi camilan tinggi gula.";
+                } else if (giziResult.status.includes("KURANG") || giziResult.status.includes("BURUK")) {
+                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-orange-500";
+                    adviceEl.innerHTML = "⚠️ <b>Rekomendasi:</b> Tambahkan porsi Protein Hewani (telur/ikan) dan Lemak sehat (santan/minyak) di setiap piringnya.";
+                } else {
+                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-emerald-500";
+                    adviceEl.innerHTML = "✅ <b>Rekomendasi:</b> Luar biasa! Pertahankan jadwal makan yang teratur dan variasikan menu setiap hari agar Si Kecil tidak bosan.";
+                }
+            }
+        }
+
+        function autoSelectTab(tabName) {
+            const btn = document.getElementById('tab-btn-' + tabName);
+            if(btn) switchTab(btn, tabName);
+        }
+
+        function switchTab(btn, tabName) {
+            // Sembunyikan semua konten
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            
+            // Reset semua gaya tombol
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600 transition-all";
+            });
+            
+            // Tampilkan konten yang dipilih
+            const content = document.getElementById('content-' + tabName);
+            if(content) content.classList.remove('hidden');
+            
+            // Aktifkan tombol yang dipilih
+            btn.className = "tab-btn bg-emerald-500 shadow-lg shadow-emerald-100 px-8 py-3 font-bold whitespace-nowrap text-white rounded-2xl transition-all scale-105";
+        }
+
+        window.onload = initTipsPage;
+    </script>
+</body>
+</html>

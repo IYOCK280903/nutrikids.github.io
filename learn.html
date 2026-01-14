@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pusat Edukasi Nutrisi - NutriKids</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8fafc;
+      }
+      .tab-active {
+        background-color: #1b6bec;
+        color: white;
+        transform: translateY(-2px);
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #1b6bec, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .card-shadow {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body class="pb-20">
+    <header
+      class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100"
+    >
+      <div
+        class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-10">
+      <div id="personalizedAlert" class="mb-12 hidden"></div>
+
+      <section class="mb-16">
+        <h2 class="text-4xl font-extrabold text-slate-800 mb-4 text-center">
+          Pusat Edukasi Nutrisi
+        </h2>
+        <p class="text-center text-slate-500 max-w-2xl mx-auto leading-relaxed">
+          Panduan resmi berdasarkan standar Antropometri Permenkes RI No. 2
+          Tahun 2020 untuk memastikan Si Kecil tumbuh optimal di masa Golden
+          Age.
+        </p>
+      </section>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <button
+          onclick="switchTab('dasar')"
+          id="btn-dasar"
+          class="tab-btn tab-active px-6 py-3 rounded-2xl font-bold transition-all shadow-md"
+        >
+          Apa itu Gizi?
+        </button>
+        <button
+          onclick="switchTab('status')"
+          id="btn-status"
+          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
+        >
+          Kategori Status
+        </button>
+        <button
+          onclick="switchTab('zscore')"
+          id="btn-zscore"
+          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
+        >
+          Mengenal Z-Score
+        </button>
+        <button
+          onclick="switchTab('dampak')"
+          id="btn-dampak"
+          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
+        >
+          Dampak Jangka Panjang
+        </button>
+      </div>
+
+      <div id="content-area">
+        <div id="tab-dasar" class="tab-content block space-y-6">
+          <div
+            class="bg-white p-8 rounded-[2.5rem] card-shadow border border-slate-50"
+          >
+            <h3
+              class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"
+            >
+              <span class="p-2 bg-blue-100 rounded-lg">🥗</span> Pengertian Gizi
+              Anak
+            </h3>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              Status gizi adalah cerminan dari keseimbangan antara asupan zat
+              gizi yang dikonsumsi (karbohidrat, protein, lemak, vitamin, dan
+              mineral) dengan kebutuhan tubuh anak untuk pertumbuhan dan
+              metabolisme.
+            </p>
+            <p class="text-slate-600 leading-relaxed mb-6">
+              Masa balita adalah periode <b>"Golden Age"</b> di mana
+              perkembangan sel otak dan fisik berlangsung sangat pesat.
+              Ketidakseimbangan nutrisi pada masa ini dapat berakibat permanen.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div
+                class="p-4 bg-emerald-50 rounded-3xl border border-emerald-100"
+              >
+                <p class="font-bold text-emerald-800 mb-1">Makro Gizi</p>
+                <p class="text-xs text-emerald-600">
+                  Energi, Karbohidrat, Protein, dan Lemak.
+                </p>
+              </div>
+              <div class="p-4 bg-blue-50 rounded-3xl border border-blue-100">
+                <p class="font-bold text-blue-800 mb-1">Mikro Gizi</p>
+                <p class="text-xs text-blue-600">
+                  Vitamin dan Mineral untuk imun tubuh.
+                </p>
+              </div>
+              <div
+                class="p-4 bg-purple-50 rounded-3xl border border-purple-100"
+              >
+                <p class="font-bold text-purple-800 mb-1">Protein Hewani</p>
+                <p class="text-xs text-purple-600">
+                  Penting untuk mencegah stunting (Telur/Ikan).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-status" class="tab-content hidden space-y-6">
+          <div class="grid gap-6">
+            <div
+              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-red-500 card-shadow"
+            >
+              <h4 class="text-xl font-bold text-red-600 mb-2">
+                Gizi Buruk & Kurang (Wasting)
+              </h4>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Kondisi akut akibat asupan energi dan protein yang sangat
+                rendah. Anak terlihat kurus, daya tahan tubuh rendah, dan
+                berisiko tinggi terkena penyakit menular atau kematian jika
+                tidak ditangani medis.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-emerald-500 card-shadow"
+            >
+              <h4 class="text-xl font-bold text-emerald-600 mb-2">
+                Gizi Normal
+              </h4>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Status ideal di mana proporsi tubuh anak seimbang sesuai standar
+                WHO. Hal ini menunjukkan asupan nutrisi mencukupi untuk
+                pertumbuhan otak dan fisik.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-orange-500 card-shadow"
+            >
+              <h4 class="text-xl font-bold text-orange-600 mb-2">
+                Gizi Lebih & Obesitas
+              </h4>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Kelebihan asupan zat gizi yang disimpan sebagai lemak tubuh
+                secara berlebih. Berisiko menyebabkan penyakit metabolik seperti
+                hipertensi sejak dini.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-zscore" class="tab-content hidden space-y-6">
+          <div class="bg-white p-8 rounded-[2.5rem] card-shadow text-center">
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">
+              Cara Membaca Z-Score
+            </h3>
+            <p class="text-slate-500 mb-8">
+              Z-Score BB/TB digunakan untuk menentukan apakah berat badan anak
+              sesuai dengan tinggi badannya saat ini.
+            </p>
+
+            <div
+              class="bg-slate-50 p-6 rounded-3xl inline-block border border-slate-100 text-sm font-mono text-blue-600 mb-8"
+            >
+              Z-Score = (Nilai Ukur Anak - Median) / Simpang Baku
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="p-4 bg-red-100 rounded-2xl">
+                <span class="block font-bold"> < -3 SD </span
+                ><span class="text-xs">Buruk</span>
+              </div>
+              <div class="p-4 bg-orange-100 rounded-2xl">
+                <span class="block font-bold"> -3 s/d -2 </span
+                ><span class="text-xs">Kurang</span>
+              </div>
+              <div class="p-4 bg-emerald-100 rounded-2xl">
+                <span class="block font-bold"> -2 s/d +1 </span
+                ><span class="text-xs">Normal</span>
+              </div>
+              <div class="p-4 bg-blue-100 rounded-2xl">
+                <span class="block font-bold"> > +2 SD </span
+                ><span class="text-xs">Lebih</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-dampak" class="tab-content hidden space-y-6">
+          <div
+            class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl"
+          >
+            <h3 class="text-2xl font-bold mb-6">
+              Mengapa Nutrisi Tidak Bisa Menunggu?
+            </h3>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <span class="text-3xl text-blue-400">🧠</span>
+                <div>
+                  <h5 class="font-bold">Kecerdasan (IQ)</h5>
+                  <p class="text-sm text-slate-300">
+                    Kegagalan tumbuh kembang (stunting) dapat menyebabkan
+                    penurunan fungsi kognitif permanen.
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <span class="text-3xl text-emerald-400">⚡</span>
+                <div>
+                  <h5 class="font-bold">Kualitas Hidup Dewasa</h5>
+                  <p class="text-sm text-slate-300">
+                    Anak dengan gizi kurang berisiko memiliki produktivitas
+                    ekonomi yang lebih rendah saat dewasa.
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <span class="text-3xl text-red-400">🏥</span>
+                <div>
+                  <h5 class="font-bold">Resistensi Penyakit</h5>
+                  <p class="text-sm text-slate-300">
+                    Gizi buruk melemahkan sistem imun, membuat anak rentan
+                    terhadap infeksi berulang.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 flex flex-col md:flex-row gap-4">
+        <a
+          href="calculator.html"
+          class="flex-1 bg-[#1b6bec] text-white text-center py-5 rounded-[2rem] font-bold shadow-lg hover:scale-[1.02] transition"
+          >Hitung Ulang Gizi 🚀</a
+        >
+      </div>
+    </main>
+
+    <script>
+      function switchTab(tabId) {
+        // Sembunyikan semua konten
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((c) => c.classList.add("hidden"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((c) => c.classList.remove("block"));
+
+        // Atur gaya tombol
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.remove("tab-active", "shadow-md");
+          b.classList.add("bg-white", "text-slate-600", "shadow-sm");
+        });
+
+        // Tampilkan konten yang dipilih
+        const activeContent = document.getElementById("tab-" + tabId);
+        activeContent.classList.remove("hidden");
+        activeContent.classList.add("block");
+
+        // Aktifkan tombol yang dipilih
+        const activeBtn = document.getElementById("btn-" + tabId);
+        activeBtn.classList.add("tab-active", "shadow-md");
+        activeBtn.classList.remove("bg-white", "text-slate-600", "shadow-sm");
+      }
+
+      // Logic Smart Notification
+      window.onload = function () {
+        const lastResult = JSON.parse(localStorage.getItem("lastNutriResult"));
+        const alertBox = document.getElementById("personalizedAlert");
+
+        if (lastResult) {
+          alertBox.classList.remove("hidden");
+          const status = lastResult.status.toLowerCase();
+          let bgColor = "bg-blue-500";
+          let emoji = "💡";
+          let message = `Pelajari cara menjaga kondisi <b>${lastResult.status}</b> Si Kecil tetap optimal.`;
+
+          if (status.includes("buruk") || status.includes("kurang")) {
+            bgColor = "bg-red-500";
+            emoji = "⚠️";
+            message = `Perhatian Bunda! Hasil terakhir menunjukkan <b>${lastResult.status}</b>. Segera pelajari penanganannya di bawah ini.`;
+          }
+
+          alertBox.innerHTML = `
+                    <div class="${bgColor} p-6 rounded-[2.5rem] text-white flex items-center gap-5 shadow-xl transition hover:scale-[1.01]">
+                        <div class="text-4xl">${emoji}</div>
+                        <div>
+                            <p class="text-xs font-black uppercase tracking-widest opacity-80 mb-1">Edukasi Khusus Untuk Bunda ${lastResult.namaAnak}</p>
+                            <p class="text-sm font-medium leading-relaxed">${message}</p>
+                        </div>
+                    </div>
+                `;
+        }
+      };
+    </script>
+  </body>
+</html>
