@@ -4,14 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Input - NutriKids</title>
-    <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
-<style>
+    <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-        .tab-active { background-color: #1b6bec; color: white; transform: translateY(-2px); }
         .gradient-text { background: linear-gradient(90deg, #1b6bec, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .glass-card { background: white; border-radius: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; }
     </style>
 </head>
 <body class="pb-20">
@@ -19,70 +17,65 @@
     <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-            <a href="index.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-2xl text-sm font-bold transition">Kembali</a>
+            <div class="flex gap-3">
+                <a href="index.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-2xl text-sm font-bold transition">Kembali</a>
+                <a href="rekapan.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Cek Rekapan</a>
+            </div>
         </div>
     </header>
 
-    <main class="container max-w-5xl mt-10">
+    <main class="container max-w-5xl mx-auto mt-10 px-4">
         <div class="text-center mb-12">
-            <div class="badge-new float-anim mb-4">Langkah Awal Bunda</div>
             <h1 class="text-3xl font-extrabold text-slate-800">Pilih Data yang Akan di Input</h1>
+            <p class="text-slate-500 mt-2">Lengkapi kedua data di bawah untuk menghitung gizi.</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 mb-16">
             <a href="posyandu.html" class="glass-card p-10 flex flex-col items-center text-center border-b-8 border-emerald-500 hover:scale-[1.02] transition-transform">
                 <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner">🏠</div>
                 <h2 class="text-2xl font-bold text-slate-800">Data Posyandu</h2>
-                <p class="text-slate-500 text-sm mt-3">Lokasi dan nama Kader pemeriksaan Si Kecil di lingkungan Bunda.</p>
+                <p class="text-slate-500 text-sm mt-3">Lokasi dan nama Kader pemeriksaan Bunda.</p>
                 <div id="btnP" class="mt-6 text-emerald-600 font-bold text-sm bg-emerald-50 px-6 py-2 rounded-full">Mulai Input →</div>
             </a>
 
             <a href="dataIbuAnak.html" class="glass-card p-10 flex flex-col items-center text-center border-b-8 border-blue-500 hover:scale-[1.02] transition-transform">
                 <div class="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner">👩‍👦</div>
                 <h2 class="text-2xl font-bold text-slate-800">Data Ibu & Anak</h2>
-                <p class="text-slate-500 text-sm mt-3">Profil identitas Bunda dan Si Kecil agar pantauan lebih akurat.</p>
+                <p class="text-slate-500 text-sm mt-3">Profil identitas Bunda dan Si Kecil.</p>
                 <div id="btnA" class="mt-6 text-blue-600 font-bold text-sm bg-blue-50 px-6 py-2 rounded-full">Mulai Input →</div>
             </a>
         </div>
 
-        <div class="w-full bg-white/50 backdrop-blur-md rounded-[3rem] p-10 border border-white mb-20">
+        <div class="w-full bg-white/50 backdrop-blur-md rounded-[3rem] p-10 border border-white mb-20 shadow-xl">
             <h3 class="text-center text-xl font-bold text-slate-800 mb-8 flex items-center justify-center gap-3">
-                <span class="text-2xl">📋</span> Rekapan Data Terinput
+                <span class="text-2xl">📋</span> Data Terdeteksi
             </h3>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-emerald-500 relative group">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-emerald-500 relative">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-black text-emerald-600 tracking-widest uppercase">Posyandu</span>
+                        <span class="text-xs font-black text-emerald-600 uppercase tracking-widest">Posyandu</span>
                         <div id="statusP" class="text-[10px] px-3 py-1 rounded-full bg-slate-100 text-slate-400 font-bold">BELUM ADA</div>
                     </div>
-                    <div id="rekapP" class="text-sm text-slate-500 italic leading-relaxed">Silakan isi data posyandu terlebih dahulu.</div>
-                    <a href="posyandu.html" id="editP" class="hidden absolute top-4 right-4 bg-emerald-50 text-emerald-600 p-2 rounded-xl hover:bg-emerald-100 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                    </a>
+                    <div id="rekapP" class="text-sm text-slate-500 italic">Isi data posyandu dulu Bunda...</div>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-blue-500 relative group">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-blue-500 relative">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-xs font-black text-blue-600 tracking-widest uppercase">Profil Anak</span>
+                        <span class="text-xs font-black text-blue-600 uppercase tracking-widest">Profil Anak</span>
                         <div id="statusA" class="text-[10px] px-3 py-1 rounded-full bg-slate-100 text-slate-400 font-bold">BELUM ADA</div>
                     </div>
-                    <div id="rekapA" class="text-sm text-slate-500 italic leading-relaxed">Silakan isi data ibu dan anak terlebih dahulu.</div>
-                    <a href="dataIbuAnak.html" id="editA" class="hidden absolute top-4 right-4 bg-blue-50 text-blue-600 p-2 rounded-xl hover:bg-blue-100 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                    </a>
+                    <div id="rekapA" class="text-sm text-slate-500 italic">Isi profil Si Kecil dulu Bunda...</div>
                 </div>
             </div>
 
             <div id="areaKonfirmasi" class="mt-12 text-center hidden">
                 <div class="p-8 rounded-[2.5rem] bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-white">
-                    <p class="text-slate-700 font-bold mb-6 italic text-lg">"Data sudah pas, Bunda? Yuk, cek status gizi Si Kecil sekarang!"</p>
-                    <a href="calculator.html" class="btn-primary !py-5 !px-12 text-lg shadow-xl">
-                        🚀 Ya, Lanjut ke Kalkulator
+                    <p class="text-slate-700 font-bold mb-6 italic text-lg">"Data sudah siap Bunda! Yuk hitung status gizi sekarang."</p>
+                    <a href="calculator.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-black py-5 px-12 rounded-2xl text-lg shadow-xl transition-all hover:scale-105">
+                        🚀 Lanjut ke Kalkulator
                     </a>
-                    <button onclick="resetData()" class="block mx-auto mt-6 text-xs text-red-400 hover:text-red-600 font-medium underline">
-                        Hapus data dan isi ulang
-                    </button>
+                    <button onclick="resetData()" class="block mx-auto mt-6 text-xs text-red-400 font-medium underline">Hapus & Isi Ulang</button>
                 </div>
             </div>
         </div>
@@ -90,6 +83,7 @@
 
     <script>
         function muatRekapan() {
+            // Mengambil data dari localStorage
             const dataP = JSON.parse(localStorage.getItem("dataPosyandu"));
             const dataA = JSON.parse(localStorage.getItem("dataAnak"));
 
@@ -98,12 +92,11 @@
                 sP.innerText = "SIAP ✅";
                 sP.className = "text-[10px] px-3 py-1 rounded-full bg-emerald-500 text-white font-bold";
                 document.getElementById("btnP").innerText = "Ubah Data Posyandu";
-                document.getElementById("editP").classList.remove("hidden");
+                // Menampilkan nama posyandu yang diinput
                 document.getElementById("rekapP").innerHTML = `
-                    <div class="text-slate-700 not-italic font-semibold space-y-1">
-                        <p>📍 ${dataP.alamat || "-"}</p>
-                        <p>👤 Kader: ${dataP.kader || "-"}</p>
-                        <p>🏘️ RT/RW: ${dataP.rt}/${dataP.rw}</p>
+                    <div class="text-slate-700 not-italic font-bold">
+                        <p class="text-emerald-600 text-lg">🏡 ${dataP.posyandu || "Posyandu"}</p>
+                        <p class="text-xs mt-1">📍 ${dataP.alamat || "-"}</p>
                     </div>`;
             }
 
@@ -112,21 +105,14 @@
                 sA.innerText = "SIAP ✅";
                 sA.className = "text-[10px] px-3 py-1 rounded-full bg-blue-500 text-white font-bold";
                 document.getElementById("btnA").innerText = "Ubah Profil Anak";
-                document.getElementById("editA").classList.remove("hidden");
-
-                // Konversi tampilan usia dari total bulan
-                const thn = Math.floor(dataA.usia / 12);
-                const bln = dataA.usia % 12;
-                const usiaText = thn > 0 ? `${thn} Thn ${bln} Bln` : `${bln} Bln`;
-
                 document.getElementById("rekapA").innerHTML = `
-                    <div class="text-slate-700 not-italic font-semibold space-y-1">
-                        <p>👩 Bunda: ${dataA.namaIbu || "-"}</p>
-                        <p>👶 Anak: ${dataA.namaAnak || "-"}</p>
-                        <p>📅 Usia: ${usiaText}</p>
+                    <div class="text-slate-700 not-italic font-bold">
+                        <p class="text-blue-600 text-lg">👶 ${dataA.namaAnak || "-"}</p>
+                        <p class="text-xs mt-1">👩 Bunda: ${dataA.namaIbu || "-"}</p>
                     </div>`;
             }
 
+            // Jika kedua data ada, tombol kalkulator muncul
             if (dataP && dataA) {
                 document.getElementById("areaKonfirmasi").classList.remove("hidden");
             }
@@ -139,6 +125,7 @@
                 window.location.reload();
             }
         }
+
         window.onload = muatRekapan;
     </script>
 </body>

@@ -23,9 +23,6 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .input-focus:focus {
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -49,21 +46,21 @@
                 <header class="text-center mb-8">
                     <span class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Profil Keluarga</span>
                     <h2 class="text-3xl font-extrabold text-slate-800 mt-4">Ibu & Anak</h2>
-                    <p class="text-slate-500 text-sm mt-2">Lengkapi identitas buah hati Bunda untuk mulai memantau gizi.</p>
+                    <p class="text-slate-500 text-sm mt-2">Lengkapi identitas buah hati Bunda (Maksimal 18 Tahun).</p>
                 </header>
 
                 <form id="childDataForm" class="space-y-5">
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">👩 Nama Bunda</label>
                         <input type="text" id="motherName" placeholder="Masukkan nama ibu"
-                            class="input-focus w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-semibold"
+                            class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-semibold"
                             required />
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">👶 Nama Si Kecil</label>
                         <input type="text" id="childName" placeholder="Masukkan nama anak"
-                            class="input-focus w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-semibold"
+                            class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-semibold"
                             required />
                     </div>
 
@@ -71,14 +68,14 @@
                         <label class="block text-sm font-bold text-slate-700 ml-1">📅 Usia Si Kecil</label>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="relative">
-                                <input type="number" id="ageYear" placeholder="0" min="0"
-                                    class="input-focus w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold"
+                                <input type="number" id="ageYear" placeholder="0" min="0" max="18"
+                                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold"
                                     required />
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Thn</span>
                             </div>
                             <div class="relative">
                                 <input type="number" id="ageMonth" placeholder="0" min="0" max="11"
-                                    class="input-focus w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold"
+                                    class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold"
                                     required />
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Bln</span>
                             </div>
@@ -89,7 +86,7 @@
                         <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">👫 Jenis Kelamin</label>
                         <div class="relative">
                             <select id="gender"
-                                class="input-focus w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold appearance-none cursor-pointer"
+                                class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-400 focus:bg-white outline-none transition-all text-slate-800 font-bold appearance-none cursor-pointer"
                                 required>
                                 <option value="" disabled selected>Pilih...</option>
                                 <option value="Laki-laki">Laki-laki</option>
@@ -102,14 +99,14 @@
                     </div>
 
                     <div class="pt-4">
-                        <button type="submit"
+                        <button type="submit" id="btnSubmit"
                             class="w-full bg-blue-500 text-white py-5 rounded-3xl font-extrabold text-lg shadow-xl shadow-blue-100 hover:bg-blue-600 hover:-translate-y-1 active:scale-95 transition-all flex items-center justify-center gap-3 group">
-                            <span>Simpan & Lanjut</span>
-                            <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span id="btnText">Simpan & Lanjut</span>
+                            <svg id="btnIcon" class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </button>
-                        <p class="text-center text-[10px] text-slate-400 mt-4 italic uppercase tracking-widest font-bold">Data akan tersimpan secara lokal di HP Bunda</p>
+                        <p class="text-center text-[10px] text-slate-400 mt-4 italic uppercase tracking-widest font-bold"></p>
                     </div>
                 </form>
             </div>
@@ -120,8 +117,24 @@
         document.getElementById('childDataForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Beri efek loading pada tombol
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnText = document.getElementById('btnText');
+            btnText.innerText = "Menyimpan...";
+            btnSubmit.style.opacity = "0.7";
+            btnSubmit.disabled = true;
+
             const thn = parseInt(document.getElementById('ageYear').value) || 0;
             const bln = parseInt(document.getElementById('ageMonth').value) || 0;
+            
+            if (thn > 18) {
+                alert("Mohon maaf, pemantauan hanya untuk anak usia 0-18 tahun.");
+                btnText.innerText = "Simpan & Lanjut";
+                btnSubmit.disabled = false;
+                btnSubmit.style.opacity = "1";
+                return;
+            }
+
             const totalBulan = (thn * 12) + bln;
 
             const dataAnak = {
@@ -132,18 +145,33 @@
                 updateTime: new Date().getTime()
             };
 
-            localStorage.setItem('dataAnak', JSON.stringify(dataAnak));
-            window.location.href = 'inputData.html'; 
+            try {
+                // Simpan data
+                localStorage.setItem('dataAnak', JSON.stringify(dataAnak));
+                
+                // Pastikan file tujuan ada. Ganti 'kalkulator.html' sesuai nama file Bunda selanjutnya.
+                // Jika ingin kembali ke halaman input gizi, pastikan namanya benar.
+                setTimeout(() => {
+                    window.location.href = 'calculator.html'; 
+                }, 500);
+
+            } catch (error) {
+                alert("Gagal menyimpan data. Pastikan memori HP tidak penuh.");
+                btnText.innerText = "Simpan & Lanjut";
+                btnSubmit.disabled = false;
+            }
         });
 
+        // Load data saat halaman dibuka
         window.onload = function() {
-            const savedData = JSON.parse(localStorage.getItem('dataAnak'));
+            const savedData = localStorage.getItem('dataAnak');
             if(savedData) {
-                document.getElementById('motherName').value = savedData.namaIbu || '';
-                document.getElementById('childName').value = savedData.namaAnak || '';
-                document.getElementById('gender').value = savedData.gender || '';
+                const parsed = JSON.parse(savedData);
+                document.getElementById('motherName').value = parsed.namaIbu || '';
+                document.getElementById('childName').value = parsed.namaAnak || '';
+                document.getElementById('gender').value = parsed.gender || '';
                 
-                const totalBulan = parseInt(savedData.usia) || 0;
+                const totalBulan = parseInt(parsed.usia) || 0;
                 document.getElementById('ageYear').value = Math.floor(totalBulan / 12);
                 document.getElementById('ageMonth').value = totalBulan % 12;
             }

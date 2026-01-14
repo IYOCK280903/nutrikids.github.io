@@ -320,6 +320,31 @@
         const usia = dataA ? parseInt(dataA.usia) : 0;
         let eduHTML = "";
 
+        function simpanDataKeRekapan() {
+    // 1. Ambil data identitas yang sudah diinput sebelumnya
+    const posyanduData = JSON.parse(localStorage.getItem("posyanduData")) || {};
+    const anakData = JSON.parse(localStorage.getItem("anakData")) || {};
+    
+    // 2. Ambil hasil perhitungan yang sedang tampil (contoh variabel)
+    const hasilBaru = {
+        tanggal: new Date().toLocaleDateString('id-ID'),
+        jam: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        namaPosyandu: posyanduData.namaPosyandu || "Umum",
+        namaAnak: anakData.namaAnak || "Si Kecil",
+        bb: document.getElementById("inputBB").value, // sesuaikan ID nya
+        tb: document.getElementById("inputTB").value, // sesuaikan ID nya
+        status: document.getElementById("statusGiziTeks").innerText, // contoh: "Gizi Baik"
+        color: "#10b981" // warna gizi
+    };
+
+    // 3. Simpan ke dalam array 'allNutriResults'
+    let listRekapan = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+    listRekapan.push(hasilBaru);
+    localStorage.setItem("allNutriResults", JSON.stringify(listRekapan));
+
+    alert("Data berhasil disimpan ke Rekapan!");
+}
+
         // EDUKASI BERDASARKAN USIA
         if (usia <= 6) {
           eduHTML += `
