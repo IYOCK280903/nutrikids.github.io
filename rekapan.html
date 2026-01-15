@@ -11,47 +11,78 @@
         body { font-family: "Poppins", sans-serif; background-color: #f1f5f9; }
         .glass-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .table-header { color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="pb-20">
     <nav class="bg-white py-4 px-10 flex justify-between items-center shadow-md sticky top-0 z-50">
         <h1 class="text-2xl font-black text-blue-600">Nutri<span class="text-emerald-500">Kids</span></h1>
         <div class="flex gap-3">
-            <a href="hasil.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-2xl text-sm font-bold transition">Kembali</a>
-            <a href="inputData.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-2xl text-sm font-bold transition">Input Data</a>
-            <a href="index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Keluar</a>
+            <a href="hasil.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Kembali</a>
+            <a href="konsultasi.html" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-red-200">Konsultasi</a>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-6 mt-10">
         <div class="text-center mb-10">
             <h2 class="text-3xl font-black text-slate-800">Rekapan Data Posyandu</h2>
-            <p class="text-slate-500 text-sm mt-2">Menampilkan semua riwayat pemeriksaan Si Kecil.</p>
+            <p class="text-slate-500 text-sm mt-2">Cari nama anak untuk melihat detail profil dan riwayat pemeriksaan.</p>
+        </div>
+
+        <div id="detailAnakSection" class="hidden mb-8 animate-fade-in">
+            <div class="glass-card p-8 border-l-8 border-blue-500 bg-gradient-to-r from-white to-blue-50">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-blue-600 font-black text-xs uppercase tracking-widest mb-1">Profil Lengkap Anak</p>
+                        <h3 class="text-3xl font-black text-slate-800 uppercase" id="detNamaAnak">-</h3>
+                        <p class="text-slate-500 font-bold mt-1 flex items-center gap-2">
+                            <span class="bg-blue-500 text-white p-1 rounded-md text-[10px]">LOKASI</span>
+                            <span id="detPosyandu">-</span>
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btnEditAnak" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-blue-200">
+                            ✏️ Edit Profil & Data
+                        </button>
+                        <button onclick="tutupDetail()" class="bg-white/80 hover:bg-white p-2 rounded-full text-slate-400 hover:text-red-500 transition shadow-sm border border-slate-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Nama Ibu</p>
+                        <p class="font-bold text-slate-700" id="detNamaIbu">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Jenis Kelamin</p>
+                        <p class="font-bold text-slate-700" id="detJK">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Berat Badan</p>
+                        <p class="font-black text-emerald-600 text-lg" id="detBB">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Tinggi Badan</p>
+                        <p class="font-black text-blue-600 text-lg" id="detTB">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Status Gizi</p>
+                        <p class="font-black" id="detStatus">-</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="glass-card p-6 mb-8 border-none ring-1 ring-slate-200">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="md:col-span-2 relative">
-                    <span class="absolute left-4 top-4 text-slate-400">🔍</span>
-                    <input type="text" id="searchBox" onkeyup="renderTable()" placeholder="Cari Posyandu atau Nama Anak..." 
-                        class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-400 outline-none font-bold text-slate-700 shadow-inner" />
-                </div>
-                
-                <select id="filterBulan" onchange="renderTable()" class="py-4 px-4 rounded-xl bg-slate-50 border-none font-bold text-slate-600 outline-none focus:ring-2 focus:ring-blue-400 shadow-inner">
-                    <option value="">Semua Bulan</option>
-                    <option value="01">Januari</option><option value="02">Februari</option>
-                    <option value="03">Maret</option><option value="04">April</option>
-                    <option value="05">Mei</option><option value="06">Juni</option>
-                    <option value="07">Juli</option><option value="08">Agustus</option>
-                    <option value="09">September</option><option value="10">Oktober</option>
-                    <option value="11">November</option><option value="12">Desember</option>
-                </select>
-
-                <select id="filterTahun" onchange="renderTable()" class="py-4 px-4 rounded-xl bg-slate-50 border-none font-bold text-slate-600 outline-none focus:ring-2 focus:ring-blue-400 shadow-inner">
-                    <option value="">Semua Tahun</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                </select>
+            <div class="relative">
+                <span class="absolute left-5 top-5 text-slate-400 text-xl">🔍</span>
+                <input type="text" id="searchBox" onkeyup="renderTable()" placeholder="Cari nama anak (contoh: Enu Jeje)..." 
+                    class="w-full pl-14 pr-6 py-5 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-blue-100 outline-none font-bold text-slate-700 shadow-inner transition-all" />
             </div>
         </div>
 
@@ -60,12 +91,12 @@
                 <table class="w-full text-left" id="rekapanTable">
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr>
-                            <th class="p-6 table-header text-center">Tanggal</th>
-                            <th class="p-6 table-header">Nama Posyandu</th>
+                            <th class="p-6 table-header text-center">Tanggal & Jam</th>
+                            <th class="p-6 table-header">Posyandu</th>
                             <th class="p-6 table-header">Nama Anak</th>
                             <th class="p-6 table-header text-center">BB / TB</th>
                             <th class="p-6 table-header text-center">Status Gizi</th>
-                            <th class="p-6 table-header text-center">Hapus</th>
+                            <th class="p-6 table-header text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="divide-y divide-slate-50 font-bold text-slate-600 text-sm"></tbody>
@@ -74,114 +105,161 @@
 
             <div id="emptyState" class="py-32 text-center">
                 <div class="text-6xl mb-4">📂</div>
-                <p class="text-slate-500 font-extrabold text-lg">Belum Ada Data</p>
-                <p class="text-slate-400 text-sm mt-1 uppercase tracking-widest">Silakan isi data di kalkulator terlebih dahulu</p>
+                <p class="text-slate-500 font-extrabold text-lg">Data Tidak Ditemukan</p>
+                <p class="text-slate-400 text-sm mt-1 uppercase tracking-widest">Coba ketik nama anak lain atau isi data baru</p>
             </div>
         </div>
 
         <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <button onclick="clearAllData()" class="text-red-400 hover:text-red-600 font-bold text-xs px-4 py-2 rounded-lg hover:bg-red-50 transition">
-                🗑️ RESET SEMUA REKAPAN
+            <button onclick="clearAllData()" class="text-red-400 hover:text-red-600 font-bold text-xs px-6 py-3 rounded-xl hover:bg-red-50 transition uppercase tracking-widest">
+                🗑️ Reset Semua Rekapan
             </button>
-            <button onclick="exportToExcel()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black shadow-xl transition-all flex items-center gap-3">
-                📗 DOWNLOAD EXCEL
+            <button onclick="exportToExcel()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black shadow-xl transition-all flex items-center gap-3 active:scale-95">
+                📗 DOWNLOAD LAPORAN EXCEL
             </button>
         </div>
     </main>
 
     <script>
-        function renderTable() {
-            // 1. Ambil data hasil pemeriksaan
+        // Ambil profil terbaru berdasarkan nama anak (case-insensitive)
+        function getLatestProfile(name) {
             const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            // 2. Ambil profil posyandu (Untuk cadangan jika di data pemeriksaan tidak ada namanya)
-            const dataP = JSON.parse(localStorage.getItem("dataPosyandu")) || {};
-            
-            const query = document.getElementById("searchBox").value.toLowerCase().trim();
-            const filterBulan = document.getElementById("filterBulan").value;
-            const filterTahun = document.getElementById("filterTahun").value;
-            
+            const normalized = name.trim().toLowerCase();
+
+            const matchingRecords = allData
+                .filter(item => (item.namaAnak || "").trim().toLowerCase() === normalized)
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            return matchingRecords[0] || null;
+        }
+
+        function renderTable() {
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            const query = document.getElementById("searchBox").value.trim();
+            const queryLower = query.toLowerCase();
+
             const tableBody = document.getElementById("tableBody");
-            const emptyState = document.getElementById("emptyState");
+            const detailSection = document.getElementById("detailAnakSection");
             const tableContainer = document.getElementById("tableContainer");
+            const emptyState = document.getElementById("emptyState");
 
             tableBody.innerHTML = "";
 
-            const filteredData = allData.filter((item) => {
-                // PENYEMPURNAAN: Prioritaskan nama dari item, lalu dari profil posyandu, terakhir baru "UMUM"
-                const namaP = (item.namaPosyandu || item.posyandu || dataP.posyandu || "UMUM").toLowerCase();
-                const namaA = (item.namaAnak || "").toLowerCase();
-                const tgl = item.tanggal || "";
-                
-                const parts = tgl.split('/');
-                const bln = parts[1] || ""; 
-                const thn = parts[2] || "";
+            // Filter semua data yang relevan dengan query
+            const filteredData = allData.filter(item =>
+                (item.namaAnak || "").toLowerCase().includes(queryLower) ||
+                (item.namaPosyandu || "").toLowerCase().includes(queryLower)
+            );
 
-                const matchSearch = namaP.includes(query) || namaA.includes(query);
-                const matchBulan = filterBulan === "" || bln === filterBulan;
-                const matchTahun = filterTahun === "" || thn === filterTahun;
+            // BAGIAN PROFIL ANAK
+            if (query.length >= 2) {
+                const latest = getLatestProfile(query);
 
-                return matchSearch && matchBulan && matchTahun;
-            });
+                if (latest) {
+                    detailSection.classList.remove("hidden");
 
+                    document.getElementById("detNamaAnak").textContent = latest.namaAnak || "-";
+                    document.getElementById("detPosyandu").textContent = latest.namaPosyandu || "Posyandu Umum";
+                    
+                    document.getElementById("detNamaIbu").textContent = latest.namaIbu?.trim() || "-";
+
+                    let jkDisplay = "-";
+                    const jkVal = (latest.jk || "").trim().toUpperCase();
+                    if (jkVal === "L") jkDisplay = "Laki-laki";
+                    else if (jkVal === "P") jkDisplay = "Perempuan";
+                    document.getElementById("detJK").textContent = jkDisplay;
+
+                    document.getElementById("detBB").textContent = (latest.bb ?? "-") + " kg";
+                    document.getElementById("detTB").textContent = (latest.tb ?? "-") + " cm";
+                    document.getElementById("detStatus").textContent = latest.status || "NORMAL";
+                    document.getElementById("detStatus").style.color = latest.color || "#64748b";
+
+                    // Tombol edit
+                    document.getElementById("btnEditAnak").onclick = function() {
+                        localStorage.setItem("dataAnak", JSON.stringify({
+                            namaAnak: latest.namaAnak || "",
+                            namaIbu: latest.namaIbu || "",
+                            jk: latest.jk || "L"
+                        }));
+                        window.location.href = "inputData.html";
+                    };
+                } else {
+                    detailSection.classList.add("hidden");
+                }
+            } else {
+                detailSection.classList.add("hidden");
+            }
+
+            // BAGIAN TABEL RIWAYAT + TOMBOL HAPUS PER BARIS
             if (filteredData.length > 0) {
                 emptyState.classList.add("hidden");
                 tableContainer.classList.remove("hidden");
-                
-                filteredData.reverse().forEach((item) => {
-                    // Tentukan nama posyandu yang akan ditampilkan
-                    const displayPosyandu = item.namaPosyandu || item.posyandu || dataP.posyandu || "UMUM";
-                    const id = item.timestamp;
 
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-blue-50/50 transition border-b border-slate-50">
-                            <td class="p-6 text-center">
-                                <div class="text-slate-800">${item.tanggal || '-'}</div>
-                                <div class="text-[10px] text-blue-400 mt-1 uppercase font-black">Jam ${item.jam || '-'}</div>
-                            </td>
-                            <td class="p-6 text-blue-600 font-extrabold uppercase">${displayPosyandu}</td>
-                            <td class="p-6 text-slate-800">${item.namaAnak || '-'}</td>
-                            <td class="p-6 text-center">
-                                <span class="bg-slate-100 px-2 py-1 rounded-md text-slate-700">${item.bb || 0}kg / ${item.tb || 0}cm</span>
-                            </td>
-                            <td class="p-6 text-center">
-                                <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase inline-block border shadow-sm" 
-                                    style="background: ${item.color}15; color: ${item.color}; border-color: ${item.color}40">
-                                    ${item.status || 'NORMAL'}
-                                </span>
-                            </td>
-                            <td class="p-6 text-center">
-                                <button onclick="deleteRow('${id}')" class="text-red-400 hover:text-red-600 p-2 bg-red-50 rounded-xl transition">
-                                    🗑️
-                                </button>
-                            </td>
-                        </tr>`;
-                });
+                filteredData
+                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+                    .forEach(item => {
+                        const timestampStr = item.timestamp.toString(); // pastikan string untuk onclick
+                        tableBody.innerHTML += `
+                            <tr class="hover:bg-blue-50/50 transition border-b border-slate-50">
+                                <td class="p-6 text-center">
+                                    <div class="text-slate-800">${item.tanggal || '-'}</div>
+                                    <div class="text-[10px] text-blue-400 mt-1 uppercase font-black">Jam ${item.jam || '-'}</div>
+                                </td>
+                                <td class="p-6 text-blue-600 font-extrabold uppercase">${item.namaPosyandu || 'Posyandu Umum'}</td>
+                                <td class="p-6 text-slate-800 font-bold">${item.namaAnak || '-'}</td>
+                                <td class="p-6 text-center">
+                                    <span class="bg-slate-100 px-3 py-1 rounded-lg text-slate-700">${item.bb ?? 0}kg / ${item.tb ?? 0}cm</span>
+                                </td>
+                                <td class="p-6 text-center">
+                                    <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase inline-block border shadow-sm" 
+                                        style="background: ${(item.color || '#64748b')}15; color: ${item.color || '#64748b'}; border-color: ${(item.color || '#64748b')}40">
+                                        ${item.status || 'NORMAL'}
+                                    </span>
+                                </td>
+                                <td class="p-6 text-center">
+                                    <button onclick="deleteRow('${timestampStr}')" class="text-red-500 hover:text-red-700 transition p-2 hover:bg-red-50 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>`;
+                    });
             } else {
                 emptyState.classList.remove("hidden");
                 tableContainer.classList.add("hidden");
             }
         }
 
-        function deleteRow(id) {
-            if (confirm("Hapus data ini?")) {
-                let allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-                const newData = allData.filter(item => item.timestamp.toString() !== id.toString());
-                localStorage.setItem("allNutriResults", JSON.stringify(newData));
-                renderTable();
-            }
+        // FUNGSI HAPUS SATU BARIS DATA
+        function deleteRow(timestamp) {
+            if (!confirm("Yakin ingin menghapus data pemeriksaan ini?")) return;
+
+            let allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            allData = allData.filter(item => item.timestamp != timestamp); // hapus berdasarkan timestamp
+            localStorage.setItem("allNutriResults", JSON.stringify(allData));
+
+            // Refresh tabel setelah hapus
+            renderTable();
+        }
+
+        function tutupDetail() {
+            document.getElementById("detailAnakSection").classList.add("hidden");
+            document.getElementById("searchBox").value = "";
+            renderTable();
         }
 
         function clearAllData() {
-            if (confirm("Hapus seluruh rekapan secara permanen?")) {
-                localStorage.removeItem("allNutriResults");
-                renderTable();
-            }
+            if (!confirm("Hapus SEMUA rekapan secara permanen?")) return;
+            localStorage.removeItem("allNutriResults");
+            renderTable();
         }
 
         function exportToExcel() {
             const table = document.getElementById("rekapanTable");
+            if (table.rows.length <= 1) return alert("Tidak ada data");
             const wb = XLSX.utils.table_to_book(table);
-            XLSX.writeFile(wb, "Rekapan_NutriKids.xlsx");
+            XLSX.writeFile(wb, "Laporan_NutriKids.xlsx");
         }
 
         window.onload = renderTable;

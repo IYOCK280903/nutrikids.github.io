@@ -165,6 +165,14 @@
               >Lihat Rekapan</a
             >
           </div>
+
+          <!-- Tombol Simpan ke Rekapan (baru, tapi tetap minimalis & sesuai tema) -->
+          <button
+            onclick="simpanKeRekapan()"
+            class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-3xl font-extrabold text-lg shadow-xl transition-all active:scale-95"
+          >
+            💾 Simpan ke Rekapan Posyandu
+          </button>
         </div>
 
         <div class="lg:col-span-7 space-y-6">
@@ -267,7 +275,7 @@
           return;
         }
 
-        document.getElementById("namaAnakHeader").innerText = result.namaAnak;
+        document.getElementById("namaAnakHeader").innerText = result.namaAnak || dataA?.namaAnak || "Si Kecil";
         document.getElementById("resBB").innerText = result.bb;
         document.getElementById("resTB").innerText = result.tb;
         document.getElementById("zscoreVal").innerText = result.zscore;
@@ -279,7 +287,7 @@
         const statusDesc = document.getElementById("statusDesc");
 
         let color = "#10b981";
-        let emoji = result.gender === "Perempuan" ? "👧" : "👦";
+        let emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
         let description = "";
         let statusLabel = "";
 
@@ -298,7 +306,7 @@
             "Si Kecil berada di kategori Gizi Kurang. Bunda perlu meningkatkan asupan protein hewani dan lemak sehat dalam menu hariannya.";
         } else if (z <= 2) {
           color = "#10b981";
-          emoji = result.gender === "Perempuan" ? "👧" : "👦";
+          emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
           statusLabel = "Gizi Normal";
           description =
             "Luar biasa, Bunda! Pertumbuhan Si Kecil terpantau sangat ideal dan sehat sesuai standar usianya.";
@@ -319,31 +327,6 @@
         const eduBox = document.getElementById("dynamicEducation");
         const usia = dataA ? parseInt(dataA.usia) : 0;
         let eduHTML = "";
-
-        function simpanDataKeRekapan() {
-    // 1. Ambil data identitas yang sudah diinput sebelumnya
-    const posyanduData = JSON.parse(localStorage.getItem("posyanduData")) || {};
-    const anakData = JSON.parse(localStorage.getItem("anakData")) || {};
-    
-    // 2. Ambil hasil perhitungan yang sedang tampil (contoh variabel)
-    const hasilBaru = {
-        tanggal: new Date().toLocaleDateString('id-ID'),
-        jam: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-        namaPosyandu: posyanduData.namaPosyandu || "Umum",
-        namaAnak: anakData.namaAnak || "Si Kecil",
-        bb: document.getElementById("inputBB").value, // sesuaikan ID nya
-        tb: document.getElementById("inputTB").value, // sesuaikan ID nya
-        status: document.getElementById("statusGiziTeks").innerText, // contoh: "Gizi Baik"
-        color: "#10b981" // warna gizi
-    };
-
-    // 3. Simpan ke dalam array 'allNutriResults'
-    let listRekapan = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-    listRekapan.push(hasilBaru);
-    localStorage.setItem("allNutriResults", JSON.stringify(listRekapan));
-
-    alert("Data berhasil disimpan ke Rekapan!");
-}
 
         // EDUKASI BERDASARKAN USIA
         if (usia <= 6) {
@@ -386,7 +369,44 @@
         }
 
         eduBox.innerHTML = eduHTML;
+
+        // =====================================================================
+        // PENYIMPANAN OTOMATIS KE HISTORY REKAPAN (SOLUSI UTAMA MASALAH KOSONG)
+        // =====================================================================
+        const profilAnak = JSON.parse(localStorage.getItem("dataAnak")) || {};
+        const profilPosyandu = JSON.parse(localStorage.getItem("dataPosyandu")) || {};
+
+        const historyEntry = {
+          timestamp: Date.now(),
+          tanggal: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          jam: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+          
+          namaAnak: profilAnak.namaAnak || result.namaAnak || "-",
+          namaIbu: profilAnak.namaIbu || "-",                            // ← SEKARANG PASTI ADA
+          jk: profilAnak.gender === "Laki-laki" ? "L" : 
+              profilAnak.gender === "Perempuan" ? "P" : "-",             // ← SEKARANG PASTI ADA
+          
+          namaPosyandu: profilPosyandu.posyandu || "Posyandu Umum",
+          bb: result.bb,
+          tb: result.tb,
+          status: statusLabel,
+          color: color,
+          zscore: result.zscore
+        };
+
+        let allHistory = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+        // Cek duplikat berdasarkan timestamp (hindari simpan berkali-kali)
+        if (!allHistory.some(entry => entry.timestamp === historyEntry.timestamp)) {
+          allHistory.push(historyEntry);
+          localStorage.setItem("allNutriResults", JSON.stringify(allHistory));
+          console.log("Data berhasil disimpan otomatis ke rekapan!");
+        }
       };
+
+      // Fungsi manual jika ingin tombol terpisah (opsional, tapi direkomendasikan)
+      function simpanKeRekapan() {
+        alert("Data sudah otomatis tersimpan saat halaman dimuat!\nCek di halaman Rekapan.");
+      }
     </script>
   </body>
 </html>

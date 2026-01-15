@@ -91,90 +91,97 @@
             </form>
         </div>
     </main>
+<script>
+    window.onload = function() {
+        // Ambil data profil anak dari storage
+        const dataA = JSON.parse(localStorage.getItem("dataAnak"));
+        
+        if (dataA) {
+            // Hitung tampilan usia
+            const thn = Math.floor(dataA.usia / 12);
+            const bln = dataA.usia % 12;
+            const usiaText = thn > 0 ? `${thn} Thn ${bln} Bln` : `${bln} Bln`;
 
-    <script>
-        window.onload = function() {
-            // Ambil data identitas anak
-            const dataA = JSON.parse(localStorage.getItem("dataAnak"));
-            if (dataA) {
-                const thn = Math.floor(dataA.usia / 12);
-                const bln = dataA.usia % 12;
-                const usiaText = thn > 0 ? `${thn} Thn ${bln} Bln` : `${bln} Bln`;
+            // Update UI Profil
+            document.getElementById("displayNamaAnak").innerText = dataA.namaAnak;
+            document.getElementById("infoAnak").innerText = dataA.namaAnak;
+            document.getElementById("infoUsiaGender").innerText = `${usiaText} | ${dataA.gender}`;
 
-                document.getElementById("displayNamaAnak").innerText = dataA.namaAnak;
-                document.getElementById("infoAnak").innerText = dataA.namaAnak;
-                document.getElementById("infoUsiaGender").innerText = `${usiaText} | ${dataA.gender}`;
-
-                const emojiBox = document.getElementById("emojiContainer");
-                if (dataA.gender.toLowerCase() === "perempuan") {
-                    emojiBox.innerText = "👧"; 
-                    emojiBox.className = "w-20 h-20 bg-pink-100 text-5xl rounded-3xl flex items-center justify-center border-2 border-pink-200";
-                } else {
-                    emojiBox.innerText = "👦";
-                    emojiBox.className = "w-20 h-20 bg-blue-100 text-5xl rounded-3xl flex items-center justify-center border-2 border-blue-200";
-                }
+            // Update Avatar sesuai Gender
+            const emojiBox = document.getElementById("emojiContainer");
+            if (dataA.gender.toLowerCase() === "perempuan") {
+                emojiBox.innerText = "👧"; 
+                emojiBox.className = "w-20 h-20 bg-pink-100 text-5xl rounded-3xl flex items-center justify-center border-2 border-pink-200";
+            } else {
+                emojiBox.innerText = "👦";
+                emojiBox.className = "w-20 h-20 bg-blue-100 text-5xl rounded-3xl flex items-center justify-center border-2 border-blue-200";
             }
-            
-            // Set Tanggal & Jam Otomatis
-            const now = new Date();
-            document.getElementById('tglPeriksa').value = now.toISOString().split('T')[0];
-            document.getElementById('jamPeriksa').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        } else {
+            // Jika data anak hilang, arahkan kembali ke input
+            alert("Data profil belum lengkap!");
+            window.location.href = "inputData.html";
+        }
+        
+        // Set Tanggal & Jam Otomatis ke hari ini
+        const now = new Date();
+        document.getElementById('tglPeriksa').value = now.toISOString().split('T')[0];
+        document.getElementById('jamPeriksa').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    };
+
+    document.getElementById('calcForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const bb = parseFloat(document.getElementById('berat').value);
+        const tb = parseFloat(document.getElementById('tinggi').value);
+        const tglRaw = document.getElementById('tglPeriksa').value;
+        const jam = document.getElementById('jamPeriksa').value;
+        
+        // --- PERBAIKAN SINKRONISASI DATA ---
+        const dataA = JSON.parse(localStorage.getItem("dataAnak")) || {};
+        const dataP = JSON.parse(localStorage.getItem("dataPosyandu")) || {}; // Sesuaikan dengan key di inputData.html
+
+        // Logika Z-Score (BB/TB) Sederhana
+        let median = tb * 0.14; 
+        let sdPlus1 = median * 1.1; 
+        let sdMinus1 = median * 0.9;
+
+        let zscore = bb >= median ? (bb - median) / (sdPlus1 - median) : (bb - median) / (median - sdMinus1);
+
+        let status = "", color = "";
+        if (zscore < -3) { status = "GIZI BURUK"; color = "#ef4444"; }
+        else if (zscore < -2) { status = "GIZI KURANG"; color = "#f59e0b"; }
+        else if (zscore <= 2) { status = "GIZI BAIK"; color = "#10b981"; }
+        else { status = "GIZI LEBIH"; color = "#3b82f6"; }
+
+        // Format Tanggal ke DD/MM/YYYY untuk tampilan tabel
+        const d = tglRaw.split("-");
+        const tglIndo = `${d[2]}/${d[1]}/${d[0]}`;
+
+        // Ambil nama posyandu (properti .posyandu sesuai dengan inputData.html)
+        const namaPosyanduFix = dataP.posyandu || "Posyandu Umum";
+
+        const hasilFinal = {
+            id: new Date().getTime(), // ID unik untuk fungsi hapus di rekapan
+            tanggal: tglIndo,
+            jam: jam,
+            namaPosyandu: namaPosyanduFix,
+            namaAnak: dataA.namaAnak || "Si Kecil",
+            bb: bb,
+            tb: tb,
+            status: status,
+            color: color,
+            zscore: zscore.toFixed(2)
         };
 
-        document.getElementById('calcForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const bb = parseFloat(document.getElementById('berat').value);
-            const tb = parseFloat(document.getElementById('tinggi').value);
-            const tglRaw = document.getElementById('tglPeriksa').value;
-            const jam = document.getElementById('jamPeriksa').value;
-            
-            const dataA = JSON.parse(localStorage.getItem("dataAnak")) || {};
-            const posyanduData = JSON.parse(localStorage.getItem("posyanduData")) || {};
+        // Simpan ke Riwayat (Array)
+        let riwayat = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+        riwayat.push(hasilFinal);
+        localStorage.setItem("allNutriResults", JSON.stringify(riwayat));
 
-            // Logika Z-Score Sederhana (Median Simulasi WHO)
-            let median, sdPlus1, sdMinus1;
-            if (tb >= 70 && tb < 80) { median = 8.5; sdPlus1 = 9.4; sdMinus1 = 7.7; }
-            else if (tb >= 80 && tb < 90) { median = 11.0; sdPlus1 = 12.1; sdMinus1 = 10.0; }
-            else if (tb >= 90 && tb < 100) { median = 13.5; sdPlus1 = 14.8; sdMinus1 = 12.3; }
-            else { median = tb * 0.14; sdPlus1 = median * 1.1; sdMinus1 = median * 0.9; }
+        // Simpan sebagai hasil terakhir untuk halaman hasil.html
+        localStorage.setItem("lastNutriResult", JSON.stringify(hasilFinal));
 
-            let zscore = bb >= median ? (bb - median) / (sdPlus1 - median) : (bb - median) / (median - sdMinus1);
-
-            let status = "", color = "";
-            if (zscore < -3) { status = "GIZI BURUK"; color = "#ef4444"; }
-            else if (zscore < -2) { status = "GIZI KURANG"; color = "#f59e0b"; }
-            else if (zscore <= 2) { status = "GIZI BAIK"; color = "#10b981"; }
-            else { status = "GIZI LEBIH"; color = "#3b82f6"; }
-
-            // Format Tanggal ke DD/MM/YYYY agar filter bulan di Rekapan Berhasil
-            const d = tglRaw.split("-");
-            const tglIndo = `${d[2]}/${d[1]}/${d[0]}`;
-
-            // --- PROSES GABUNG & SIMPAN ---
-            const hasilFinal = {
-                tanggal: tglIndo,
-                jam: jam,
-                namaPosyandu: posyanduData.namaPosyandu || "Umum",
-                namaAnak: dataA.namaAnak || "Si Kecil",
-                bb: bb,
-                tb: tb,
-                status: status,
-                color: color,
-                zscore: zscore.toFixed(2)
-            };
-
-            // 1. Simpan ke Riwayat (allNutriResults)
-            let riwayat = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            riwayat.push(hasilFinal);
-            localStorage.setItem("allNutriResults", JSON.stringify(riwayat));
-
-            // 2. Simpan untuk halaman Hasil (lastNutriResult)
-            localStorage.setItem("lastNutriResult", JSON.stringify(hasilFinal));
-
-            // 3. Pindah Halaman
-            window.location.href = "hasil.html";
-        });
-    </script>
-</body>
-</html>
+        // Pindah ke halaman hasil
+        window.location.href = "hasil.html";
+    });
+</script>
