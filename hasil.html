@@ -7,169 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link ke CSS global -->
+    <link rel="stylesheet" href="style.css">
+    <!-- CSS spesifik untuk halaman hasil -->
     <style>
-        /* Import CSS Variables dan Global Styles */
-        :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --secondary: #3b82f6;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-            --info: #3b82f6;
-            --purple: #8b5cf6;
-            --bg-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-            --text-main: #1e293b;
-            --text-secondary: #64748b;
-            --text-light: #94a3b8;
-            --bg-light: #f8fafc;
-            --white: #ffffff;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            --radius-sm: 0.5rem;
-            --radius-md: 1rem;
-            --radius-lg: 1.5rem;
-            --radius-xl: 2rem;
-            --radius-2xl: 2.5rem;
-        }
-
-        /* RESET & BASE */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
-
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            color: var(--text-main); 
-            background-color: var(--bg-light); 
-            overflow-x: hidden; 
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        /* Grid Background */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image: 
-                linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
-        /* Container */
-        .container { 
-            width: 100%;
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 1.5rem; 
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 0 1rem;
-            }
-        }
-
-        /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-        }
-
-        h2 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-        }
-
-        h3 {
-            font-size: clamp(1.25rem, 3vw, 2rem);
-        }
-
-        p {
-            margin-bottom: 1rem;
-        }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--primary-dark);
-        }
-
-        /* NAVIGATION */
-        .nav-container { 
-            padding: 1rem 0; 
-            width: 100%; 
-            z-index: 1000; 
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-        }
-
-        .nav-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 100px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-md);
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .brand { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: var(--primary); 
-            text-decoration: none; 
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .brand span { 
-            color: var(--text-main); 
-        }
-
-        .nav-cta-box {
-            background: var(--primary);
-            color: var(--white) !important;
-            padding: 0.625rem 1.5rem !important;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 700;
-        }
-
-        .nav-cta-box:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Main Content */
+        /* CSS khusus untuk halaman hasil */
         main {
             padding: 2rem 0;
             position: relative;
@@ -181,21 +23,10 @@
             margin-bottom: 3rem;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
-        }
-
         .badge-success {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(231, 236, 235, 0.886);
             color: var(--primary);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(224, 236, 232, 0.851);
         }
 
         /* Page Grid */
@@ -212,29 +43,14 @@
             }
         }
 
-        /* Glass Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-            padding: 2rem;
-        }
-
-        .glass-card:hover {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Status Card */
+        /* Status Card Khusus untuk Hasil */
         .status-card {
             text-align: center;
             position: relative;
             overflow: hidden;
             border-bottom: 12px solid;
             transition: all 0.5s ease;
+            padding: 2rem !important;
         }
 
         .status-card::before {
@@ -348,7 +164,7 @@
             font-weight: 600;
         }
 
-        /* Action Buttons */
+        /* Action Buttons untuk halaman hasil */
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -360,62 +176,6 @@
             .action-buttons {
                 grid-template-columns: 1fr;
             }
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-lg);
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: var(--white);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: #2563eb;
-            transform: translateY(-3px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 2px solid #e2e8f0;
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-sm {
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            width: auto;
         }
 
         /* Charts Container */
@@ -466,7 +226,72 @@
             width: 100%;
         }
 
-        /* Recommendations */
+        /* KMS Chart Styles */
+        .kms-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .chart-tab {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chart-tab.active {
+            color: var(--primary);
+        }
+
+        .chart-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .chart-tab:hover:not(.active) {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+
+        /* Recommendations khusus hasil */
         .recommendations {
             margin-top: 2rem;
         }
@@ -545,12 +370,18 @@
             line-height: 1.6;
         }
 
-        /* Quick Links */
+        /* Quick Links khusus hasil */
         .quick-links {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
         }
 
         .quick-link {
@@ -664,48 +495,18 @@
             opacity: 0.9;
         }
 
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .text-left { text-align: left; }
-
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-3 { margin-top: 1rem; }
-        .mt-4 { margin-top: 1.5rem; }
-        .mt-5 { margin-top: 2rem; }
-        .mt-6 { margin-top: 3rem; }
-
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 1rem; }
-        .mb-4 { margin-bottom: 1.5rem; }
-        .mb-5 { margin-bottom: 2rem; }
-        .mb-6 { margin-bottom: 3rem; }
-
-        .d-flex { display: flex; }
-        .flex-column { flex-direction: column; }
-        .align-items-center { align-items: center; }
-        .justify-content-center { justify-content: center; }
-        .justify-content-between { justify-content: space-between; }
-
-        .w-100 { width: 100%; }
-        .h-100 { height: 100%; }
-
-        .d-none { display: none; }
-        .d-block { display: block; }
-
-        /* ANIMATIONS */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Kemenkes Reference */
+        .kemenkes-ref {
+            background: rgba(227, 240, 236, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        /* RESPONSIVE */
+        /* Responsif khusus halaman hasil */
         @media (max-width: 768px) {
             .nav-inner {
                 padding: 0.5rem 1rem;
@@ -720,8 +521,8 @@
                 font-size: 0.9rem;
             }
             
-            .glass-card {
-                padding: 1.5rem;
+            .status-card {
+                padding: 1.5rem !important;
             }
             
             .status-emoji {
@@ -732,16 +533,18 @@
                 font-size: 2rem;
             }
             
-            .quick-links {
-                grid-template-columns: 1fr;
+            .chart-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.75rem;
+            }
+            
+            .chart-tab {
+                flex-shrink: 0;
             }
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-            
             .status-emoji {
                 font-size: 3rem;
             }
@@ -772,9 +575,15 @@
                     <i class="fas fa-heartbeat"></i>
                     <span>NutriKids</span>
                 </a>
-                <a href="calculator.html" class="nav-cta-box">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Kalkulator
-                </a>
+                <button class="menu-toggle" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-links">
+                    
+                    <a href="calculator.html" class="nav-cta-box">
+                        <i class="fas fa-arrow-left"></i> Kembali ke Kalkulator
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -843,7 +652,7 @@
                     <!-- Action Buttons -->
                     <div class="action-buttons mt-4">
                         <button onclick="window.print()" class="btn btn-outline">
-                            <i class="fas fa-print"></i> Cetak
+                            <i class="fas fa-print"></i> Cetak Laporan
                         </button>
                         <a href="rekapan.html" class="btn btn-secondary">
                             <i class="fas fa-history"></i> Lihat Rekapan
@@ -888,32 +697,49 @@
                         </button>
                     </div>
                     
-                    <div id="chartsSection" class="d-none">
-                        <div class="charts-grid">
-                            <div class="chart-card">
-                                <div class="chart-title">
-                                    <i class="fas fa-weight" style="color: var(--primary);"></i>
-                                    Grafik BB/U (Berat Badan menurut Umur)
-                                </div>
-                                <div class="chart-container">
-                                    <canvas id="kmsChartBB"></canvas>
-                                </div>
+                    <div id="chartsSection" class="d-none fade-in">
+                        <!-- Chart Tabs -->
+                        <div class="chart-tabs">
+                            <button class="chart-tab active" onclick="showChart('bbu')">BB/U</button>
+                            <button class="chart-tab" onclick="showChart('tbu')">TB/U</button>
+                            <button class="chart-tab" onclick="showChart('bbtb')">BB/TB</button>
+                        </div>
+                        
+                        <!-- Charts Grid -->
+                        <div id="chartsGrid" class="charts-grid">
+                            <!-- Charts will be rendered here -->
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="kms-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ef4444;"></div>
+                                <span>Gizi Buruk (< -3SD)</span>
                             </div>
-                            
-                            <div class="chart-card">
-                                <div class="chart-title">
-                                    <i class="fas fa-ruler-vertical" style="color: var(--secondary);"></i>
-                                    Grafik TB/U (Tinggi Badan menurut Umur)
-                                </div>
-                                <div class="chart-container">
-                                    <canvas id="kmsChartTB"></canvas>
-                                </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #f59e0b;"></div>
+                                <span>Gizi Kurang (-3SD s/d -2SD)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #10b981;"></div>
+                                <span>Gizi Baik (-2SD s/d +2SD)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #3b82f6;"></div>
+                                <span>Gizi Lebih (> +2SD)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #8b5cf6; border-radius: 50%;"></div>
+                                <span>Posisi Anak</span>
                             </div>
                         </div>
                         
-                        <div class="info-note mt-3" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-lg); padding: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
-                            <i class="fas fa-info-circle" style="color: var(--secondary); margin-right: 0.5rem;"></i>
-                            Grafik berdasarkan standar WHO dan Kemenkes RI. Garis hijau menunjukkan median pertumbuhan normal.
+                        <div class="kemenkes-ref mt-2">
+                            <i class="fas fa-scroll" style="color: var(--secondary); margin-right: 0.5rem;"></i>
+                            <small>
+                                <b>Grafik KMS Digital</b> sesuai standar WHO dan Kemenkes RI. 
+                                Garis P50 menunjukkan median pertumbuhan normal populasi referensi.
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -951,15 +777,80 @@
         </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>NutriKids</h4>
+                    <p>Sistem monitoring gizi anak berbasis standar Kemenkes RI dan WHO untuk memastikan pertumbuhan optimal si kecil.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Menu Utama</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="calculator.html">Kalkulator Gizi</a></li>
+                        <li><a href="learn.html">Edukasi Gizi</a></li>
+                        <li><a href="tips.html">Tips Parenting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kontak</h4>
+                    <ul>
+                        <li><a href="mailto:info@nutrikids.id">info@nutrikids.id</a></li>
+                        <li><a href="tel:+628123456789">+62 812 3456 789</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NutriKids. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // Global variables
+        // Fungsi untuk toggle menu mobile
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // ==============================
+        // 1. DATA REFERENSI WHO/KEMENKES
+        // ==============================
+        const kmsData = {
+            // Data referensi untuk BB/U Laki-laki (0-60 bulan)
+            "bbu_laki": {
+                median: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 8.0, 8.4, 8.8, 9.2, 9.5, 9.9, 10.2, 10.5, 10.8, 11.1, 11.4, 11.7, 12.0, 12.3, 12.6, 12.9, 13.2, 13.5, 13.8, 14.0, 14.3, 14.6, 14.9, 15.2, 15.4, 15.7, 16.0, 16.2, 16.5, 16.8, 17.0, 17.3, 17.6, 17.8, 18.1, 18.4, 18.6, 18.9, 19.2, 19.4, 19.7, 20.0, 20.2, 20.5, 20.7, 21.0, 21.3, 21.5, 21.8, 22.0, 22.3, 22.5, 22.8, 23.0, 23.3],
+                sd_minus3: [2.1, 2.9, 3.6, 4.2, 4.7, 5.1, 5.5, 5.8, 6.1, 6.4, 6.6, 6.9, 7.1, 7.4, 7.6, 7.8, 8.0, 8.2, 8.4, 8.6, 8.8, 9.0, 9.2, 9.4, 9.6, 9.8, 10.0, 10.2, 10.4, 10.6, 10.8, 11.0, 11.2, 11.4, 11.6, 11.8, 12.0, 12.2, 12.4, 12.6, 12.8, 13.0, 13.2, 13.4, 13.6, 13.8, 14.0, 14.2, 14.4, 14.6, 14.8, 15.0, 15.2, 15.4, 15.6, 15.8, 16.0, 16.2, 16.4, 16.6, 16.8],
+                sd_minus2: [2.5, 3.4, 4.3, 5.0, 5.6, 6.1, 6.6, 7.0, 7.3, 7.6, 7.9, 8.2, 8.5, 8.8, 9.0, 9.3, 9.5, 9.8, 10.0, 10.2, 10.5, 10.7, 11.0, 11.2, 11.4, 11.7, 11.9, 12.1, 12.4, 12.6, 12.8, 13.1, 13.3, 13.5, 13.8, 14.0, 14.2, 14.5, 14.7, 14.9, 15.2, 15.4, 15.6, 15.9, 16.1, 16.3, 16.6, 16.8, 17.0, 17.3, 17.5, 17.7, 18.0, 18.2, 18.4, 18.7, 18.9, 19.1, 19.4, 19.6, 19.8],
+                sd_plus2: [4.3, 5.8, 7.1, 8.0, 8.7, 9.3, 9.8, 10.3, 10.7, 11.1, 11.5, 11.9, 12.3, 12.6, 13.0, 13.3, 13.7, 14.0, 14.4, 14.7, 15.1, 15.4, 15.8, 16.1, 16.5, 16.8, 17.2, 17.5, 17.9, 18.2, 18.6, 18.9, 19.3, 19.6, 20.0, 20.3, 20.7, 21.0, 21.4, 21.7, 22.1, 22.4, 22.8, 23.1, 23.5, 23.8, 24.2, 24.5, 24.9, 25.2, 25.6, 25.9, 26.3, 26.6, 27.0, 27.3, 27.7, 28.0, 28.4, 28.7, 29.1],
+                sd_plus3: [4.9, 6.6, 8.1, 9.1, 9.9, 10.6, 11.2, 11.8, 12.3, 12.7, 13.2, 13.6, 14.0, 14.4, 14.8, 15.2, 15.6, 16.0, 16.4, 16.8, 17.2, 17.6, 18.0, 18.4, 18.8, 19.2, 19.6, 20.0, 20.4, 20.8, 21.2, 21.6, 22.0, 22.4, 22.8, 23.2, 23.6, 24.0, 24.4, 24.8, 25.2, 25.6, 26.0, 26.4, 26.8, 27.2, 27.6, 28.0, 28.4, 28.8, 29.2, 29.6, 30.0, 30.4, 30.8, 31.2, 31.6, 32.0, 32.4, 32.8, 33.2]
+            },
+            
+            // Data referensi untuk TB/U Laki-laki (0-60 bulan)
+            "tbu_laki": {
+                median: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 72.0, 73.3, 74.5, 75.7, 76.9, 78.0, 79.1, 80.2, 81.2, 82.3, 83.2, 84.2, 85.1, 86.0, 86.9, 87.8, 88.6, 89.4, 90.2, 91.0, 91.7, 92.4, 93.1, 93.8, 94.5, 95.2, 95.9, 96.5, 97.1, 97.7, 98.4, 98.9, 99.5, 100.1, 100.7, 101.2, 101.7, 102.3, 102.8, 103.3, 103.8, 104.3, 104.8, 105.3, 105.8, 106.3, 106.7, 107.2, 107.7, 108.1, 108.6, 109.1],
+                sd_minus3: [45.6, 50.0, 53.4, 56.2, 58.6, 60.6, 62.3, 63.8, 65.2, 66.5, 67.7, 68.9, 70.0, 71.1, 72.2, 73.2, 74.2, 75.2, 76.2, 77.1, 78.0, 78.9, 79.8, 80.7, 81.5, 82.3, 83.1, 83.9, 84.7, 85.4, 86.2, 86.9, 87.6, 88.3, 89.0, 89.7, 90.3, 91.0, 91.6, 92.3, 92.9, 93.5, 94.1, 94.7, 95.3, 95.8, 96.4, 96.9, 97.5, 98.0, 98.5, 99.1, 99.6, 100.1, 100.6, 101.1, 101.6, 102.1, 102.6, 103.1, 103.6],
+                sd_minus2: [46.8, 51.4, 55.0, 58.0, 60.5, 62.6, 64.4, 66.0, 67.4, 68.8, 70.1, 71.3, 72.5, 73.7, 74.8, 75.9, 77.0, 78.0, 79.1, 80.1, 81.1, 82.0, 82.9, 83.8, 84.7, 85.6, 86.4, 87.3, 88.1, 88.9, 89.7, 90.5, 91.2, 92.0, 92.7, 93.4, 94.1, 94.8, 95.5, 96.2, 96.9, 97.5, 98.2, 98.8, 99.4, 100.0, 100.6, 101.2, 101.8, 102.4, 103.0, 103.5, 104.1, 104.7, 105.2, 105.8, 106.3, 106.9, 107.4, 107.9, 108.5],
+                sd_plus2: [53.4, 58.3, 62.0, 65.1, 67.7, 69.9, 71.7, 73.4, 75.0, 76.5, 77.9, 79.2, 80.5, 81.8, 83.0, 84.2, 85.4, 86.5, 87.7, 88.8, 89.9, 90.9, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 97.9, 98.9, 99.8, 100.7, 101.6, 102.5, 103.4, 104.3, 105.1, 106.0, 106.8, 107.7, 108.5, 109.3, 110.1, 110.9, 111.7, 112.5, 113.3, 114.0, 114.8, 115.5, 116.3, 117.0, 117.7, 118.4, 119.1, 119.8, 120.5, 121.2, 121.9, 122.6, 123.3],
+                sd_plus3: [55.2, 60.3, 64.2, 67.4, 70.1, 72.4, 74.4, 76.2, 77.8, 79.4, 80.9, 82.3, 83.7, 85.0, 86.3, 87.6, 88.9, 90.1, 91.3, 92.5, 93.7, 94.8, 95.9, 97.0, 98.1, 99.2, 100.3, 101.3, 102.4, 103.4, 104.4, 105.5, 106.5, 107.5, 108.5, 109.5, 110.4, 111.4, 112.3, 113.3, 114.2, 115.1, 116.0, 116.9, 117.8, 118.7, 119.6, 120.4, 121.3, 122.1, 123.0, 123.8, 124.6, 125.5, 126.3, 127.1, 127.9, 128.7, 129.5, 130.3, 131.1]
+            }
+        };
+
+        // ==============================
+        // 2. GLOBAL VARIABLES
+        // ==============================
         let currentResult = null;
         let currentDataAnak = null;
-        let chartBB = null;
-        let chartTB = null;
         let chartsVisible = false;
+        let currentChartType = 'bbu';
+        let activeCharts = {};
+        let chartMode = 'grid';
 
-        // Initialize page
+        // ==============================
+        // 3. INITIALIZATION
+        // ==============================
         document.addEventListener('DOMContentLoaded', function() {
             // Load data from localStorage
             const result = JSON.parse(localStorage.getItem("lastNutriResult"));
@@ -984,6 +875,30 @@
             document.getElementById("zscoreVal").textContent = result.zscore;
             
             // Determine status
+            updateStatusCard(result, dataA);
+            
+            // Generate recommendations
+            generateRecommendations(result, dataA);
+            
+            // Setup event listeners
+            document.getElementById("toggleChartsBtn").addEventListener("click", toggleCharts);
+            
+            // Auto-show charts if result indicates need for attention
+            const z = parseFloat(result.zscore);
+            if (z < -2 || z > 2) {
+                setTimeout(() => {
+                    toggleCharts();
+                }, 500);
+            }
+            
+            // Auto-save to history
+            autoSaveToHistory(result);
+        });
+
+        // ==============================
+        // 4. STATUS CARD FUNCTIONS
+        // ==============================
+        function updateStatusCard(result, dataA) {
             const z = parseFloat(result.zscore);
             let status = "Gizi Baik";
             let color = "#10b981";
@@ -994,17 +909,17 @@
                 status = "Gizi Buruk";
                 color = "#ef4444";
                 emoji = "😟";
-                description = "Si Kecil terindikasi Gizi Buruk. Konsultasikan segera dengan tenaga kesehatan.";
+                description = "Perhatian! Si Kecil terindikasi Gizi Buruk. Segera konsultasikan dengan tenaga kesehatan.";
             } else if (z < -2) {
                 status = "Gizi Kurang";
                 color = "#f59e0b";
                 emoji = "⚠️";
-                description = "Si Kecil berada di kategori Gizi Kurang. Perhatikan asupan gizi hariannya.";
+                description = "Si Kecil berada di kategori Gizi Kurang. Perlu perbaikan asupan gizi.";
             } else if (z <= 2) {
                 status = "Gizi Baik";
                 color = "#10b981";
                 emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
-                description = "Luar biasa! Pertumbuhan Si Kecil sangat ideal sesuai standar usianya.";
+                description = "Luar biasa! Pertumbuhan Si Kecil sangat ideal sesuai standar Kemenkes.";
             } else {
                 status = "Gizi Lebih";
                 color = "#3b82f6";
@@ -1027,108 +942,11 @@
             statusDesc.textContent = description;
             zscoreBadge.style.color = color;
             zscoreBadge.style.borderColor = color;
-            
-            // Generate recommendations
-            generateRecommendations(z, dataA?.usia || 0, status);
-            
-            // Setup chart toggle button
-            document.getElementById("toggleChartsBtn").addEventListener("click", toggleCharts);
-            
-            // Auto-save to history
-            autoSaveToHistory(result, status, color);
-        });
-
-        // Generate recommendations based on status and age
-        function generateRecommendations(zscore, usiaBulan, status) {
-            const grid = document.getElementById("recommendationsGrid");
-            let html = "";
-            
-            // Base recommendation based on status
-            if (zscore < -2) {
-                html += `
-                    <div class="recommendation-card danger">
-                        <h4 class="recommendation-title">
-                            <i class="fas fa-exclamation-triangle"></i> Prioritas Perbaikan Gizi
-                        </h4>
-                        <p class="recommendation-desc">
-                            Tingkatkan asupan protein hewani (ikan, telur, daging) dan tambahkan 1-2 sendok makan minyak sayur/mentega dalam setiap porsi makan.
-                        </p>
-                    </div>
-                `;
-            } else if (zscore <= 2) {
-                html += `
-                    <div class="recommendation-card good">
-                        <h4 class="recommendation-title">
-                            <i class="fas fa-check-circle"></i> Pertahankan Kebiasaan Baik
-                        </h4>
-                        <p class="recommendation-desc">
-                            Teruskan pola makan sehat yang telah Bunda terapkan. Berikan variasi makanan dan pastikan kecukupan cairan.
-                        </p>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="recommendation-card info">
-                        <h4 class="recommendation-title">
-                            <i class="fas fa-balance-scale"></i> Pengaturan Pola Makan
-                        </h4>
-                        <p class="                            <p class="recommendation-desc">
-                                Batasi makanan tinggi gula dan lemak jenuh. Tingkatkan aktivitas fisik seperti bermain di luar ruangan selama 60 menit per hari.
-                            </p>
-                        </div>
-                    `;
-            }
-            
-            // Age-specific recommendations
-            if (usiaBulan < 24) {
-                html += `
-                    <div class="recommendation-card warning">
-                        <h4 class="recommendation-title">
-                            <i class="fas fa-baby"></i> Nutrisi Usia Dini
-                        </h4>
-                        <p class="recommendation-desc">
-                            ${usiaBulan < 6 ? 'ASI eksklusif sangat penting. Jika sudah MPASI, berikan makanan kaya zat besi seperti hati ayam dan sayuran hijau.' : 'Pastikan porsi MPASI mencukupi dengan komposisi karbohidrat, protein, dan lemak seimbang.'}
-                        </p>
-                    </div>
-                `;
-            } else if (usiaBulan >= 24 && usiaBulan < 60) {
-                html += `
-                    <div class="recommendation-card info">
-                        <h4 class="recommendation-title">
-                            <i class="fas fa-running"></i> Aktivitas Fisik
-                        </h4>
-                        <p class="recommendation-desc">
-                            Anak usia ini butuh aktivitas fisik minimal 3 jam per hari. Ajak bermain aktif seperti berlari, melompat, atau menari.
-                        </p>
-                    </div>
-                `;
-            }
-            
-            // General recommendations
-            html += `
-                <div class="recommendation-card info">
-                    <h4 class="recommendation-title">
-                        <i class="fas fa-apple-alt"></i> Variasi Makanan
-                    </h4>
-                    <p class="recommendation-desc">
-                        Sajikan makanan dengan warna-warni berbeda setiap hari untuk memastikan kecukupan vitamin dan mineral. Minimal 5 porsi sayur/buah per hari.
-                    </p>
-                </div>
-                
-                <div class="recommendation-card warning">
-                    <h4 class="recommendation-title">
-                        <i class="fas fa-clock"></i> Jadwal Makan Teratur
-                    </h4>
-                    <p class="recommendation-desc">
-                        Tetapkan jadwal makan 3 kali utama dan 2 kali selingan. Hindari memberi makan terlalu dekat dengan waktu tidur.
-                    </p>
-                </div>
-            `;
-            
-            grid.innerHTML = html;
         }
 
-        // Toggle charts visibility
+        // ==============================
+        // 5. CHART FUNCTIONS
+        // ==============================
         function toggleCharts() {
             const chartsSection = document.getElementById("chartsSection");
             const toggleBtn = document.getElementById("toggleChartsBtn");
@@ -1137,77 +955,266 @@
                 chartsSection.classList.remove("d-none");
                 chartsSection.classList.add("fade-in");
                 toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Sembunyikan Grafik';
+                toggleBtn.classList.add("btn-secondary");
+                toggleBtn.classList.remove("btn-outline");
                 chartsVisible = true;
                 
                 // Initialize charts
                 setTimeout(() => {
-                    initCharts();
+                    renderCharts(currentChartType);
                 }, 300);
             } else {
                 chartsSection.classList.add("d-none");
                 toggleBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Tampilkan Grafik';
+                toggleBtn.classList.remove("btn-secondary");
+                toggleBtn.classList.add("btn-outline");
                 chartsVisible = false;
                 
-                // Destroy charts to free memory
-                if (chartBB) chartBB.destroy();
-                if (chartTB) chartTB.destroy();
+                // Destroy charts
+                destroyAllCharts();
             }
         }
 
-        // Initialize charts
-        function initCharts() {
-            const usiaBulan = currentDataAnak?.usia || 0;
+        function showChart(chartType) {
+            // Update active tab
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentChartType = chartType;
+            
+            // Update chart
+            renderCharts(chartType);
+        }
+
+        function renderCharts(chartType) {
+            const chartsGrid = document.getElementById("chartsGrid");
+            
+            // Clear previous charts
+            chartsGrid.innerHTML = '';
+            destroyAllCharts();
+            
+            const gender = currentDataAnak?.gender || "Laki-laki";
+            const isMale = gender === "Laki-laki";
+            const usiaBulan = Math.min(Math.floor(currentDataAnak?.usia || 0), 60);
             const bb = parseFloat(currentResult.bb);
             const tb = parseFloat(currentResult.tb);
             
-            // Generate sample data for BB/U chart
-            const labelsBB = Array.from({length: 61}, (_, i) => i);
-            const medianBB = labelsBB.map(umur => {
-                if (umur <= 60) {
-                    // Simplified median weight for boys (kg)
-                    return 3.3 + (umur * 0.15);
+            // Prepare chart configs
+            const chartConfigs = [];
+            
+            if (chartType === 'bbu') {
+                chartConfigs.push({
+                    id: 'chartBBU',
+                    title: 'Grafik BB/U (Berat Badan menurut Umur)',
+                    type: 'bbu',
+                    yLabel: 'Berat Badan (kg)',
+                    childValue: bb,
+                    childPosition: usiaBulan
+                });
+                
+                if (chartMode === 'grid') {
+                    chartConfigs.push({
+                        id: 'chartTBU',
+                        title: 'Grafik TB/U (Tinggi Badan menurut Umur)',
+                        type: 'tbu',
+                        yLabel: 'Tinggi Badan (cm)',
+                        childValue: tb,
+                        childPosition: usiaBulan
+                    });
                 }
-                return 0;
+            } else if (chartType === 'tbu') {
+                chartConfigs.push({
+                    id: 'chartTBU',
+                    title: 'Grafik TB/U (Tinggi Badan menurut Umur)',
+                    type: 'tbu',
+                    yLabel: 'Tinggi Badan (cm)',
+                    childValue: tb,
+                    childPosition: usiaBulan
+                });
+            } else if (chartType === 'bbtb') {
+                chartConfigs.push({
+                    id: 'chartBBTB',
+                    title: 'Grafik BB/TB (Berat Badan menurut Tinggi Badan)',
+                    type: 'bbtb',
+                    yLabel: 'Berat Badan (kg)',
+                    childValue: bb,
+                    childPosition: tb
+                });
+            }
+            
+            // Update grid layout
+            if (chartMode === 'single' || chartConfigs.length === 1) {
+                chartsGrid.style.gridTemplateColumns = "1fr";
+            } else {
+                chartsGrid.style.gridTemplateColumns = "1fr 1fr";
+            }
+            
+            // Create chart containers
+            chartConfigs.forEach((config) => {
+                const chartCard = document.createElement('div');
+                chartCard.className = 'chart-card';
+                chartCard.innerHTML = `
+                    <div class="chart-title">
+                        <i class="fas fa-${config.type === 'bbu' ? 'weight' : config.type === 'tbu' ? 'ruler-vertical' : 'chart-line'}" 
+                           style="color: ${config.type === 'bbu' ? 'var(--primary)' : config.type === 'tbu' ? 'var(--secondary)' : 'var(--purple)'};"></i>
+                        ${config.title}
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="${config.id}"></canvas>
+                    </div>
+                `;
+                chartsGrid.appendChild(chartCard);
+                
+                // Render chart
+                setTimeout(() => {
+                    if (config.type === 'bbtb') {
+                        renderBBTBChart(config.id, config);
+                    } else {
+                        renderStandardKMSChart(config.id, config);
+                    }
+                }, 100);
+            });
+        }
+
+        function renderStandardKMSChart(canvasId, config) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Destroy existing chart if any
+            if (activeCharts[canvasId]) {
+                activeCharts[canvasId].destroy();
+            }
+            
+            const gender = currentDataAnak?.gender || "Laki-laki";
+            const isMale = gender === "Laki-laki";
+            const usiaBulan = Math.min(Math.floor(currentDataAnak?.usia || 0), 60);
+            
+            const dataKey = `${config.type}_${isMale ? 'laki' : 'perempuan'}`;
+            
+            // Check if we have data
+            if (!kmsData[dataKey]) {
+                showNoDataMessage(ctx);
+                return;
+            }
+            
+            // Generate labels for 0-60 months
+            const labels = [];
+            for (let i = 0; i <= 60; i++) {
+                labels.push(`${i}`);
+            }
+            
+            // Get reference data
+            const medianData = kmsData[dataKey].median.slice(0, 61);
+            const minus2Data = kmsData[dataKey].sd_minus2.slice(0, 61);
+            const minus3Data = kmsData[dataKey].sd_minus3.slice(0, 61);
+            const plus2Data = kmsData[dataKey].sd_plus2.slice(0, 61);
+            const plus3Data = kmsData[dataKey].sd_plus3.slice(0, 61);
+            
+            // Create child position data
+            const childData = labels.map((_, index) => {
+                return index === usiaBulan ? config.childValue : null;
             });
             
-            // Generate sample data for TB/U chart
-            const medianTB = labelsBB.map(umur => {
-                if (umur <= 60) {
-                    // Simplified median height for boys (cm)
-                    return 50 + (umur * 0.7);
-                }
-                return 0;
-            });
-            
-            // BB/U Chart
-            const ctxBB = document.getElementById('kmsChartBB').getContext('2d');
-            if (chartBB) chartBB.destroy();
-            
-            chartBB = new Chart(ctxBB, {
+            // Create chart
+            activeCharts[canvasId] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labelsBB,
+                    labels: labels,
                     datasets: [
+                        // Area under +3SD (Gizi Lebih)
                         {
-                            label: 'Median',
-                            data: medianBB,
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            borderWidth: 3,
+                            label: 'Gizi Lebih',
+                            data: plus3Data,
+                            borderColor: 'rgba(59, 130, 246, 0.3)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 1,
                             fill: true,
-                            tension: 0.4
+                            pointRadius: 0,
+                            tension: 0.3
                         },
+                        // Area under +2SD (Gizi Lebih)
                         {
-                            label: 'Si Kecil',
-                            data: Array(61).fill(null).map((_, i) => i === Math.min(Math.floor(usiaBulan), 60) ? bb : null),
-                            borderColor: '#8b5cf6',
+                            label: '+2SD',
+                            data: plus2Data,
+                            borderColor: 'rgba(59, 130, 246, 0.5)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Area -2SD to +2SD (Normal)
+                        {
+                            label: 'Gizi Baik',
+                            data: minus2Data,
+                            borderColor: 'rgba(16, 185, 129, 0.5)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Area -3SD to -2SD (Gizi Kurang)
+                        {
+                            label: 'Gizi Kurang',
+                            data: minus3Data,
+                            borderColor: 'rgba(245, 158, 11, 0.5)',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Median Line (P50)
+                        {
+                            label: 'Median (P50)',
+                            data: medianData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // +3SD Line
+                        {
+                            label: '+3SD',
+                            data: plus3Data,
+                            borderColor: 'rgba(59, 130, 246, 0.7)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [2, 2],
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // -3SD Line
+                        {
+                            label: '-3SD',
+                            data: minus3Data,
+                            borderColor: 'rgba(239, 68, 68, 0.7)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [2, 2],
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Child's Position
+                        {
+                            label: 'Posisi Anak',
+                            data: childData,
                             backgroundColor: '#8b5cf6',
+                            borderColor: '#8b5cf6',
                             borderWidth: 3,
                             pointRadius: 8,
                             pointHoverRadius: 12,
                             pointBackgroundColor: '#8b5cf6',
                             pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2
+                            pointBorderWidth: 2,
+                            showLine: false
                         }
                     ]
                 },
@@ -1216,59 +1223,173 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'top',
+                            display: false
                         },
                         tooltip: {
                             mode: 'index',
-                            intersect: false
+                            intersect: false,
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#64748b',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 7) { // Child position
+                                        const unit = config.type === 'tbu' ? ' cm' : ' kg';
+                                        return `Posisi Anak: ${context.parsed.y.toFixed(1)}${unit}`;
+                                    }
+                                    return '';
+                                }
+                            }
                         }
                     },
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: 'Usia (bulan)'
+                                text: 'Usia (bulan)',
+                                color: '#64748b',
+                                font: {
+                                    size: 12,
+                                    family: 'Poppins'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)'
+                            },
+                            ticks: {
+                                maxTicksLimit: 10,
+                                callback: function(value, index) {
+                                    return index % 6 === 0 ? this.getLabelForValue(value) : '';
+                                }
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Berat Badan (kg)'
-                            }
+                                text: config.yLabel,
+                                color: '#64748b',
+                                font: {
+                                    size: 12,
+                                    family: 'Poppins'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)'
+                            },
+                            beginAtZero: true
                         }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
                     }
                 }
             });
+        }
+
+        function renderBBTBChart(canvasId, config) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
             
-            // TB/U Chart
-            const ctxTB = document.getElementById('kmsChartTB').getContext('2d');
-            if (chartTB) chartTB.destroy();
+            if (activeCharts[canvasId]) {
+                activeCharts[canvasId].destroy();
+            }
             
-            chartTB = new Chart(ctxTB, {
+            const bb = parseFloat(currentResult.bb);
+            const tb = parseFloat(currentResult.tb);
+            
+            // Generate sample data for BB/TB
+            const labels = ['65', '70', '75', '80', '85', '90', '95', '100', '105', '110'];
+            const medianData = [6.1, 7.2, 8.4, 9.7, 10.9, 12.1, 13.4, 14.8, 16.3, 17.9];
+            const minus2Data = [4.6, 5.4, 6.3, 7.3, 8.2, 9.1, 10.1, 11.1, 12.2, 13.4];
+            const minus3Data = [3.9, 4.6, 5.4, 6.3, 7.0, 7.8, 8.6, 9.5, 10.4, 11.4];
+            const plus2Data = [8.0, 9.5, 11.1, 12.8, 14.4, 16.0, 17.7, 19.5, 21.5, 23.6];
+            const plus3Data = [9.2, 10.9, 12.8, 14.8, 16.6, 18.5, 20.5, 22.6, 24.9, 27.3];
+            
+            // Find closest height for child position
+            const closestHeight = findClosestHeight(tb, labels);
+            const childIndex = labels.indexOf(closestHeight.toString());
+            
+            const childData = labels.map((_, index) => {
+                return index === childIndex ? bb : null;
+            });
+            
+            activeCharts[canvasId] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labelsBB,
+                    labels: labels,
                     datasets: [
+                        // Area under +3SD (Gizi Lebih)
                         {
-                            label: 'Median',
-                            data: medianTB,
-                            borderColor: '#3b82f6',
+                            label: 'Gizi Lebih',
+                            data: plus3Data,
+                            borderColor: 'rgba(59, 130, 246, 0.3)',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 3,
+                            borderWidth: 1,
                             fill: true,
-                            tension: 0.4
+                            pointRadius: 0,
+                            tension: 0.3
                         },
+                        // Area under +2SD (Gizi Lebih)
                         {
-                            label: 'Si Kecil',
-                            data: Array(61).fill(null).map((_, i) => i === Math.min(Math.floor(usiaBulan), 60) ? tb : null),
-                            borderColor: '#f59e0b',
-                            backgroundColor: '#f59e0b',
+                            label: '+2SD',
+                            data: plus2Data,
+                            borderColor: 'rgba(59, 130, 246, 0.5)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Area -2SD to +2SD (Normal)
+                        {
+                            label: 'Gizi Baik',
+                            data: minus2Data,
+                            borderColor: 'rgba(16, 185, 129, 0.5)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Area -3SD to -2SD (Gizi Kurang)
+                        {
+                            label: 'Gizi Kurang',
+                            data: minus3Data,
+                            borderColor: 'rgba(245, 158, 11, 0.5)',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 1,
+                            fill: '-1',
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Median Line (P50)
+                        {
+                            label: 'Median (P50)',
+                            data: medianData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.3
+                        },
+                        // Child's Position
+                        {
+                            label: 'Posisi Anak',
+                            data: childData,
+                            backgroundColor: '#8b5cf6',
+                            borderColor: '#8b5cf6',
                             borderWidth: 3,
                             pointRadius: 8,
                             pointHoverRadius: 12,
-                            pointBackgroundColor: '#f59e0b',
+                            pointBackgroundColor: '#8b5cf6',
                             pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2
+                            pointBorderWidth: 2,
+                            showLine: false
                         }
                     ]
                 },
@@ -1277,38 +1398,212 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'top',
+                            display: false
                         },
                         tooltip: {
                             mode: 'index',
-                            intersect: false
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 5) { // Child position
+                                        return `Posisi Anak: ${context.parsed.y.toFixed(1)} kg`;
+                                    }
+                                    return '';
+                                }
+                            }
                         }
                     },
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: 'Usia (bulan)'
+                                text: 'Tinggi Badan (cm)',
+                                color: '#64748b'
+                            },
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Tinggi Badan (cm)'
-                            }
+                                text: 'Berat Badan (kg)',
+                                color: '#64748b'
+                            },
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)'
+                            },
+                            beginAtZero: true
                         }
                     }
                 }
             });
         }
 
-        // Auto-save to history
-        function autoSaveToHistory(result, status, color) {
+        function findClosestHeight(height, labels) {
+            const heights = labels.map(h => parseInt(h));
+            return heights.reduce((prev, curr) => {
+                return Math.abs(curr - height) < Math.abs(prev - height) ? curr : prev;
+            });
+        }
+
+        function showNoDataMessage(ctx) {
+            ctx.font = "14px Poppins";
+            ctx.fillStyle = "#64748b";
+            ctx.textAlign = "center";
+            ctx.fillText("Data grafik tidak tersedia", 150, 100);
+        }
+
+        function destroyAllCharts() {
+            Object.values(activeCharts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            activeCharts = {};
+        }
+
+        // ==============================
+        // 6. RECOMMENDATIONS FUNCTIONS
+        // ==============================
+        function generateRecommendations(result, dataA) {
+            const grid = document.getElementById("recommendationsGrid");
+            const z = parseFloat(result.zscore);
+            const usiaBulan = dataA?.usia || 0;
+            const gender = dataA?.gender || "Laki-laki";
+            
+            let html = '';
+            
+            // Priority recommendation based on Z-Score
+            if (z < -3) {
+                html += `
+                    <div class="recommendation-card danger">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-exclamation-triangle"></i> PRIORITAS: Penanganan Gizi Buruk
+                        </h4>
+                        <p class="recommendation-desc">
+                            <b>Segera konsultasikan dengan dokter atau ahli gizi.</b> 
+                            Berikan makanan tinggi kalori dan protein setiap 2-3 jam. 
+                            Pantau berat badan setiap minggu.
+                        </p>
+                    </div>
+                `;
+            } else if (z < -2) {
+                html += `
+                    <div class="recommendation-card warning">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-weight-scale"></i> Perbaikan Gizi Kurang
+                        </h4>
+                        <p class="recommendation-desc">
+                            Tingkatkan asupan kalori 10-20% dari kebutuhan normal. 
+                            Tambahkan 1-2 sendok makan minyak/margarin dalam makanan. 
+                            Protein hewani (telur, ikan, daging) minimal 2x sehari.
+                        </p>
+                    </div>
+                `;
+            } else if (z <= 2) {
+                html += `
+                    <div class="recommendation-card good">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-check-circle"></i> Pertahankan Status Gizi Baik
+                        </h4>
+                        <p class="recommendation-desc">
+                            Lanjutkan pola makan sehat dengan komposisi seimbang. 
+                            Variasikan makanan untuk kecukupan vitamin dan mineral. 
+                            Pantau perkembangan melalui grafik KMS setiap bulan.
+                        </p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-balance-scale"></i> Pengaturan Gizi Lebih
+                        </h4>
+                        <p class="recommendation-desc">
+                            Batasi makanan tinggi gula dan lemak jenuh. 
+                            Tingkatkan aktivitas fisik minimal 60 menit/hari. 
+                            Porsi sayur harus 2x lipat porsi karbohidrat.
+                        </p>
+                    </div>
+                `;
+            }
+            
+            // Age-specific recommendations
+            if (usiaBulan < 6) {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-baby"></i> ASI Eksklusif
+                        </h4>
+                        <p class="recommendation-desc">
+                            Berikan ASI eksklusif tanpa tambahan apapun. 
+                            Pastikan teknik menyusui benar dan frekuensi 8-12x/hari. 
+                            Ibu perlu makan bergizi untuk kualitas ASI.
+                        </p>
+                    </div>
+                `;
+            } else if (usiaBulan >= 6 && usiaBulan < 24) {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-utensils"></i> MPASI Tepat
+                        </h4>
+                        <p class="recommendation-desc">
+                            MPASI harus kaya zat besi (hati ayam, daging merah). 
+                            Tekstur meningkat bertahap: halus → lumat → kasar. 
+                            Berikan 3x makanan utama + 2x selingan.
+                        </p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-running"></i> Aktivitas Fisik
+                        </h4>
+                        <p class="recommendation-desc">
+                            Ajak bermain aktif minimal 3 jam/hari. 
+                            Batasi screen time maksimal 1 jam/hari. 
+                            Kegiatan outdoor untuk sinar matahari dan vitamin D.
+                        </p>
+                    </div>
+                `;
+            }
+            
+            // General nutrition advice
+            html += `
+                <div class="recommendation-card good">
+                    <h4 class="recommendation-title">
+                        <i class="fas fa-apple-alt"></i> Pola Makan Seimbang
+                    </h4>
+                    <p class="recommendation-desc">
+                        Komposisi piring: 1/2 sayur-buah, 1/4 protein, 1/4 karbohidrat. 
+                        Batasi gula maksimal 4 sendok teh/hari. 
+                        Minum air putih 6-8 gelas/hari.
+                    </p>
+                </div>
+                
+                <div class="recommendation-card warning">
+                    <h4 class="recommendation-title">
+                        <i class="fas fa-clock"></i> Jadwal Teratur
+                    </h4>
+                    <p class="recommendation-desc">
+                        Makan 3x utama (pagi, siang, malam) + 2x selingan. 
+                        Jarak antar makan 3-4 jam. 
+                        Tidak makan 2 jam sebelum tidur.
+                    </p>
+                </div>
+            `;
+            
+            grid.innerHTML = html;
+        }
+
+        // ==============================
+        // 7. UTILITY FUNCTIONS
+        // ==============================
+        function autoSaveToHistory(result) {
             try {
-                // Get existing history
                 let history = JSON.parse(localStorage.getItem("nutriHistory")) || [];
                 
-                // Create history entry
                 const entry = {
                     id: Date.now(),
                     timestamp: new Date().toISOString(),
@@ -1318,31 +1613,20 @@
                     bb: result.bb,
                     tb: result.tb,
                     zscore: result.zscore,
-                    status: status,
-                    color: color,
-                    recommendations: generateSummaryRecommendations(parseFloat(result.zscore))
+                    status: document.getElementById("statusText").textContent,
+                    color: document.getElementById("statusCard").style.borderColor
                 };
                 
-                // Add to beginning of history
                 history.unshift(entry);
                 
-                // Keep only last 20 entries
                 if (history.length > 20) {
                     history = history.slice(0, 20);
                 }
                 
-                // Save back to localStorage
                 localStorage.setItem("nutriHistory", JSON.stringify(history));
             } catch (error) {
                 console.error("Gagal menyimpan ke riwayat:", error);
             }
-        }
-
-        // Generate summary recommendations for history
-        function generateSummaryRecommendations(zscore) {
-            if (zscore < -2) return "Perlu perbaikan gizi segera. Konsultasi dengan ahli gizi.";
-            if (zscore <= 2) return "Gizi baik. Pertahankan pola makan sehat.";
-            return "Perhatikan asupan kalori dan tingkatkan aktivitas fisik.";
         }
     </script>
 </body>

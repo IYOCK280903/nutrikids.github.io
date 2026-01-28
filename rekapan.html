@@ -167,6 +167,44 @@
         .date-input {
             font-family: 'Poppins', sans-serif;
         }
+        
+        .search-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .search-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .search-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .posyandu-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .posyandu-stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border-left: 4px solid;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -231,11 +269,11 @@
             <div class="glass-card p-6 rounded-2xl">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Status Baik</p>
-                        <p class="text-2xl font-bold text-emerald-600" id="goodStatus">0</p>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Posyandu Aktif</p>
+                        <p class="text-2xl font-bold text-emerald-600" id="activePosyandu">0</p>
                     </div>
                     <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                        <i class="fas fa-clinic-medical text-emerald-600 text-xl"></i>
                     </div>
                 </div>
             </div>
@@ -265,14 +303,58 @@
             </div>
         </div>
 
+        <!-- Posyandu Statistics -->
+        <div id="posyanduStatsSection" class="mb-8 fade-in hidden">
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-slate-800">Statistik Posyandu</h3>
+                    <span class="text-sm text-slate-500" id="selectedPosyanduName">-</span>
+                </div>
+                <div class="posyandu-stats">
+                    <div class="posyandu-stat-card" style="border-left-color: #10b981;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Total Anak</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChildren">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #1b6bec;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Pemeriksaan</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChecks">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #f59e0b;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Status Baik</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduGoodStatus">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #ef4444;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Perlu Perhatian</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduWarningStatus">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Search and Filters -->
         <div class="glass-card p-6 mb-8 rounded-3xl">
+            <!-- Search Tabs -->
+            <div class="search-tabs">
+                <div class="search-tab active" onclick="setSearchMode('posyandu')">
+                    <i class="fas fa-clinic-medical mr-1"></i> Cari Posyandu
+                </div>
+                <div class="search-tab" onclick="setSearchMode('anak')">
+                    <i class="fas fa-child mr-1"></i> Cari Nama Anak
+                </div>
+                <div class="search-tab" onclick="setSearchMode('status')">
+                    <i class="fas fa-chart-line mr-1"></i> Cari Status Gizi
+                </div>
+            </div>
+            
             <div class="flex flex-col md:flex-row gap-4 items-center">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-5 top-5 text-slate-400"></i>
                     <input type="text" id="searchBox" onkeyup="renderTable()" 
-                           placeholder="Cari berdasarkan nama anak, posyandu, atau status..." 
+                           placeholder="Cari berdasarkan nama posyandu..." 
                            class="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all" />
+                    <div id="searchPlaceholder" class="text-xs text-slate-400 mt-2 ml-1">
+                        Masukkan nama posyandu untuk mencari data
+                    </div>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-2">
@@ -284,8 +366,8 @@
                         <option value="Gizi Lebih">Gizi Lebih</option>
                     </select>
                     
-                    <select id="posyanduFilter" onchange="renderTable()" class="px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700">
-                        <option value="">Semua Posyandu</option>
+                    <select id="posyanduFilter" onchange="handlePosyanduFilter()" class="px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700">
+                        <option value="">Pilih Posyandu</option>
                     </select>
                 </div>
             </div>
@@ -303,8 +385,8 @@
                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700 date-input" />
                 </div>
                 <div class="flex items-end">
-                    <button onclick="resetDateFilters()" class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-medium transition">
-                        Reset Filter Tanggal
+                    <button onclick="resetAllFilters()" class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-medium transition">
+                        Reset Semua Filter
                     </button>
                 </div>
             </div>
@@ -316,6 +398,67 @@
                 <div class="filter-pill" onclick="setDateFilter('week')">Minggu Ini</div>
                 <div class="filter-pill" onclick="setDateFilter('month')">Bulan Ini</div>
                 <div class="filter-pill" onclick="setDateFilter('year')">Tahun Ini</div>
+            </div>
+        </div>
+
+        <!-- Posyandu Detail Section -->
+        <div id="posyanduDetailSection" class="hidden mb-8 fade-in">
+            <div class="glass-card p-8 rounded-3xl border-l-8 border-blue-500 bg-gradient-to-r from-white to-blue-50/50">
+                <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                <i class="fas fa-clinic-medical text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-blue-600 font-bold text-xs uppercase tracking-widest mb-1">Detail Posyandu</p>
+                                <h3 class="text-3xl font-black text-slate-800 uppercase" id="posyanduName">-</h3>
+                                <p class="text-slate-500 font-medium mt-1 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                                    <span id="posyanduLocation">-</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Total Anak</p>
+                                <p class="text-2xl font-bold text-slate-700" id="posyanduTotal">0</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Status Baik</p>
+                                <p class="text-2xl font-bold text-emerald-600" id="posyanduGood">0</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Perlu Perhatian</p>
+                                <p class="text-2xl font-bold text-orange-600" id="posyanduWarning">0</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Terakhir Update</p>
+                                <p class="font-bold text-slate-700" id="posyanduLastUpdate">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button onclick="exportPosyanduData()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                            <i class="fas fa-file-excel"></i>
+                            <span>Export Data</span>
+                        </button>
+                        <button onclick="tutupPosyanduDetail()" class="flex items-center gap-2 px-5 py-3 bg-white text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all border border-slate-200">
+                            <i class="fas fa-times"></i>
+                            <span>Tutup</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Anak di Posyandu Ini -->
+                <div class="mt-6">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">Anak Terdaftar di Posyandu Ini</h4>
+                    <div id="posyanduChildrenList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Children list will be populated here -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -404,20 +547,9 @@
                     <div id="weightChartContainer" class="hidden">
                         <canvas id="weightChart" height="150"></canvas>
                     </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Nama Kader</p>
-                        <p class="font-bold text-slate-700" id="detKader">-</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">RT / RW</p>
-                        <p class="font-bold text-slate-700" id="detRtRw">-</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Umur Anak</p>
-                        <p class="font-bold text-slate-700" id="detUmur">-</p>
-                    </div>
                 </div>
             </div>
+        </div>
 
         <!-- Main Table -->
         <div class="glass-card overflow-hidden rounded-3xl">
@@ -455,7 +587,7 @@
             <div id="emptyState" class="py-20 text-center">
                 <div class="text-6xl mb-6 opacity-20">📊</div>
                 <p class="text-slate-500 font-extrabold text-xl mb-2">Belum Ada Data</p>
-                <p class="text-slate-400 text-sm max-w-md mx-auto mb-6">
+                <p class="text-slate-400 text-sm max-w-md mx-auto mb-6" id="emptyMessage">
                     Mulai dengan menginput data anak melalui kalkulator gizi untuk melihat rekapan di sini.
                 </p>
                 <a href="calculator.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
@@ -479,7 +611,6 @@
             </div>
             
             <div class="flex gap-2">
-                
                 <button onclick="exportToExcel()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
                     <i class="fas fa-file-excel"></i>
                     <span>Export Excel</span>
@@ -498,12 +629,13 @@
         // Global variables
         let currentSort = 'desc';
         let currentDateFilter = 'all';
+        let currentSearchMode = 'posyandu';
         let weightChart = null;
         let isChartVisible = false;
+        let allData = [];
         
         // Format date utilities
         const formatDate = {
-            // Format timestamp to readable date
             toReadable: (timestamp) => {
                 if (!timestamp) return '-';
                 const date = new Date(parseInt(timestamp));
@@ -515,7 +647,6 @@
                 });
             },
             
-            // Format timestamp to readable time
             toTime: (timestamp) => {
                 if (!timestamp) return '-';
                 const date = new Date(parseInt(timestamp));
@@ -526,7 +657,6 @@
                 });
             },
             
-            // Format to date only (YYYY-MM-DD)
             toInputDate: (timestamp) => {
                 if (!timestamp) return '';
                 const date = new Date(parseInt(timestamp));
@@ -536,7 +666,6 @@
                 return `${year}-${month}-${day}`;
             },
             
-            // Format to full date string
             toFullDate: (timestamp) => {
                 if (!timestamp) return '-';
                 const date = new Date(parseInt(timestamp));
@@ -548,7 +677,6 @@
                 });
             },
             
-            // Format to chart label (short)
             toChartLabel: (timestamp) => {
                 if (!timestamp) return '';
                 const date = new Date(parseInt(timestamp));
@@ -558,7 +686,6 @@
                 });
             },
             
-            // Check if date is within range
             isWithinRange: (timestamp, fromDate, toDate) => {
                 if (!timestamp) return false;
                 const date = new Date(parseInt(timestamp));
@@ -567,7 +694,6 @@
                 
                 if (from && date < from) return false;
                 if (to) {
-                    // Set to date to end of day
                     const toEndOfDay = new Date(to);
                     toEndOfDay.setHours(23, 59, 59, 999);
                     if (date > toEndOfDay) return false;
@@ -578,10 +704,80 @@
         
         // Initialize page
         function initPage() {
-            renderTable();
-            updateStats();
+            allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            updateGlobalStats();
             populatePosyanduFilter();
             setupDefaultDates();
+            updateSearchPlaceholder();
+            renderTable();
+        }
+        
+        // Set search mode
+        function setSearchMode(mode) {
+            currentSearchMode = mode;
+            
+            // Update active tab
+            document.querySelectorAll('.search-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update placeholder
+            updateSearchPlaceholder();
+            
+            // Clear search
+            document.getElementById('searchBox').value = '';
+            
+            // Render table with new mode
+            renderTable();
+        }
+        
+        // Update search placeholder based on mode
+        function updateSearchPlaceholder() {
+            const searchBox = document.getElementById('searchBox');
+            const placeholder = document.getElementById('searchPlaceholder');
+            
+            switch(currentSearchMode) {
+                case 'posyandu':
+                    searchBox.placeholder = 'Cari berdasarkan nama posyandu...';
+                    placeholder.textContent = 'Masukkan nama posyandu untuk mencari data';
+                    break;
+                case 'anak':
+                    searchBox.placeholder = 'Cari berdasarkan nama anak...';
+                    placeholder.textContent = 'Masukkan nama anak untuk mencari data';
+                    break;
+                case 'status':
+                    searchBox.placeholder = 'Cari berdasarkan status gizi...';
+                    placeholder.textContent = 'Masukkan status gizi (Gizi Baik, Gizi Kurang, dll)';
+                    break;
+            }
+        }
+        
+        // Update global statistics
+        function updateGlobalStats() {
+            const total = allData.length;
+            
+            // Count good status
+            const good = allData.filter(item => item.status?.includes('Baik')).length;
+            
+            // Count warning status
+            const warning = allData.filter(item => 
+                item.status?.includes('Kurang') || 
+                item.status?.includes('Buruk') || 
+                item.status?.includes('Lebih')
+            ).length;
+            
+            // Count unique children
+            const uniqueChildren = new Set(allData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean));
+            
+            // Count active posyandus
+            const activePosyandus = new Set(allData.map(item => item.namaPosyandu).filter(Boolean)).size;
+            
+            document.getElementById('totalData').textContent = total;
+            document.getElementById('goodStatus').textContent = good;
+            document.getElementById('warningStatus').textContent = warning;
+            document.getElementById('uniqueChildren').textContent = uniqueChildren.size;
+            document.getElementById('activePosyandu').textContent = activePosyandus;
         }
         
         // Set default date filters
@@ -589,16 +785,54 @@
             const today = new Date();
             const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
             
-            // Set default "from" to first day of current month
             document.getElementById('dateFrom').value = formatDate.toInputDate(firstDayOfMonth.getTime());
-            
-            // Set default "to" to today
             document.getElementById('dateTo').value = formatDate.toInputDate(today.getTime());
+        }
+        
+        // Populate posyandu filter dropdown
+        function populatePosyanduFilter() {
+            const posyandus = [...new Set(allData.map(item => item.namaPosyandu).filter(Boolean))];
+            const select = document.getElementById('posyanduFilter');
+            
+            select.innerHTML = '<option value="">Pilih Posyandu</option>';
+            
+            posyandus.sort().forEach(posyandu => {
+                const option = document.createElement('option');
+                option.value = posyandu;
+                option.textContent = posyandu;
+                select.appendChild(option);
+            });
+        }
+        
+        // Handle posyandu filter selection
+        function handlePosyanduFilter() {
+            const selectedPosyandu = document.getElementById('posyanduFilter').value;
+            
+            if (selectedPosyandu) {
+                // Set search mode to posyandu
+                currentSearchMode = 'posyandu';
+                
+                // Update search tabs
+                document.querySelectorAll('.search-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelectorAll('.search-tab')[0].classList.add('active');
+                
+                // Update search box
+                document.getElementById('searchBox').value = selectedPosyandu;
+                
+                // Update placeholder
+                updateSearchPlaceholder();
+                
+                // Show posyandu detail
+                showPosyanduDetail(selectedPosyandu);
+            }
+            
+            renderTable();
         }
         
         // Render table with filtering
         function renderTable() {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
             const query = document.getElementById("searchBox").value.trim().toLowerCase();
             const statusFilter = document.getElementById("statusFilter").value;
             const posyanduFilter = document.getElementById("posyanduFilter").value;
@@ -607,14 +841,25 @@
             
             let filteredData = allData;
             
-            // Apply search filter
+            // Apply search filter based on mode
             if (query) {
-                filteredData = filteredData.filter(item =>
-                    (item.namaAnak || "").toLowerCase().includes(query) ||
-                    (item.namaPosyandu || "").toLowerCase().includes(query) ||
-                    (item.status || "").toLowerCase().includes(query) ||
-                    (item.namaIbu || "").toLowerCase().includes(query)
-                );
+                switch(currentSearchMode) {
+                    case 'posyandu':
+                        filteredData = filteredData.filter(item =>
+                            (item.namaPosyandu || "").toLowerCase().includes(query)
+                        );
+                        break;
+                    case 'anak':
+                        filteredData = filteredData.filter(item =>
+                            (item.namaAnak || "").toLowerCase().includes(query)
+                        );
+                        break;
+                    case 'status':
+                        filteredData = filteredData.filter(item =>
+                            (item.status || "").toLowerCase().includes(query)
+                        );
+                        break;
+                }
             }
             
             // Apply status filter
@@ -622,7 +867,7 @@
                 filteredData = filteredData.filter(item => item.status === statusFilter);
             }
             
-            // Apply posyandu filter
+            // Apply posyandu filter from dropdown
             if (posyanduFilter) {
                 filteredData = filteredData.filter(item => item.namaPosyandu === posyanduFilter);
             }
@@ -665,14 +910,23 @@
             
             // Update UI
             updateTableUI(filteredData);
-            updateStats(filteredData, allData);
+            updateEmptyMessage(query, filteredData.length);
             
-            // Show child detail if search matches exactly one child
-            if (query && filteredData.length > 0) {
+            // Show posyandu detail if searching by posyandu
+            if (currentSearchMode === 'posyandu' && query && filteredData.length > 0) {
+                showPosyanduDetail(query);
+            }
+            
+            // Show child detail if searching by child name
+            if (currentSearchMode === 'anak' && query && filteredData.length > 0) {
                 const firstChild = filteredData[0];
-                if (filteredData.every(item => item.namaAnak === firstChild.namaAnak)) {
+                if (filteredData.every(item => item.namaAnak?.toLowerCase() === firstChild.namaAnak?.toLowerCase())) {
                     showChildDetail(firstChild.namaAnak);
+                } else {
+                    hideDetailSections();
                 }
+            } else {
+                hideDetailSections();
             }
         }
         
@@ -694,19 +948,10 @@
                     const dateStr = formatDate.toReadable(item.timestamp);
                     const timeStr = formatDate.toTime(item.timestamp);
                     
-                    let statusColor = '#64748b';
                     let statusClass = 'badge-blue';
-                    
-                    if (item.status?.includes('Baik')) {
-                        statusColor = '#10b981';
-                        statusClass = 'badge-green';
-                    } else if (item.status?.includes('Kurang') || item.status?.includes('Buruk')) {
-                        statusColor = '#f59e0b';
-                        statusClass = 'badge-yellow';
-                    } else if (item.status?.includes('Lebih')) {
-                        statusColor = '#1b6bec';
-                        statusClass = 'badge-blue';
-                    }
+                    if (item.status?.includes('Baik')) statusClass = 'badge-green';
+                    else if (item.status?.includes('Kurang') || item.status?.includes('Buruk')) statusClass = 'badge-yellow';
+                    else if (item.status?.includes('Lebih')) statusClass = 'badge-blue';
                     
                     html += `
                         <tr class="table-row">
@@ -716,7 +961,7 @@
                             </td>
                             <td class="p-6">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                                    <i class="fas fa-clinic-medical text-blue-500"></i>
                                     <span class="font-bold text-slate-700">${item.namaPosyandu || 'Posyandu Umum'}</span>
                                 </div>
                             </td>
@@ -764,47 +1009,175 @@
             }
         }
         
-        // Update statistics
-        function updateStats(filteredData = [], allData = []) {
-            if (!allData.length) allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+        // Update empty message based on search
+        function updateEmptyMessage(query, resultCount) {
+            const emptyMessage = document.getElementById('emptyMessage');
             
-            const total = allData.length;
-            const good = allData.filter(item => item.status?.includes('Baik')).length;
-            const warning = allData.filter(item => 
+            if (resultCount === 0 && query) {
+                switch(currentSearchMode) {
+                    case 'posyandu':
+                        emptyMessage.textContent = `Tidak ditemukan data untuk posyandu "${query}". Coba nama posyandu lain.`;
+                        break;
+                    case 'anak':
+                        emptyMessage.textContent = `Tidak ditemukan data untuk anak "${query}". Coba nama anak lain.`;
+                        break;
+                    case 'status':
+                        emptyMessage.textContent = `Tidak ditemukan data untuk status gizi "${query}".`;
+                        break;
+                }
+            } else {
+                emptyMessage.textContent = 'Mulai dengan menginput data anak melalui kalkulator gizi untuk melihat rekapan di sini.';
+            }
+        }
+        
+        // Show posyandu detail
+        function showPosyanduDetail(posyanduName) {
+            const posyanduData = allData.filter(item => 
+                item.namaPosyandu?.toLowerCase() === posyanduName.toLowerCase()
+            );
+            
+            if (posyanduData.length === 0) return;
+            
+            // Calculate statistics
+            const uniqueChildren = new Set(posyanduData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean)).size;
+            const goodStatus = posyanduData.filter(item => item.status?.includes('Baik')).length;
+            const warningStatus = posyanduData.filter(item => 
                 item.status?.includes('Kurang') || 
                 item.status?.includes('Buruk') || 
                 item.status?.includes('Lebih')
             ).length;
             
-            // Count unique children
-            const uniqueChildren = new Set(allData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean));
+            // Get latest timestamp
+            const latestTimestamp = Math.max(...posyanduData.map(item => parseInt(item.timestamp) || 0));
             
-            document.getElementById('totalData').textContent = total;
-            document.getElementById('goodStatus').textContent = good;
-            document.getElementById('warningStatus').textContent = warning;
-            document.getElementById('uniqueChildren').textContent = uniqueChildren.size;
+            // Update UI
+            document.getElementById('posyanduName').textContent = posyanduName;
+            document.getElementById('posyanduTotal').textContent = uniqueChildren;
+            document.getElementById('posyanduGood').textContent = goodStatus;
+            document.getElementById('posyanduWarning').textContent = warningStatus;
+            document.getElementById('posyanduLastUpdate').textContent = latestTimestamp > 0 ? 
+                formatDate.toFullDate(latestTimestamp) : '-';
+            
+            // Update stats section
+            document.getElementById('posyanduTotalChildren').textContent = uniqueChildren;
+            document.getElementById('posyanduTotalChecks').textContent = posyanduData.length;
+            document.getElementById('posyanduGoodStatus').textContent = goodStatus;
+            document.getElementById('posyanduWarningStatus').textContent = warningStatus;
+            document.getElementById('selectedPosyanduName').textContent = posyanduName;
+            
+            // Populate children list
+            populatePosyanduChildren(posyanduData);
+            
+            // Show sections
+            document.getElementById('posyanduDetailSection').classList.remove('hidden');
+            document.getElementById('posyanduStatsSection').classList.remove('hidden');
+            
+            // Hide child detail
+            document.getElementById('detailAnakSection').classList.add('hidden');
         }
         
-        // Populate posyandu filter
-        function populatePosyanduFilter() {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            const posyandus = new Set(allData.map(item => item.namaPosyandu).filter(Boolean));
+        // Populate posyandu children list
+        function populatePosyanduChildren(posyanduData) {
+            const childrenList = document.getElementById('posyanduChildrenList');
+            const uniqueChildren = [];
             
-            const select = document.getElementById('posyanduFilter');
-            // Clear existing options except first
-            select.innerHTML = '<option value="">Semua Posyandu</option>';
-            
-            posyandus.forEach(posyandu => {
-                const option = document.createElement('option');
-                option.value = posyandu;
-                option.textContent = posyandu;
-                select.appendChild(option);
+            // Get unique children
+            posyanduData.forEach(item => {
+                if (item.namaAnak && !uniqueChildren.some(child => child.namaAnak === item.namaAnak)) {
+                    // Get latest record for this child
+                    const childRecords = posyanduData.filter(record => record.namaAnak === item.namaAnak);
+                    const latestRecord = childRecords.sort((a, b) => 
+                        (parseInt(b.timestamp) || 0) - (parseInt(a.timestamp) || 0)
+                    )[0];
+                    
+                    uniqueChildren.push({
+                        namaAnak: item.namaAnak,
+                        namaIbu: item.namaIbu || '-',
+                        usia: item.usia || '-',
+                        bb: latestRecord.bb || '-',
+                        tb: latestRecord.tb || '-',
+                        status: latestRecord.status || 'NORMAL',
+                        timestamp: latestRecord.timestamp
+                    });
+                }
             });
+            
+            let html = '';
+            uniqueChildren.forEach(child => {
+                let statusColor = 'bg-blue-100 text-blue-700';
+                if (child.status?.includes('Baik')) statusColor = 'bg-emerald-100 text-emerald-700';
+                else if (child.status?.includes('Kurang') || child.status?.includes('Buruk')) statusColor = 'bg-orange-100 text-orange-700';
+                else if (child.status?.includes('Lebih')) statusColor = 'bg-blue-100 text-blue-700';
+                
+                html += `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h5 class="font-bold text-slate-800">${child.namaAnak}</h5>
+                            <span class="text-xs px-2 py-1 rounded-full ${statusColor}">
+                                ${child.status}
+                            </span>
+                        </div>
+                        <div class="space-y-2 text-sm text-slate-600">
+                            <div class="flex justify-between">
+                                <span>Ibu:</span>
+                                <span class="font-medium">${child.namaIbu}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Usia:</span>
+                                <span class="font-medium">${child.usia} bulan</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>BB/TB:</span>
+                                <span class="font-medium">${child.bb} kg / ${child.tb} cm</span>
+                            </div>
+                            <div class="text-xs text-slate-400 mt-2">
+                                Terakhir: ${child.timestamp ? formatDate.toReadable(child.timestamp) : '-'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            childrenList.innerHTML = html || '<p class="text-slate-500 col-span-3 text-center">Tidak ada data anak</p>';
         }
         
-        // Show child detail
+        // Export posyandu data
+        function exportPosyanduData() {
+            const posyanduName = document.getElementById('posyanduName').textContent;
+            const posyanduData = allData.filter(item => 
+                item.namaPosyandu?.toLowerCase() === posyanduName.toLowerCase()
+            );
+            
+            if (posyanduData.length === 0) {
+                alert('Tidak ada data untuk diexport.');
+                return;
+            }
+            
+            // Prepare worksheet data
+            const worksheetData = posyanduData.map(item => ({
+                'Tanggal': formatDate.toReadable(item.timestamp),
+                'Waktu': formatDate.toTime(item.timestamp),
+                'Posyandu': item.namaPosyandu || '',
+                'Nama Anak': item.namaAnak || '',
+                'Nama Ibu': item.namaIbu || '',
+                'Jenis Kelamin': item.jk === 'L' ? 'Laki-laki' : item.jk === 'P' ? 'Perempuan' : '',
+                'Usia (bulan)': item.usia || '',
+                'Berat Badan (kg)': item.bb || '',
+                'Tinggi Badan (cm)': item.tb || '',
+                'Z-Score': item.zscore || '',
+                'Status Gizi': item.status || ''
+            }));
+            
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, `Data ${posyanduName}`);
+            
+            // Export
+            XLSX.writeFile(workbook, `Data_Posyandu_${posyanduName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+        
+        // Show child detail (existing function with modifications)
         function showChildDetail(childName) {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
             const childRecords = allData
                 .filter(item => item.namaAnak?.toLowerCase() === childName.toLowerCase())
                 .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
@@ -812,9 +1185,8 @@
             if (childRecords.length === 0) return;
             
             const latest = childRecords[0];
-            const detailSection = document.getElementById('detailAnakSection');
             
-            // Fill basic info
+            // Update UI (existing code)
             document.getElementById('detNamaAnak').textContent = latest.namaAnak || '-';
             document.getElementById('detPosyandu').textContent = latest.namaPosyandu || 'Posyandu Umum';
             document.getElementById('detNamaIbu').textContent = latest.namaIbu || '-';
@@ -824,16 +1196,11 @@
             document.getElementById('detJK').textContent = gender;
             
             // Age
-            if (latest.usia) {
-                document.getElementById('detUsia').textContent = `${latest.usia} bulan`;
-            } else {
-                document.getElementById('detUsia').textContent = '-';
-            }
+            document.getElementById('detUsia').textContent = latest.usia ? `${latest.usia} bulan` : '-';
             
             // Last measurement
-            if (latest.timestamp) {
-                document.getElementById('detTerakhir').textContent = formatDate.toFullDate(latest.timestamp);
-            }
+            document.getElementById('detTerakhir').textContent = latest.timestamp ? 
+                formatDate.toFullDate(latest.timestamp) : '-';
             
             // Measurements
             document.getElementById('detBB').textContent = `${latest.bb || 0} kg`;
@@ -842,141 +1209,29 @@
             document.getElementById('detZScore').textContent = `${latest.zscore || '0.00'} SD`;
             
             // Measurement dates
-            document.getElementById('detBBDate').textContent = `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}`;
-            document.getElementById('detTBDate').textContent = `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}`;
+            document.getElementById('detBBDate').textContent = latest.timestamp ? 
+                `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}` : 'Terakhir diukur';
+            document.getElementById('detTBDate').textContent = latest.timestamp ? 
+                `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}` : 'Terakhir diukur';
             
-            // Status color
-            let statusColor = '#64748b';
-            if (latest.status?.includes('Baik')) statusColor = '#10b981';
-            else if (latest.status?.includes('Kurang') || latest.status?.includes('Buruk')) statusColor = '#f59e0b';
-            else if (latest.status?.includes('Lebih')) statusColor = '#1b6bec';
-            
-            document.getElementById('detStatus').style.color = statusColor;
-            
-            // Setup edit button
-            document.getElementById('btnEditAnak').onclick = function() {
-                localStorage.setItem("dataAnak", JSON.stringify({
-                    namaAnak: latest.namaAnak || "",
-                    namaIbu: latest.namaIbu || "",
-                    jk: latest.jk || "L",
-                    usia: latest.usia || 0,
-                    namaPosyandu: latest.namaPosyandu || ""
-                }));
-                window.location.href = "inputData.html";
-            };
-            
-            // Show detail section
-            detailSection.classList.remove('hidden');
-            
-            // Prepare weight chart data
-            prepareWeightChart(childRecords);
+            // Show/hide sections
+            document.getElementById('detailAnakSection').classList.remove('hidden');
+            document.getElementById('posyanduDetailSection').classList.add('hidden');
+            document.getElementById('posyanduStatsSection').classList.add('hidden');
         }
         
-        // Prepare weight chart
-        function prepareWeightChart(records) {
-            const sortedRecords = records.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-            
-            const labels = sortedRecords.map(record => formatDate.toChartLabel(record.timestamp));
-            const weights = sortedRecords.map(record => parseFloat(record.bb) || 0);
-            
-            // Destroy existing chart
-            if (weightChart) {
-                weightChart.destroy();
-            }
-            
-            // Initialize chart when shown
-            if (isChartVisible) {
-                initWeightChart(labels, weights);
-            }
+        // Hide all detail sections
+        function hideDetailSections() {
+            document.getElementById('detailAnakSection').classList.add('hidden');
+            document.getElementById('posyanduDetailSection').classList.add('hidden');
+            document.getElementById('posyanduStatsSection').classList.add('hidden');
         }
         
-        // Initialize weight chart
-        function initWeightChart(labels, weights) {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            
-            weightChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Berat Badan (kg)',
-                        data: weights,
-                        borderColor: '#1b6bec',
-                        backgroundColor: 'rgba(27, 107, 236, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#1b6bec',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: false,
-                            grid: {
-                                borderDash: [5, 5]
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Toggle chart visibility
-        function toggleChart() {
-            const container = document.getElementById('weightChartContainer');
-            const toggleText = document.getElementById('chartToggleText');
-            
-            if (isChartVisible) {
-                container.classList.add('hidden');
-                toggleText.innerHTML = '<i class="fas fa-chart-line mr-1"></i>Tampilkan Grafik';
-                isChartVisible = false;
-            } else {
-                container.classList.remove('hidden');
-                toggleText.innerHTML = '<i class="fas fa-eye-slash mr-1"></i>Sembunyikan Grafik';
-                isChartVisible = true;
-                
-                // Initialize chart if not already
-                if (!weightChart) {
-                    const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-                    const childName = document.getElementById('detNamaAnak').textContent;
-                    const childRecords = allData.filter(item => 
-                        item.namaAnak?.toLowerCase() === childName.toLowerCase()
-                    );
-                    prepareWeightChart(childRecords);
-                }
-            }
-        }
-        
-        // Toggle sort order
-        function toggleSort() {
-            const sortIcon = document.getElementById('sortIcon');
-            const sortText = document.getElementById('sortText');
-            
-            if (currentSort === 'desc') {
-                currentSort = 'asc';
-                sortIcon.className = 'fas fa-sort-amount-up';
-                sortText.textContent = 'Terlama';
-            } else {
-                currentSort = 'desc';
-                sortIcon.className = 'fas fa-sort-amount-down';
-                sortText.textContent = 'Terbaru';
-            }
-            
+        // Close posyandu detail
+        function tutupPosyanduDetail() {
+            hideDetailSections();
+            document.getElementById('searchBox').value = '';
+            document.getElementById('posyanduFilter').value = '';
             renderTable();
         }
         
@@ -997,13 +1252,38 @@
             renderTable();
         }
         
-        // Reset date filters
+        // Reset all filters
+        function resetAllFilters() {
+            document.getElementById('searchBox').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('posyanduFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            currentDateFilter = 'all';
+            currentSearchMode = 'posyandu';
+            
+            // Reset UI
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            document.querySelectorAll('.filter-pill')[0].classList.add('active');
+            
+            document.querySelectorAll('.search-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.search-tab')[0].classList.add('active');
+            
+            updateSearchPlaceholder();
+            hideDetailSections();
+            renderTable();
+        }
+        
+        // Reset date filters only
         function resetDateFilters() {
             document.getElementById('dateFrom').value = '';
             document.getElementById('dateTo').value = '';
             currentDateFilter = 'all';
             
-            // Reset quick filter pills
             document.querySelectorAll('.filter-pill').forEach(pill => {
                 pill.classList.remove('active');
             });
@@ -1012,47 +1292,60 @@
             renderTable();
         }
         
-        // View details
-        function viewDetails(timestamp) {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            const record = allData.find(item => item.timestamp == timestamp);
+        // Existing functions (unchanged)
+        function toggleSort() {
+            const sortIcon = document.getElementById('sortIcon');
+            const sortText = document.getElementById('sortText');
             
+            if (currentSort === 'desc') {
+                currentSort = 'asc';
+                sortIcon.className = 'fas fa-sort-amount-up';
+                sortText.textContent = 'Terlama';
+            } else {
+                currentSort = 'desc';
+                sortIcon.className = 'fas fa-sort-amount-down';
+                sortText.textContent = 'Terbaru';
+            }
+            
+            renderTable();
+        }
+        
+        function viewDetails(timestamp) {
+            const record = allData.find(item => item.timestamp == timestamp);
             if (record) {
                 localStorage.setItem('lastNutriResult', JSON.stringify(record));
                 window.location.href = 'hasil.html';
             }
         }
         
-        // Delete row
         function deleteRow(timestamp) {
             if (!confirm('Yakin ingin menghapus data ini?')) return;
             
-            let allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
             allData = allData.filter(item => item.timestamp != timestamp);
             localStorage.setItem("allNutriResults", JSON.stringify(allData));
             
+            updateGlobalStats();
+            populatePosyanduFilter();
             renderTable();
         }
         
-        // Close detail
         function tutupDetail() {
-            document.getElementById('detailAnakSection').classList.add('hidden');
+            hideDetailSections();
             document.getElementById('searchBox').value = '';
             renderTable();
         }
         
-        // Clear all data
         function clearAllData() {
             if (!confirm('Hapus SEMUA data rekapan? Tindakan ini tidak dapat dibatalkan.')) return;
             
             localStorage.removeItem("allNutriResults");
+            allData = [];
+            updateGlobalStats();
+            populatePosyanduFilter();
             renderTable();
-            
-            // Show success message
             alert('Semua data telah berhasil dihapus.');
         }
         
-        // Import data
         function importData() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -1069,20 +1362,14 @@
                             const importedData = JSON.parse(e.target.result);
                             const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
                             
-                            // Validate and fix timestamp format
                             const validatedData = importedData.map(item => {
-                                // Ensure timestamp exists
                                 if (!item.timestamp) {
                                     item.timestamp = Date.now().toString();
                                 }
-                                
-                                // Ensure timestamp is string
                                 item.timestamp = String(item.timestamp);
-                                
                                 return item;
                             });
                             
-                            // Merge data, avoid duplicates
                             const newData = [...existingData];
                             validatedData.forEach(item => {
                                 if (!existingData.some(existing => existing.timestamp === item.timestamp)) {
@@ -1091,6 +1378,9 @@
                             });
                             
                             localStorage.setItem("allNutriResults", JSON.stringify(newData));
+                            allData = newData;
+                            updateGlobalStats();
+                            populatePosyanduFilter();
                             renderTable();
                             alert(`Berhasil mengimpor ${validatedData.length} data.`);
                         } catch (error) {
@@ -1106,16 +1396,12 @@
             input.click();
         }
         
-        // Export to Excel with proper date formatting
         function exportToExcel() {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            
             if (allData.length === 0) {
                 alert('Tidak ada data untuk diexport.');
                 return;
             }
             
-            // Convert to worksheet with formatted dates
             const worksheetData = allData.map(item => ({
                 'Tanggal': formatDate.toReadable(item.timestamp),
                 'Waktu': formatDate.toTime(item.timestamp),
@@ -1135,33 +1421,22 @@
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Data NutriKids');
             
-            // Generate filename with current date
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0].replace(/-/g, '');
             XLSX.writeFile(workbook, `Laporan_NutriKids_${dateStr}.xlsx`);
         }
         
-        // Export to PDF
-        function exportToPDF() {
-            alert('Fitur export PDF dalam pengembangan. Untuk saat ini, gunakan export Excel.');
-        }
-        
-        // Fix existing data timestamps on load
         function fixExistingTimestamps() {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
             let needsFix = false;
             
             const fixedData = allData.map(item => {
-                // If timestamp is missing or invalid, create one
                 if (!item.timestamp || isNaN(parseInt(item.timestamp))) {
                     needsFix = true;
-                    // Create timestamp from current date minus random days (for demo)
                     const daysAgo = Math.floor(Math.random() * 365);
                     const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
                     item.timestamp = date.getTime().toString();
                 }
                 
-                // If tanggal/jam exist but timestamp doesn't, parse them
                 if (!item.timestamp && item.tanggal && item.jam) {
                     try {
                         const [day, month, year] = item.tanggal.split('/');
@@ -1170,7 +1445,6 @@
                         item.timestamp = date.getTime().toString();
                         needsFix = true;
                     } catch (e) {
-                        // If parsing fails, use current timestamp
                         item.timestamp = Date.now().toString();
                         needsFix = true;
                     }
@@ -1181,7 +1455,7 @@
             
             if (needsFix) {
                 localStorage.setItem("allNutriResults", JSON.stringify(fixedData));
-                console.log('Fixed timestamps for existing data');
+                allData = fixedData;
             }
         }
         
