@@ -4,9 +4,707 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NutriKids - Pantau Tumbuh Kembang Si Kecil</title>
-    <link href="style.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary: #1b6bec;
+            --primary-dark: #0d4bc2;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-2xl: 2.5rem;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-light: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        /* RESET & BASE */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            color: var(--text-main); 
+            background-color: var(--bg-light); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(27, 107, 236, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+        }
+
+        /* Container */
+        .container { 
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 1.5rem; 
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* NAVIGATION */
+        .nav-container { 
+            padding: 1rem 0; 
+            width: 100%; 
+            z-index: 1000; 
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .brand { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span { 
+            color: var(--text-main); 
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background: rgba(27, 107, 236, 0.05);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            background: rgba(27, 107, 236, 0.1);
+        }
+
+        .nav-cta {
+            background: var(--gradient-primary);
+            color: var(--white) !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(27, 107, 236, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 107, 236, 0.4);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2rem;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, rgba(27, 107, 236, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: var(--primary);
+            border: 1px solid rgba(27, 107, 236, 0.2);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .main-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* ILLUSTRATION SECTION */
+        .illustration-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+        }
+
+        .image-circle-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 8px solid white;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        .hero-img-final {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .glow-circle-bg {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.1;
+            filter: blur(40px);
+            z-index: 1;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 3;
+            animation: float-emoji 4s ease-in-out infinite;
+        }
+
+        .floating-emoji.e-1 {
+            top: 10%;
+            left: 10%;
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            animation-delay: 0s;
+        }
+
+        .floating-emoji.e-2 {
+            top: 60%;
+            right: 15%;
+            background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+            color: white;
+            animation-delay: 1s;
+        }
+
+        .floating-emoji.e-3 {
+            bottom: 20%;
+            left: 15%;
+            background: linear-gradient(135deg, #96ceb4, #d4a5a5);
+            color: white;
+            animation-delay: 2s;
+        }
+
+        @keyframes float-emoji {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            gap: 0.5rem;
+            font-size: 1rem;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(27, 107, 236, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(27, 107, 236, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            padding: 2rem;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* FEATURES SECTION */
+        .features-section {
+            padding: 5rem 0;
+            background: var(--gradient-light);
+            position: relative;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--bg-light), transparent);
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            padding: 5rem 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: white;
+            color: var(--primary);
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-section p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section ul li a {
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .footer-bottom p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* UTILITY CLASSES */
+        .text-center { text-align: center; }
+        .pt-4 { padding-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: var(--shadow-lg);
+                border-radius: var(--radius-lg);
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 1rem;
+                width: 100%;
+                border-radius: var(--radius-md);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .image-circle-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .glow-circle-bg {
+                width: 350px;
+                height: 350px;
+            }
+
+            .floating-emoji {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+
+            .hero-section {
+                padding: 2rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .image-circle-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .glow-circle-bg {
+                width: 300px;
+                height: 300px;
+            }
+
+            .floating-emoji {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Grid Background -->
@@ -23,7 +721,6 @@
                 
                 <div class="nav-links">
                     
-                    
                 </div>
                 
                 <button class="menu-toggle" aria-label="Toggle menu">
@@ -38,7 +735,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <div class="badge badge-new animate-bounce-subtle">
+                    <div class="badge badge-new">
                         <i class="fas fa-star"></i> Sahabat Bunda & Si Kecil
                     </div>
                     
@@ -51,21 +748,21 @@
                     <p class="main-description">
                         Hai Bunda! Yuk, jadi pahlawan kesehatan bagi buah hati dengan pantau 
                         status gizi secara akurat, mudah, dan menyenangkan. NutriKids membantu 
-                        Anda memantau tumbuh kembang anak berdasarkan standar Kemenkes RI.
+                        Anda memantau tumbuh kembang anak berdasarkan standar Kemenkes RI dan WHO.
                     </p>
                     
                     <div class="pt-4">
                         <a href="inputData.html" class="btn btn-primary">
                             <i class="fas fa-rocket"></i> Mulai Input Data
                         </a>
-                        <a href="#features" class="btn btn-outline ml-4">
+                        <a href="#features" class="btn btn-outline">
                             <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
                         </a>
                     </div>
                 </div>
                 <div class="illustration-wrapper">
-                    <div class="image-circle-container float-anim">
-                        <img src="LUCU.png" alt="NutriKids - Anak Sehat" class="hero-img-final" />
+                    <div class="image-circle-container">
+                        <img src="LUCU.png" alt="Hero Illustration" class="hero-img-final">
                     </div>
                     <div class="glow-circle-bg"></div>
                     
@@ -85,61 +782,73 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-6">
+    <section id="features" class="features-section">
         <div class="container">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-bold text-slate-800 mb-3">
-                    Kenapa Memilih NutriKids?
-                </h2>
-                <p class="text-slate-500 max-w-2xl mx-auto">
-                    Platform lengkap untuk memantau tumbuh kembang anak dengan standar akurat
-                </p>
+            <div class="section-title">
+                <h2>Kenapa Memilih NutriKids?</h2>
+                <p>Platform lengkap untuk memantau tumbuh kembang anak dengan standar akurat</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-card p-5">
-                    <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-4">
+            <div class="features-grid">
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Akurat & Terpercaya</h3>
-                    <p class="text-slate-500">
-                        Menggunakan standar antropometri Kemenkes RI dan WHO untuk perhitungan Z-Score yang akurat.
-                    </p>
+                    <h3>Akurat & Terpercaya</h3>
+                    <p>Menggunakan standar antropometri Kemenkes RI dan WHO untuk perhitungan Z-Score yang akurat.</p>
                 </div>
                 
-                <div class="glass-card p-5">
-                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mb-4">
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Mudah Digunakan</h3>
-                    <p class="text-slate-500">
-                        Interface yang ramah pengguna, bisa diakses dari smartphone maupun komputer.
-                    </p>
+                    <h3>Mudah Digunakan</h3>
+                    <p>Interface yang ramah pengguna, bisa diakses dari smartphone maupun komputer.</p>
                 </div>
                 
-                <div class="glass-card p-5">
-                    <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-4">
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-history"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Rekaman Lengkap</h3>
-                    <p class="text-slate-500">
-                        Simpan dan pantau riwayat perkembangan anak dari waktu ke waktu dalam satu platform.
-                    </p>
+                    <h3>Rekaman Lengkap</h3>
+                    <p>Simpan dan pantau riwayat perkembangan anak dari waktu ke waktu dalam satu platform.</p>
+                </div>
+                
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Edukasi Lengkap</h3>
+                    <p>Dilengkapi dengan materi edukasi dan tips nutrisi berdasarkan usia anak.</p>
+                </div>
+                
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comment-medical"></i>
+                    </div>
+                    <h3>Konsultasi Ahli</h3>
+                    <p>Akses konsultasi dengan ahli gizi untuk saran personal tentang tumbuh kembang anak.</p>
+                </div>
+                
+                <div class="glass-card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Aman & Privasi</h3>
+                    <p>Data anak Anda aman dan terlindungi, hanya digunakan untuk analisis nutrisi.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-6">
+    <section class="cta-section">
         <div class="container">
-            <div class="glass-card p-6 text-center" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); color: white;">
-                <h2 class="text-3xl font-bold mb-3">Siap Mulai Pantau Tumbuh Kembang Si Kecil?</h2>
-                <p class="mb-4 opacity-90">
-                    Bergabung dengan ribuan Bunda yang telah menggunakan NutriKids untuk memastikan gizi optimal bagi buah hati.
-                </p>
-                <a href="inputData.html" class="btn bg-white text-emerald-600 hover:bg-slate-100 inline-flex items-center gap-2">
-                    <i class="fas fa-play-circle"></i> Mulai Sekarang
+            <div class="cta-content">
+                <h2>Siap Mulai Pantau Tumbuh Kembang Si Kecil?</h2>
+                <p>Bergabung dengan ribuan Bunda yang telah menggunakan NutriKids untuk memastikan gizi optimal bagi buah hati.</p>
+                <a href="inputData.html" class="btn cta-button">
+                    <i class="fas fa-play-circle"></i> Mulai Sekarang - Gratis!
                 </a>
             </div>
         </div>
@@ -151,17 +860,12 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>NutriKids</h4>
-                    <p>Platform pemantauan tumbuh kembang anak berbasis standar Kemenkes RI dan WHO.</p>
-                    <div class="flex gap-3 mt-3">
-                        <a href="#" class="text-slate-500 hover:text-emerald-600">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-slate-500 hover:text-emerald-600">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-slate-500 hover:text-emerald-600">
-                            <i class="fab fa-twitter"></i>
-                        </a>
+                    <p>Platform pemantauan tumbuh kembang anak berbasis standar Kemenkes RI dan WHO untuk memastikan gizi optimal Si Kecil.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 
@@ -181,6 +885,7 @@
                     <ul>
                         <li><a href="tips.html">Tips Nutrisi</a></li>
                         <li><a href="learn.html">Materi Gizi</a></li>
+                        <li><a href="konsultasi.html">Konsultasi</a></li>
                         <li><a href="#features">Tentang Kami</a></li>
                     </ul>
                 </div>
@@ -189,20 +894,21 @@
                     <h4>Kontak</h4>
                     <ul>
                         <li><i class="fas fa-envelope mr-2"></i> info@nutrikids.id</li>
-                        <li><i class="fas fa-phone mr-2"></i> (021) 1234-5678</li>
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> Jakarta, Indonesia</li>
+                        <li><i class="fas fa-phone mr-2"></i> +62 821-0000-0000</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>  Yogyakarta, Indonesia</li>
+                        <li><i class="fas fa-clock mr-2"></i> Senin - Jumat: 08:00 - 17:00</li>
                     </ul>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 NutriKids. Hak Cipta Dilindungi. | Dibuat dengan <i class="fas fa-heart text-red-500"></i> untuk kesehatan anak Indonesia</p>
-                <p class="text-sm mt-2">Sumber data: Kemenkes RI PMK No. 2 Tahun 2020 tentang Standar Antropometri Anak</p>
+                <p>&copy; 2024 NutriKids. Hak Cipta Dilindungi. | Dibuat dengan <i class="fas fa-heart" style="color: #ef4444;"></i> untuk kesehatan anak Indonesia</p>
+                <p>Sumber data: Kemenkes RI PMK No. 2 Tahun 2020 tentang Standar Antropometri Anak</p>
             </div>
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
+    <!-- JavaScript -->
     <script>
         // Mobile menu toggle
         const menuToggle = document.querySelector('.menu-toggle');
@@ -258,93 +964,22 @@
                 }
             });
         });
+        
+        // Add active class to current page in navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentPage || 
+                    (currentPage === '' && linkHref === 'index.html')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
     </script>
-    
-    <!-- Tailwind Grid Utility (inline untuk compatibility) -->
-    <style>
-        .grid {
-            display: grid;
-        }
-        .grid-cols-1 {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-        @media (min-width: 768px) {
-            .md\:grid-cols-3 {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
-        .gap-6 {
-            gap: 1.5rem;
-        }
-        .gap-3 {
-            gap: 0.75rem;
-        }
-        .ml-4 {
-            margin-left: 1rem;
-        }
-        .mr-2 {
-            margin-right: 0.5rem;
-        }
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-        .mt-3 {
-            margin-top: 0.75rem;
-        }
-        .py-6 {
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-        .text-3xl {
-            font-size: 1.875rem;
-            line-height: 2.25rem;
-        }
-        .text-xl {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-        }
-        .text-2xl {
-            font-size: 1.5rem;
-            line-height: 2rem;
-        }
-        .text-sm {
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-        }
-        .opacity-90 {
-            opacity: 0.9;
-        }
-        .bg-emerald-100 {
-            background-color: rgba(16, 185, 129, 0.1);
-        }
-        .text-emerald-600 {
-            color: #059669;
-        }
-        .bg-blue-100 {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-        .text-blue-600 {
-            color: #2563eb;
-        }
-        .bg-purple-100 {
-            background-color: rgba(168, 85, 247, 0.1);
-        }
-        .text-purple-600 {
-            color: #7c3aed;
-        }
-        .text-red-500 {
-            color: #ef4444;
-        }
-        .inline-flex {
-            display: inline-flex;
-        }
-        .max-w-2xl {
-            max-width: 42rem;
-        }
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
 </body>
 </html>
