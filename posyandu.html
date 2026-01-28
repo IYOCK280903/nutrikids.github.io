@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Posyandu - NutriKids</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+=======
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Posyandu - NutriKids</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     <style>
         /* Import CSS Variables dan Global Styles */
         :root {
@@ -71,6 +79,7 @@
             margin: 0 auto; 
             padding: 0 1.5rem; 
         }
+<<<<<<< HEAD
 
         @media (max-width: 640px) {
             .container {
@@ -501,11 +510,91 @@
                 <div class="form-header">
                     <div class="form-icon">
                         <i class="fas fa-home"></i>
+=======
+        .input-styled:focus {
+            background-color: white;
+            border-color: #10b981;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.08);
+        }
+        .btn-save {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            font-weight: 800;
+            padding: 1.25rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+        }
+        .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .icon-input {
+            position: absolute;
+            top: 50%;
+            left: 1.25rem;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="pb-20">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+            <a href="inputData.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2 rounded-2xl text-sm font-bold transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-xl mx-auto mt-12 px-6">
+        <div class="text-center mb-12">
+            <span class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">🏠 Input Lokasi</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mt-4">Data Posyandu Bunda</h1>
+            <p class="text-slate-500 mt-3 text-base leading-relaxed">Lengkapi informasi posyandu untuk rekaman pemeriksaan yang akurat.</p>
+        </div>
+
+        <div class="glass-card p-8 relative z-10">
+            <form id="posyanduForm">
+                <div class="mb-6 relative">
+                    <label class="block text-slate-700 font-bold mb-2">Nama Posyandu</label>
+                    <div class="icon-input">🏡</div>
+                    <input id="posyanduName" type="text" class="input-styled pl-12" placeholder="Misal: Posyandu Melati" required>
+                </div>
+
+                <div class="mb-6 relative">
+                    <label class="block text-slate-700 font-bold mb-2">Nama Kader</label>
+                    <div class="icon-input">👩‍⚕️</div>
+                    <input id="kaderName" type="text" class="input-styled pl-12" placeholder="Misal: Ibu Siti" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="relative">
+                        <label class="block text-slate-700 font-bold mb-2">RT</label>
+                        <div class="icon-input">📍</div>
+                        <input id="rt" type="text" class="input-styled pl-12" placeholder="Misal: 001" required>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-slate-700 font-bold mb-2">RW</label>
+                        <div class="icon-input">📍</div>
+                        <input id="rw" type="text" class="input-styled pl-12" placeholder="Misal: 002" required>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
                     </div>
                     <h1>Form Posyandu</h1>
                     <p>Lengkapi data posyandu tempat pemeriksaan Si Kecil</p>
                 </div>
 
+<<<<<<< HEAD
                 <form id="posyanduForm">
                     <div class="form-group">
                         <label for="posyandu" class="form-label">
@@ -623,10 +712,15 @@
                     </p>
                 </div>
             </div>
+=======
+                <button type="button" class="btn-save w-full" id="btnSavePosyandu">Simpan & Lanjut</button>
+            </form>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         </div>
     </main>
 
     <script>
+<<<<<<< HEAD
         // Load existing data if available
         document.addEventListener('DOMContentLoaded', function() {
             const savedData = localStorage.getItem('dataPosyandu');
@@ -653,6 +747,42 @@
             if (rt < 1 || rt > 999) {
                 alert('RT harus antara 1 dan 999');
                 return;
+=======
+        document.getElementById("btnSavePosyandu").addEventListener("click", function () {
+            const posyandu = document.getElementById("posyanduName").value.trim();
+            const kader = document.getElementById("kaderName").value.trim();
+            const rt = document.getElementById("rt").value.trim() || "0";
+            const rw = document.getElementById("rw").value.trim() || "0";
+
+            if (!posyandu || !kader) {
+                alert("Nama Posyandu dan Nama Kader wajib diisi!");
+                return;
+            }
+
+            const dataPosyandu = {
+                posyandu: posyandu,
+                kader: kader,
+                rt: rt,
+                rw: rw,
+                updateTime: new Date().getTime()
+            };
+
+            localStorage.setItem("dataPosyandu", JSON.stringify(dataPosyandu));
+            alert("Data Posyandu berhasil disimpan!");
+
+            // Kembali ke dashboard
+            window.location.href = "inputData.html";
+        });
+
+        // Load data jika ada
+        window.onload = function () {
+            const savedData = JSON.parse(localStorage.getItem("dataPosyandu"));
+            if (savedData) {
+                document.getElementById("posyanduName").value = savedData.posyandu || "";
+                document.getElementById("kaderName").value = savedData.kader || "";
+                document.getElementById("rt").value = savedData.rt === "0" ? "" : savedData.rt;
+                document.getElementById("rw").value = savedData.rw === "0" ? "" : savedData.rw;
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
             }
             
             if (rw < 1 || rw > 999) {

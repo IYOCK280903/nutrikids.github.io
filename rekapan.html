@@ -6,9 +6,15 @@
     <title>Rekapan Data Posyandu - NutriKids</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+=======
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     <style>
         :root {
             --primary: #1b6bec;
@@ -169,6 +175,7 @@
         }
     </style>
 </head>
+<<<<<<< HEAD
 <body class="min-h-screen">
     <!-- Navigation -->
     <header class="sticky-header border-b border-slate-100/50">
@@ -177,6 +184,45 @@
                 <a href="index.html" class="flex items-center gap-3 group">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center shadow-lg">
                         <i class="fas fa-heartbeat text-white text-xl"></i>
+=======
+<body class="pb-20">
+    <nav class="bg-white py-4 px-10 flex justify-between items-center shadow-md sticky top-0 z-50">
+        <h1 class="text-2xl font-black text-blue-600">Nutri<span class="text-emerald-500">Kids</span></h1>
+        <div class="flex gap-3">
+            <a href="inputData.html" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-red-200">Lupa Data </a>
+            <a href="hasil.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Kembali</a>
+            <a href="konsultasi.html" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-red-200">Konsultasi</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 mt-10">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-black text-slate-800">Rekapan Data Posyandu</h2>
+            <p class="text-slate-500 text-sm mt-2">Cari nama posyandu atau nama anak untuk melihat detail profil dan riwayat pemeriksaan.</p>
+        </div>
+
+        <div class="glass-card p-6 mb-8 border-none ring-1 ring-slate-200">
+            <div class="relative">
+                <span class="absolute left-5 top-5 text-slate-400 text-xl">🔍</span>
+                <input type="text" id="searchBox" onkeyup="handleSearch()" placeholder="Cari nama posyandu atau nama anak..." 
+                    class="w-full pl-14 pr-6 py-5 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-blue-100 outline-none font-bold text-slate-700 shadow-inner transition-all" />
+            </div>
+        </div>
+
+        <div id="resultArea" class="space-y-6 mb-8"></div>
+
+        <!-- Profil + Tabel -->
+        <div id="detailSection" class="hidden animate-fade-in">
+            <div class="glass-card p-8 border-l-8 border-blue-500 bg-gradient-to-r from-white to-blue-50 mb-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-blue-600 font-black text-xs uppercase tracking-widest mb-1">Profil Lengkap Anak</p>
+                        <h3 class="text-3xl font-black text-slate-800 uppercase" id="detNamaAnak">-</h3>
+                        <p class="text-slate-500 font-bold mt-1 flex items-center gap-2">
+                            <span class="bg-blue-500 text-white p-1 rounded-md text-[10px]">LOKASI</span>
+                            <span id="detPosyandu">-</span>
+                        </p>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
                     </div>
                     <div>
                         <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
@@ -369,6 +415,7 @@
                         </button>
                     </div>
                 </div>
+<<<<<<< HEAD
                 
                 <!-- Recent Measurements -->
                 <div class="mt-6">
@@ -389,6 +436,13 @@
                             <p class="text-3xl font-black uppercase" id="detStatus">-</p>
                             <p class="text-xs opacity-80 mt-2">Skor: <span id="detZScore">0.00 SD</span></p>
                         </div>
+=======
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Nama Ibu</p>
+                        <p class="font-bold text-slate-700" id="detNamaIbu">-</p>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
                     </div>
                 </div>
                 
@@ -404,10 +458,22 @@
                     <div id="weightChartContainer" class="hidden">
                         <canvas id="weightChart" height="150"></canvas>
                     </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Nama Kader</p>
+                        <p class="font-bold text-slate-700" id="detKader">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">RT / RW</p>
+                        <p class="font-bold text-slate-700" id="detRtRw">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Umur Anak</p>
+                        <p class="font-bold text-slate-700" id="detUmur">-</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
+<<<<<<< HEAD
         <!-- Main Table -->
         <div class="glass-card overflow-hidden rounded-3xl">
             <div class="p-6 border-b border-slate-100">
@@ -475,6 +541,42 @@
                 </button>
             </div>
         </div>
+=======
+            <div class="glass-card overflow-hidden border-none ring-1 ring-slate-200">
+                <div id="tableContainer" class="overflow-x-auto">
+                    <table class="w-full text-left" id="rekapanTable">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="p-6 table-header text-center">Tanggal & Jam</th>
+                                <th class="p-6 table-header">Posyandu</th>
+                                <th class="p-6 table-header">Nama Anak</th>
+                                <th class="p-6 table-header text-center">BB / TB</th>
+                                <th class="p-6 table-header text-center">Status Gizi</th>
+                                <th class="p-6 table-header text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-slate-50 font-bold text-slate-600 text-sm"></tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="hidden py-32 text-center">
+                    <div class="text-6xl mb-4">📂</div>
+                    <p class="text-slate-500 font-extrabold text-lg">Tidak ada data di tanggal ini</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <button onclick="clearAllData()" class="text-red-400 hover:text-red-600 font-bold text-xs px-6 py-3 rounded-xl hover:bg-red-50 transition uppercase tracking-widest">
+                🗑️ Reset Semua Rekapan
+            </button>
+            <button onclick="exportToExcel()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black shadow-xl transition-all flex items-center gap-3 active:scale-95">
+                📗 DOWNLOAD LAPORAN EXCEL
+            </button>
+            <button onclick="exportToPdf()" class="bg-blue-500 hover:bg-blue-600 text-white px-10 py-5 rounded-2xl font-black shadow-xl transition-all flex items-center gap-3 active:scale-95">
+                📕 DOWNLOAD LAPORAN PDF
+            </button>
+        </div>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     </main>
     
     <!-- Floating Action Button -->
@@ -484,6 +586,7 @@
 
     <!-- JavaScript -->
     <script>
+<<<<<<< HEAD
         // Global variables
         let currentSort = 'desc';
         let currentDateFilter = 'all';
@@ -747,11 +850,227 @@
                 });
                 
                 tableBody.innerHTML = html;
+=======
+        const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+
+        let selectedPosyandu = null;
+        let selectedDate = null;
+        let selectedChild = null;
+        let currentFlatpickr = null;
+
+        function formatDate(tanggal) {
+            if (!tanggal) return '-';
+            const [d, m, y] = tanggal.split('/');
+            const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+        }
+
+        function formatUmur(totalBulan) {
+            if (!totalBulan || isNaN(totalBulan)) return "-";
+            const tahun = Math.floor(totalBulan / 12);
+            const bulan = totalBulan % 12;
+            let result = "";
+            if (tahun > 0) result += tahun + " THN ";
+            if (bulan > 0 || tahun === 0) result += bulan + " BLN";
+            return result.trim() || "0 BLN";
+        }
+
+        function handleSearch() {
+            const query = document.getElementById("searchBox").value.trim().toLowerCase();
+            const resultArea = document.getElementById("resultArea");
+            resultArea.innerHTML = "";
+
+            if (query.length < 2) {
+                resetState();
+                return;
+            }
+
+            const posyanduList = [...new Set(allData
+                .filter(item => 
+                    (item.namaPosyandu || "").toLowerCase().includes(query) ||
+                    (item.namaAnak || "").toLowerCase().includes(query)
+                )
+                .map(item => item.namaPosyandu || "Posyandu Umum"))];
+
+            if (posyanduList.length === 0) {
+                resultArea.innerHTML = `<div class="text-center py-12 text-slate-500">Tidak ditemukan posyandu atau anak.</div>`;
+                return;
+            }
+
+            resultArea.innerHTML = `<p class="text-slate-600 font-bold mb-4">Pilih Posyandu:</p>`;
+
+            posyanduList.forEach(pos => {
+                const card = document.createElement("div");
+                card.className = "glass-card p-6 cursor-pointer hover:bg-blue-50 transition mb-4 border-l-4 border-blue-500";
+                card.innerHTML = `
+                    <h3 class="text-xl font-bold text-blue-600">${pos}</h3>
+                    <p class="text-sm text-slate-500 mt-1">Klik untuk pilih tanggal</p>
+                `;
+                card.onclick = () => showDatePicker(pos);
+                resultArea.appendChild(card);
+            });
+        }
+
+        function showDatePicker(posyandu) {
+            selectedPosyandu = posyandu;
+
+            const resultArea = document.getElementById("resultArea");
+            resultArea.innerHTML = `
+                <p class="text-slate-600 font-bold mb-4">Pilih Tanggal di ${posyandu}:</p>
+                <div class="glass-card p-6">
+                    <label class="block text-slate-700 font-bold mb-2">Tanggal Periode</label>
+                    <input type="text" id="datePicker" placeholder="Pilih tanggal (contoh: 16/01/2026)" class="w-full p-4 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-bold cursor-pointer">
+                    <p class="text-sm text-slate-500 mt-2">Klik untuk membuka kalender dan pilih tanggal.</p>
+                </div>
+            `;
+
+            if (currentFlatpickr) currentFlatpickr.destroy();
+
+            currentFlatpickr = flatpickr("#datePicker", {
+                dateFormat: "d/m/Y",
+                defaultDate: "",
+                minDate: "01/01/2020",
+                maxDate: "31/12/2030",
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        selectedDate = dateStr;
+                        showChildren(posyandu, dateStr);
+                    }
+                }
+            });
+
+            document.getElementById("datePicker").focus();
+        }
+
+        function showChildren(posyandu, dateStr) {
+            const [d, m, y] = dateStr.split('/');
+            const resultArea = document.getElementById("resultArea");
+            resultArea.innerHTML += `
+                <p class="text-slate-600 font-bold mb-4 mt-6">Anak di ${posyandu} - ${formatDate(dateStr)}:</p>
+            `;
+
+            const filtered = allData.filter(item => {
+                const [dd, mm, yy] = item.tanggal.split('/');
+                return (item.namaPosyandu || "Posyandu Umum") === posyandu && dd === d && mm === m && yy === y;
+            });
+
+            const uniqueChildren = [...new Set(filtered.map(item => item.namaAnak))].map(childName => filtered.find(item => item.namaAnak === childName));
+
+            if (uniqueChildren.length === 0) {
+                resultArea.innerHTML += `<p class="text-center py-6 text-slate-500">Tidak ada data anak pada tanggal ini.</p>`;
+                return;
+            }
+
+            uniqueChildren.forEach(child => {
+                const card = document.createElement("div");
+                card.className = "glass-card p-6 cursor-pointer hover:bg-purple-50 transition mb-4 border-l-4 border-purple-500";
+                card.innerHTML = `
+                    <h3 class="text-xl font-bold text-purple-600">${child.namaAnak}</h3>
+                    <p class="text-sm text-slate-500 mt-1">Klik untuk detail lengkap</p>
+                `;
+                card.onclick = () => showChildDetail(child.namaAnak, posyandu, dateStr);
+                resultArea.appendChild(card);
+            });
+        }
+
+        function showChildDetail(childName, posyandu, dateStr) {
+            selectedChild = childName;
+
+            const latest = getLatestProfile(childName);
+            if (!latest) return;
+
+            document.getElementById("detailSection").classList.remove("hidden");
+
+            document.getElementById("detNamaAnak").textContent = latest.namaAnak || "-";
+            document.getElementById("detPosyandu").textContent = latest.namaPosyandu || "Posyandu Umum";
+            document.getElementById("detNamaIbu").textContent = latest.namaIbu?.trim() || "-";
+
+            let jkDisplay = "-";
+            const jkVal = (latest.jk || "").trim().toUpperCase();
+            if (jkVal === "L") jkDisplay = "Laki-laki";
+            else if (jkVal === "P") jkDisplay = "Perempuan";
+            document.getElementById("detJK").textContent = jkDisplay;
+
+            document.getElementById("detBB").textContent = (latest.bb ?? "-") + " kg";
+            document.getElementById("detTB").textContent = (latest.tb ?? "-") + " cm";
+            document.getElementById("detStatus").textContent = latest.status || "NORMAL";
+            document.getElementById("detStatus").style.color = latest.color || "#64748b";
+
+            document.getElementById("detKader").textContent = latest.kader || "-";
+            document.getElementById("detRtRw").textContent = `${latest.rt || '0'}/${latest.rw || '0'}`;
+
+            const totalBulan = parseInt(latest.usia) || 0;
+            document.getElementById("detUmur").textContent = formatUmur(totalBulan);
+
+            document.getElementById("btnEditAnak").onclick = function() {
+                localStorage.setItem("dataAnak", JSON.stringify({
+                    namaAnak: latest.namaAnak || "",
+                    namaIbu: latest.namaIbu || "",
+                    jk: latest.jk || "L"
+                }));
+                window.location.href = "inputData.html";
+            };
+
+            renderChildHistory(childName, posyandu, dateStr);
+        }
+
+        function renderChildHistory(childName, posyandu, dateStr) {
+            const [d, m, y] = dateStr.split('/');
+            const tableBody = document.getElementById("tableBody");
+            const tableContainer = document.getElementById("tableContainer");
+            const emptyState = document.getElementById("emptyState");
+
+            tableBody.innerHTML = "";
+
+            const filtered = allData.filter(item => {
+                const [dd, mm, yy] = item.tanggal.split('/');
+                return item.namaAnak === childName &&
+                       (item.namaPosyandu || "Posyandu Umum") === posyandu &&
+                       dd === d && mm === m && yy === y;
+            }).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            // Hilangkan dobel dengan Set berdasarkan timestamp
+            const uniqueFiltered = [...new Map(filtered.map(item => [item.timestamp, item])).values()];
+
+            if (uniqueFiltered.length > 0) {
+                emptyState.classList.add("hidden");
+                tableContainer.classList.remove("hidden");
+
+                uniqueFiltered.forEach(item => {
+                    const ts = item.timestamp.toString();
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-blue-50/50 transition border-b border-slate-50">
+                            <td class="p-6 text-center">
+                                <div class="text-slate-800">${item.tanggal || '-'}</div>
+                                <div class="text-[10px] text-blue-400 mt-1 uppercase font-black">Jam ${item.jam || '-'}</div>
+                            </td>
+                            <td class="p-6 text-blue-600 font-extrabold uppercase">${item.namaPosyandu || 'Posyandu Umum'}</td>
+                            <td class="p-6 text-slate-800 font-bold">${item.namaAnak || '-'}</td>
+                            <td class="p-6 text-center">
+                                <span class="bg-slate-100 px-3 py-1 rounded-lg text-slate-700">${item.bb ?? 0}kg / ${item.tb ?? 0}cm</span>
+                            </td>
+                            <td class="p-6 text-center">
+                                <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase inline-block border shadow-sm" 
+                                    style="background: ${item.color || '#64748b'}15; color: ${item.color || '#64748b'}; border-color: ${item.color || '#64748b'}40">
+                                    ${item.status || 'NORMAL'}
+                                </span>
+                            </td>
+                            <td class="p-6 text-center">
+                                <button onclick="deleteRow('${ts}')" class="text-red-500 hover:text-red-700 transition p-2 hover:bg-red-50 rounded-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>`;
+                });
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
             } else {
                 tableContainer.classList.add("hidden");
                 emptyState.classList.remove("hidden");
             }
         }
+<<<<<<< HEAD
         
         // Update statistics
         function updateStats(filteredData = [], allData = []) {
@@ -1021,17 +1340,37 @@
             localStorage.setItem("allNutriResults", JSON.stringify(allData));
             
             renderTable();
+=======
+
+        function deleteRow(timestamp) {
+            if (!confirm("Yakin ingin menghapus data ini?")) return;
+
+            let data = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            data = data.filter(item => item.timestamp != timestamp);
+            localStorage.setItem("allNutriResults", JSON.stringify(data));
+
+            if (selectedChild && selectedPosyandu && selectedDate) {
+                renderChildHistory(selectedChild, selectedPosyandu, selectedDate);
+            }
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         }
         
         // Close detail
         function tutupDetail() {
+<<<<<<< HEAD
             document.getElementById('detailAnakSection').classList.add('hidden');
             document.getElementById('searchBox').value = '';
             renderTable();
+=======
+            document.getElementById("detailSection").classList.add("hidden");
+            document.getElementById("searchBox").value = "";
+            document.getElementById("resultArea").innerHTML = "";
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         }
         
         // Clear all data
         function clearAllData() {
+<<<<<<< HEAD
             if (!confirm('Hapus SEMUA data rekapan? Tindakan ini tidak dapat dibatalkan.')) return;
             
             localStorage.removeItem("allNutriResults");
@@ -1039,6 +1378,11 @@
             
             // Show success message
             alert('Semua data telah berhasil dihapus.');
+=======
+            if (!confirm("Hapus SEMUA data rekapan?")) return;
+            localStorage.removeItem("allNutriResults");
+            location.reload();
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         }
         
         // Import data
@@ -1097,6 +1441,7 @@
         
         // Export to Excel with proper date formatting
         function exportToExcel() {
+<<<<<<< HEAD
             const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
             
             if (allData.length === 0) {
@@ -1179,6 +1524,84 @@
             fixExistingTimestamps();
             initPage();
         });
+=======
+            if (document.getElementById("detailSection").classList.contains("hidden")) {
+                alert("Belum ada profil anak yang dipilih. Silakan pilih anak terlebih dahulu.");
+                return;
+            }
+
+            const table = document.getElementById("rekapanTable");
+            if (table.rows.length <= 1) {
+                alert("Tidak ada riwayat pemeriksaan di tanggal ini. Pilih periode yang memiliki data.");
+                return;
+            }
+
+            // Profil Anak
+            const profileData = [
+                ["Nama Anak", document.getElementById("detNamaAnak").textContent.trim()],
+                ["Nama Ibu", document.getElementById("detNamaIbu").textContent.trim()],
+                ["Jenis Kelamin", document.getElementById("detJK").textContent.trim()],
+                ["Berat Badan", document.getElementById("detBB").textContent.trim()],
+                ["Tinggi Badan", document.getElementById("detTB").textContent.trim()],
+                ["Status Gizi", document.getElementById("detStatus").textContent.trim()],
+                ["Nama Kader", document.getElementById("detKader").textContent.trim()],
+                ["RT / RW", document.getElementById("detRtRw").textContent.trim()],
+                ["Umur Anak", document.getElementById("detUmur").textContent.trim()],
+                ["Lokasi Posyandu", document.getElementById("detPosyandu").textContent.trim()]
+            ];
+
+            const wb = XLSX.utils.book_new();
+            const wsProfile = XLSX.utils.aoa_to_sheet(profileData);
+            XLSX.utils.book_append_sheet(wb, wsProfile, "Profil Anak");
+
+            // Riwayat
+            const wsHistory = XLSX.utils.table_to_sheet(table);
+            XLSX.utils.book_append_sheet(wb, wsHistory, "Riwayat Pemeriksaan");
+
+            const childName = document.getElementById("detNamaAnak").textContent.trim().replace(/\s+/g, '_') || "Rekapan";
+            const tanggalFile = new Date().toISOString().slice(0,10);
+            XLSX.writeFile(wb, `Rekapan_${childName}_${tanggalFile}.xlsx`);
+        }
+
+        function exportToPdf() {
+            if (document.getElementById("detailSection").classList.contains("hidden")) {
+                alert("Belum ada profil anak yang dipilih. Silakan pilih anak terlebih dahulu.");
+                return;
+            }
+
+            const table = document.getElementById("rekapanTable");
+            if (table.rows.length <= 1) {
+                alert("Tidak ada riwayat pemeriksaan di tanggal ini. Pilih periode yang memiliki data.");
+                return;
+            }
+
+            window.print();
+        }
+
+        function getLatestProfile(name) {
+            const normalized = name.trim().toLowerCase();
+            const matching = allData
+                .filter(item => (item.namaAnak || "").trim().toLowerCase() === normalized)
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            return matching[0] || null;
+        }
+
+        function resetState() {
+            selectedPosyandu = null;
+            selectedDate = null;
+            selectedChild = null;
+            document.getElementById("detailSection").classList.add("hidden");
+            document.getElementById("resultArea").innerHTML = "";
+            if (currentFlatpickr) {
+                currentFlatpickr.destroy();
+                currentFlatpickr = null;
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById("searchBox").focus();
+        };
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     </script>
 </body>
 </html>

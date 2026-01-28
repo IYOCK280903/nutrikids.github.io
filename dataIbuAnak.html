@@ -120,6 +120,7 @@
             top: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+<<<<<<< HEAD
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.5);
         }
@@ -748,10 +749,117 @@
                     </p>
                 </div>
             </div>
+=======
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.03);
+            border: 2px solid #ffffff;
+        }
+        .input-styled {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 1rem;
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #475569;
+            outline: none;
+        }
+        .input-styled:focus {
+            background-color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.08);
+        }
+        .btn-save {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: 800;
+            padding: 1.25rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
+        }
+        .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .icon-input {
+            position: absolute;
+            top: 50%;
+            left: 1.25rem;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="pb-20">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+            <a href="inputData.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2 rounded-2xl text-sm font-bold transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-xl mx-auto mt-12 px-6">
+        <div class="text-center mb-12">
+            <span class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">👩‍👦 Input Profil</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mt-4">Data Ibu & Anak</h1>
+            <p class="text-slate-500 mt-3 text-base leading-relaxed">Lengkapi identitas Bunda dan Si Kecil untuk rekaman akurat.</p>
+        </div>
+
+        <div class="glass-card p-8 relative z-10">
+            <form id="anakForm">
+                <div class="mb-6 relative">
+                    <label class="block text-slate-700 font-bold mb-2">Nama Ibu</label>
+                    <div class="icon-input">👩</div>
+                    <input id="motherName" type="text" class="input-styled pl-12" placeholder="Nama lengkap Bunda" required>
+                </div>
+
+                <div class="mb-6 relative">
+                    <label class="block text-slate-700 font-bold mb-2">Nama Anak</label>
+                    <div class="icon-input">👶</div>
+                    <input id="childName" type="text" class="input-styled pl-12" placeholder="Nama lengkap Si Kecil" required>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-slate-700 font-bold mb-2">Jenis Kelamin Anak</label>
+                    <select id="gender" class="input-styled" required>
+                        <option value="">Pilih jenis kelamin</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div>
+                        <label class="block text-slate-700 font-bold mb-2">Usia (Tahun)</label>
+                        <input id="ageYear" type="number" min="0" class="input-styled" placeholder="Contoh: 1" required>
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-bold mb-2">Usia (Bulan)</label>
+                        <input id="ageMonth" type="number" min="0" max="11" class="input-styled" placeholder="Contoh: 6" required>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-save w-full" id="btnSaveAnak">Simpan & Lanjut</button>
+            </form>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         </div>
     </main>
 
     <script>
+<<<<<<< HEAD
         // Function to calculate age
         function hitungUsia() {
             const tanggalLahir = document.getElementById('tanggalLahir').value;
@@ -924,6 +1032,51 @@
                 alertDiv.remove();
             }, 2000);
         }
+=======
+        document.getElementById("btnSaveAnak").addEventListener("click", function () {
+            const namaIbu = document.getElementById("motherName").value.trim();
+            const namaAnak = document.getElementById("childName").value.trim();
+            const gender = document.getElementById("gender").value;
+            const ageYear = parseInt(document.getElementById("ageYear").value) || 0;
+            const ageMonth = parseInt(document.getElementById("ageMonth").value) || 0;
+
+            if (!namaIbu || !namaAnak || !gender) {
+                alert("Nama Ibu, Nama Anak, dan Jenis Kelamin wajib diisi!");
+                return;
+            }
+
+            // Hitung total usia dalam bulan
+            const totalBulan = (ageYear * 12) + ageMonth;
+
+            const dataAnak = {
+                namaIbu: namaIbu,
+                namaAnak: namaAnak,
+                gender: gender,
+                usia: totalBulan,  // Simpan sebagai total bulan untuk mudah dihitung
+                updateTime: new Date().getTime()
+            };
+
+            localStorage.setItem('dataAnak', JSON.stringify(dataAnak));
+            alert("Data Ibu & Anak berhasil disimpan!");
+
+            // Kembali ke dashboard
+            window.location.href = 'inputData.html';
+        });
+
+        // Load data jika ada
+        window.onload = function() {
+            const savedData = JSON.parse(localStorage.getItem('dataAnak'));
+            if (savedData) {
+                document.getElementById('motherName').value = savedData.namaIbu || '';
+                document.getElementById('childName').value = savedData.namaAnak || '';
+                document.getElementById('gender').value = savedData.gender || '';
+                
+                const totalBulan = parseInt(savedData.usia) || 0;
+                document.getElementById('ageYear').value = Math.floor(totalBulan / 12);
+                document.getElementById('ageMonth').value = totalBulan % 12;
+            }
+        };
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     </script>
 </body>
 </html>

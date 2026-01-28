@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hasil Analisis Gizi - NutriKids</title>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -265,10 +266,36 @@
             filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
         }
 
+=======
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #1b6bec, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+        }
+        .emoji-animate {
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
         }
+<<<<<<< HEAD
 
         .status-text {
             font-size: 2.5rem;
@@ -948,16 +975,129 @@
                     </p>
                 </div>
             </div>
+=======
+        .status-glow {
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body class="pb-20">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+            <a href="index.html" class="bg-slate-800 text-white px-5 py-2 rounded-2xl text-sm font-bold hover:bg-slate-700 transition">Ke Beranda</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 mt-10 mb-20">
+        <div class="text-center mb-12">
+            <span class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">✨ Analisis Selesai</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mt-4">
+                Laporan Gizi
+                <span class="text-blue-600" id="namaAnakHeader">Si Kecil</span>
+            </h1>
+            <p class="text-slate-500 mt-2">Berdasarkan Standar Antropometri Kemenkes RI</p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-card p-10 text-center border-b-[12px] shadow-2xl status-glow relative overflow-hidden" id="statusCard">
+                    <div class="absolute top-0 left-0 w-full h-2 opacity-10 bg-current"></div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Status Gizi (Z-Score BB/TB)</p>
+
+                    <div class="text-8xl mb-6 filter drop-shadow-xl emoji-animate" id="statusEmoji">👶</div>
+
+                    <h2 class="text-4xl font-black mb-2 uppercase tracking-tight" id="statusText">MEMUASKAN</h2>
+
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-sm font-bold text-slate-600 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-current"></span>
+                        Skor: <span id="zscoreVal">0.00</span> SD
+                    </div>
+
+                    <p class="text-slate-500 text-sm mb-8 font-medium leading-relaxed px-4" id="statusDesc">Si Kecil tumbuh dengan sangat baik!</p>
+
+                    <div class="grid grid-cols-2 gap-4 pt-8 border-t border-slate-100">
+                        <div class="bg-slate-50 p-5 rounded-3xl">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Berat Badan</span>
+                            <div class="flex items-baseline justify-center gap-1">
+                                <span class="text-3xl font-black text-slate-700" id="resBB">0</span>
+                                <span class="text-sm text-slate-400 font-bold">kg</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-3xl">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Tinggi Badan</span>
+                            <div class="flex items-baseline justify-center gap-1">
+                                <span class="text-3xl font-black text-slate-700" id="resTB">0</span>
+                                <span class="text-sm text-slate-400 font-bold">cm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <a href="calculator.html" class="flex-1 py-4 text-center font-bold text-slate-500 hover:text-emerald-600 transition-all bg-white rounded-3xl border border-slate-200 shadow-sm">🔄 Hitung Ulang</a>
+                    
+                    <a href="rekapan.html" class="flex-1 bg-white text-slate-700 border border-slate-200 text-center py-5 rounded-[2rem] font-bold shadow-sm hover:bg-slate-50 transition">Lihat Rekapan</a>
+                </div>
+
+                <button onclick="simpanKeRekapan()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-3xl font-extrabold text-lg shadow-xl transition-all active:scale-95">
+                    💾 Simpan ke Rekapan Posyandu
+                </button>
+            </div>
+
+            <div class="lg:col-span-7 space-y-6">
+                <div class="glass-card p-8 md:p-10 shadow-xl border-none border-slate-100">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-800">Rekomendasi Bunda</h3>
+                    </div>
+                    <div id="dynamicEducation" class="space-y-6"></div>
+
+                    <div class="mt-10 grid grid-cols-2 gap-4">
+                        <a href="learn.html" class="flex items-center gap-4 p-5 bg-emerald-50 rounded-3xl border border-emerald-100 hover:bg-emerald-100 transition-all group">
+                            <div class="text-3xl group-hover:scale-110 transition-transform">📚</div>
+                            <span class="text-xs font-black text-emerald-800 uppercase tracking-widest">Materi Gizi</span>
+                        </a>
+                        <a href="tips.html" class="flex items-center gap-4 p-5 bg-blue-50 rounded-3xl border border-blue-100 hover:bg-blue-100 transition-all group">
+                            <div class="text-3xl group-hover:rotate-12 transition-transform">💡</div>
+                            <span class="text-xs font-black text-blue-800 uppercase tracking-widest">Tips Nutrisi</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white flex items-center gap-6 shadow-2xl relative overflow-hidden group">
+                    <div class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:rotate-12 transition-transform duration-700">📅</div>
+                    <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🗓️</div>
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Agenda Rutin</p>
+                        <p class="text-sm md:text-base font-semibold leading-relaxed">
+                            Jangan lupa timbang Si Kecil setiap bulan di Posyandu untuk memantau grafik pertumbuhannya!
+                        </p>
+                    </div>
+                </div>
+            </div>
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
         </div>
     </main>
 
     <script>
+<<<<<<< HEAD
         // Global variables
         let currentResult = null;
         let currentDataAnak = null;
         let chartBB = null;
         let chartTB = null;
         let chartsVisible = false;
+=======
+      window.onload = function () {
+        const result = JSON.parse(localStorage.getItem("lastNutriResult"));
+        const dataAnak = JSON.parse(localStorage.getItem("dataAnak")) || {};
+        const dataPosyandu = JSON.parse(localStorage.getItem("dataPosyandu")) || {};
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
@@ -1128,6 +1268,7 @@
             grid.innerHTML = html;
         }
 
+<<<<<<< HEAD
         // Toggle charts visibility
         function toggleCharts() {
             const chartsSection = document.getElementById("chartsSection");
@@ -1344,6 +1485,135 @@
             if (zscore <= 2) return "Gizi baik. Pertahankan pola makan sehat.";
             return "Perhatikan asupan kalori dan tingkatkan aktivitas fisik.";
         }
+=======
+        // Tampilkan nama anak di header
+        document.getElementById("namaAnakHeader").innerText = 
+          result.namaAnak || dataAnak.namaAnak || "Si Kecil";
+
+        document.getElementById("resBB").innerText = result.bb || "0";
+        document.getElementById("resTB").innerText = result.tb || "0";
+        document.getElementById("zscoreVal").innerText = result.zscore || "0.00";
+
+        const z = parseFloat(result.zscore) || 0;
+        const statusCard = document.getElementById("statusCard");
+        const statusEmoji = document.getElementById("statusEmoji");
+        const statusText = document.getElementById("statusText");
+        const statusDesc = document.getElementById("statusDesc");
+
+        let color = "#10b981";
+        let emoji = dataAnak.gender === "Perempuan" ? "👧" : "👦";
+        let description = "";
+        let statusLabel = "";
+
+        if (z < -3) {
+          color = "#ef4444";
+          emoji = "😟";
+          statusLabel = "Gizi Buruk";
+          description = "Si Kecil terindikasi Gizi Buruk (Sangat Kurus). Segera konsultasi dokter atau Puskesmas.";
+        } else if (z < -2) {
+          color = "#f59e0b";
+          emoji = "⚠️";
+          statusLabel = "Gizi Kurang";
+          description = "Si Kecil berada di Gizi Kurang. Tingkatkan asupan protein hewani dan lemak sehat.";
+        } else if (z <= 2) {
+          color = "#10b981";
+          emoji = dataAnak.gender === "Perempuan" ? "👧" : "👦";
+          statusLabel = "Gizi Normal";
+          description = "Pertumbuhan Si Kecil sangat ideal dan sehat sesuai standar usia!";
+        } else {
+          color = "#3b82f6";
+          emoji = "😅";
+          statusLabel = "Gizi Lebih";
+          description = "Si Kecil Gizi Lebih. Perhatikan porsi makan dan camilan rendah gula/garam.";
+        }
+
+        statusCard.style.borderColor = color;
+        statusText.innerText = statusLabel;
+        statusText.style.color = color;
+        statusEmoji.innerText = emoji;
+        statusDesc.innerText = description;
+
+        // =====================================================================
+        // PENYIMPANAN OTOMATIS KE REKAPAN DENGAN SEMUA FIELD LENGKAP
+        // =====================================================================
+        const historyEntry = {
+          timestamp: Date.now(),
+          tanggal: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+          jam: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+
+          namaAnak: dataAnak.namaAnak || result.namaAnak || "-",
+          namaIbu: dataAnak.namaIbu || "-",
+          jk: dataAnak.gender === "Laki-laki" ? "L" : 
+              dataAnak.gender === "Perempuan" ? "P" : "-",
+
+          namaPosyandu: dataPosyandu.posyandu || "Posyandu Umum",
+
+          // FIELD TAMBAHAN YANG PASTI DISIMPAN (INI PENYEBAB UTAMA KOSONG SEBELUMNYA)
+          kader: dataPosyandu.kader || "-",          // ← dari form posyandu
+          rt: dataPosyandu.rt || "0",                // ← dari form posyandu
+          rw: dataPosyandu.rw || "0",                // ← dari form posyandu
+          usia: dataAnak.usia || "-",                // ← dari form anak (total bulan atau string)
+
+          bb: result.bb || "0",
+          tb: result.tb || "0",
+          status: statusLabel,
+          color: color,
+          zscore: result.zscore || "0.00"
+        };
+
+        let allHistory = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+        if (!allHistory.some(entry => entry.timestamp === historyEntry.timestamp)) {
+          allHistory.push(historyEntry);
+          localStorage.setItem("allNutriResults", JSON.stringify(allHistory));
+          console.log("Data lengkap berhasil disimpan otomatis ke rekapan!", historyEntry);
+        }
+
+        // =====================================================================
+        // EDUKASI DAN TIPS (tetap sama)
+        // =====================================================================
+        const eduBox = document.getElementById("dynamicEducation");
+        const usia = parseInt(dataAnak.usia) || 0;
+        let eduHTML = "";
+
+        if (usia <= 6) {
+          eduHTML += `
+            <div class="p-6 bg-emerald-50 rounded-[2rem] border-l-8 border-emerald-500 shadow-sm">
+              <h4 class="font-bold text-emerald-800 text-lg mb-2">🍼 Usia ${usia} Bulan: ASI Eksklusif</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Fokus pada pemberian ASI saja tanpa tambahan cairan lain.</p>
+            </div>`;
+        } else if (usia <= 24) {
+          eduHTML += `
+            <div class="p-6 bg-blue-50 rounded-[2rem] border-l-8 border-blue-500 shadow-sm">
+              <h4 class="font-bold text-blue-800 text-lg mb-2">🥣 Usia ${usia} Bulan: MPASI Berkualitas</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Tambahkan <b>Protein Hewani</b> di setiap porsi MPASI.</p>
+            </div>`;
+        } else {
+          eduHTML += `
+            <div class="p-6 bg-indigo-50 rounded-[2rem] border-l-8 border-indigo-500 shadow-sm">
+              <h4 class="font-bold text-indigo-800 text-lg mb-2">🍱 Menu Keluarga Seimbang</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Pastikan porsi sayur dan buah seimbang setiap hari.</p>
+            </div>`;
+        }
+
+        if (z < -2) {
+          eduHTML += `
+            <div class="p-6 border-2 border-dashed border-amber-300 rounded-[2rem] bg-amber-50/50">
+              <h4 class="font-bold text-slate-800 text-sm mb-3">📍 Tips Meningkatkan Berat Badan:</h4>
+              <ul class="text-sm text-slate-600 space-y-3">
+                <li class="flex items-start gap-2"><span>✅</span> Tambah 1 sdt minyak/lemak di setiap porsi.</li>
+                <li class="flex items-start gap-2"><span>✅</span> Makan utama 3x + selingan 2x sehari.</li>
+                <li class="flex items-start gap-2"><span>✅</span> Konsultasi ke bidan/dokter.</li>
+              </ul>
+            </div>`;
+        }
+
+        eduBox.innerHTML = eduHTML;
+      };
+
+      function simpanKeRekapan() {
+        alert("Data sudah otomatis tersimpan saat halaman dimuat!\nCek di halaman Rekapan.");
+      }
+>>>>>>> 8895c9abd3ee091c0173ceeb4421daf8469df2a9
     </script>
 </body>
 </html>
