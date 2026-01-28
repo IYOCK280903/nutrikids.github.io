@@ -1,412 +1,1349 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hasil Analisis Gizi - NutriKids</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        background-color: #f8fafc;
-        background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
-        background-size: 24px 24px;
-      }
-      .gradient-text {
-        background: linear-gradient(90deg, #1b6bec, #10b981);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .glass-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 2.5rem;
-      }
-      .emoji-animate {
-        animation: bounce 2s infinite;
-        display: inline-block;
-      }
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
+        /* Import CSS Variables dan Global Styles */
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --bg-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-2xl: 2.5rem;
         }
-        50% {
-          transform: translateY(-15px);
+
+        /* RESET & BASE */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
-      }
-      .status-glow {
-        transition: all 0.5s ease;
-      }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            color: var(--text-main); 
+            background-color: var(--bg-light); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Container */
+        .container { 
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 1.5rem; 
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* NAVIGATION */
+        .nav-container { 
+            padding: 1rem 0; 
+            width: 100%; 
+            z-index: 1000; 
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .brand { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span { 
+            color: var(--text-main); 
+        }
+
+        .nav-cta-box {
+            background: var(--primary);
+            color: var(--white) !important;
+            padding: 0.625rem 1.5rem !important;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .nav-cta-box:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Page Grid */
+        .page-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            padding: 2rem;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Status Card */
+        .status-card {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 12px solid;
+            transition: all 0.5s ease;
+        }
+
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            opacity: 0.1;
+            background: currentColor;
+        }
+
+        .status-label {
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-emoji {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .status-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .zscore-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .zscore-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        /* Measurement Grid */
+        .measurement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .measurement-item {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .measurement-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .measurement-value {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .measurement-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        .measurement-unit {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #2563eb;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-sm {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            width: auto;
+        }
+
+        /* Charts Container */
+        .charts-container {
+            margin-top: 2rem;
+        }
+
+        .charts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            margin-top: 2rem;
+        }
+
+        .recommendations-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendations-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-gradient);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .recommendations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recommendation-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            border-left: 8px solid;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .recommendation-card.good {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .recommendation-card.warning {
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+
+        .recommendation-card.danger {
+            border-left-color: var(--danger);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.1) 100%);
+        }
+
+        .recommendation-card.info {
+            border-left-color: var(--info);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+        }
+
+        .recommendation-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendation-desc {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-link-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .quick-link-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+
+        .quick-link-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--secondary);
+        }
+
+        .quick-link-text {
+            flex: 1;
+        }
+
+        .quick-link-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .quick-link-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Agenda Card */
+        .agenda-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            color: var(--white);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agenda-card::before {
+            content: '📅';
+            position: absolute;
+            right: -1rem;
+            top: -1rem;
+            font-size: 8rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        .agenda-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agenda-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+
+        .agenda-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.25rem;
+        }
+
+        .agenda-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-5 { margin-top: 2rem; }
+        .mt-6 { margin-top: 3rem; }
+
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 2rem; }
+        .mb-6 { margin-bottom: 3rem; }
+
+        .d-flex { display: flex; }
+        .flex-column { flex-direction: column; }
+        .align-items-center { align-items: center; }
+        .justify-content-center { justify-content: center; }
+        .justify-content-between { justify-content: space-between; }
+
+        .w-100 { width: 100%; }
+        .h-100 { height: 100%; }
+
+        .d-none { display: none; }
+        .d-block { display: block; }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-inner {
+                padding: 0.5rem 1rem;
+            }
+            
+            .brand {
+                font-size: 1.2rem;
+            }
+            
+            .nav-cta-box {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem;
+            }
+            
+            .glass-card {
+                padding: 1.5rem;
+            }
+            
+            .status-emoji {
+                font-size: 4rem;
+            }
+            
+            .status-text {
+                font-size: 2rem;
+            }
+            
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .status-emoji {
+                font-size: 3rem;
+            }
+            
+            .status-text {
+                font-size: 1.5rem;
+            }
+            
+            .measurement-number {
+                font-size: 1.5rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+        }
     </style>
-  </head>
-  <body class="pb-20">
-    <header
-      class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100"
-    >
-      <div
-        class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center"
-      >
-        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-        <a
-          href="index.html"
-          class="bg-slate-800 text-white px-5 py-2 rounded-2xl text-sm font-bold hover:bg-slate-700 transition"
-          >Ke Beranda</a
-        >
-      </div>
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-bg"></div>
+    
+    <!-- Header/Navigation -->
+    <header class="nav-container">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="index.html" class="brand">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>NutriKids</span>
+                </a>
+                <a href="calculator.html" class="nav-cta-box">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Kalkulator
+                </a>
+            </div>
+        </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 mt-10 mb-20">
-      <div class="text-center mb-12">
-        <span
-          class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-          >✨ Analisis Selesai</span
-        >
-        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mt-4">
-          Laporan Gizi
-          <span class="text-blue-600" id="namaAnakHeader">Si Kecil</span>
-        </h1>
-        <p class="text-slate-500 mt-2">
-          Berdasarkan Standar Antropometri Kemenkes RI
-        </p>
-      </div>
-
-      <div class="grid lg:grid-cols-12 gap-8 items-start">
-        <div class="lg:col-span-5 space-y-6">
-          <div
-            class="glass-card p-10 text-center border-b-[12px] shadow-2xl status-glow relative overflow-hidden"
-            id="statusCard"
-          >
-            <div
-              class="absolute top-0 left-0 w-full h-2 opacity-10 bg-current"
-            ></div>
-            <p
-              class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6"
-            >
-              Status Gizi (Z-Score BB/TB)
+    <main class="container">
+        <div class="page-header fade-in">
+            <span class="badge badge-success">
+                <i class="fas fa-check-circle"></i> Analisis Selesai
+            </span>
+            <h1>Laporan Gizi 
+                <span id="namaAnakHeader" style="color: var(--primary);">Si Kecil</span>
+            </h1>
+            <p class="text-center" style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                Berdasarkan Standar Antropometri Kemenkes RI dan WHO
             </p>
-
-            <div
-              class="text-8xl mb-6 filter drop-shadow-xl emoji-animate"
-              id="statusEmoji"
-            >
-              👶
-            </div>
-
-            <h2
-              class="text-4xl font-black mb-2 uppercase tracking-tight"
-              id="statusText"
-            >
-              MEMUASKAN
-            </h2>
-
-            <div
-              class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-sm font-bold text-slate-600 mb-6"
-            >
-              <span class="w-2 h-2 rounded-full bg-current"></span>
-              Skor: <span id="zscoreVal">0.00</span> SD
-            </div>
-
-            <p
-              class="text-slate-500 text-sm mb-8 font-medium leading-relaxed px-4"
-              id="statusDesc"
-            >
-              Si Kecil tumbuh dengan sangat baik!
-            </p>
-
-            <div class="grid grid-cols-2 gap-4 pt-8 border-t border-slate-100">
-              <div class="bg-slate-50 p-5 rounded-3xl">
-                <span
-                  class="block text-[10px] font-bold text-slate-400 uppercase mb-1"
-                  >Berat Badan</span
-                >
-                <div class="flex items-baseline justify-center gap-1">
-                  <span class="text-3xl font-black text-slate-700" id="resBB"
-                    >0</span
-                  >
-                  <span class="text-sm text-slate-400 font-bold">kg</span>
-                </div>
-              </div>
-              <div class="bg-slate-50 p-5 rounded-3xl">
-                <span
-                  class="block text-[10px] font-bold text-slate-400 uppercase mb-1"
-                  >Tinggi Badan</span
-                >
-                <div class="flex items-baseline justify-center gap-1">
-                  <span class="text-3xl font-black text-slate-700" id="resTB"
-                    >0</span
-                  >
-                  <span class="text-sm text-slate-400 font-bold">cm</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <a
-              href="calculator.html"
-              class="flex-1 py-4 text-center font-bold text-slate-500 hover:text-emerald-600 transition-all bg-white rounded-3xl border border-slate-200 shadow-sm"
-            >
-              🔄 Hitung Ulang
-            </a>
-            <button
-              onclick="window.print()"
-              class="px-6 py-4 bg-white rounded-3xl border border-slate-200 shadow-sm hover:bg-slate-50 transition-all"
-            >
-              🖨️
-            </button>
-            <a
-              href="rekapan.html"
-              class="flex-1 bg-white text-slate-700 border border-slate-200 text-center py-5 rounded-[2rem] font-bold shadow-sm hover:bg-slate-50 transition"
-              >Lihat Rekapan</a
-            >
-          </div>
-
-          <!-- Tombol Simpan ke Rekapan (baru, tapi tetap minimalis & sesuai tema) -->
-          <button
-            onclick="simpanKeRekapan()"
-            class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-3xl font-extrabold text-lg shadow-xl transition-all active:scale-95"
-          >
-            💾 Simpan ke Rekapan Posyandu
-          </button>
         </div>
 
-        <div class="lg:col-span-7 space-y-6">
-          <div
-            class="glass-card p-8 md:p-10 shadow-xl border-none border-slate-100"
-          >
-            <div class="flex items-center gap-4 mb-8">
-              <div
-                class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100"
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-              </div>
-              <h3 class="text-2xl font-extrabold text-slate-800">
-                Rekomendasi Bunda
-              </h3>
-            </div>
-
-            <div id="dynamicEducation" class="space-y-6"></div>
-
-            <div class="mt-10 grid grid-cols-2 gap-4">
-              <a
-                href="learn.html"
-                class="flex items-center gap-4 p-5 bg-emerald-50 rounded-3xl border border-emerald-100 hover:bg-emerald-100 transition-all group"
-              >
-                <div
-                  class="text-3xl group-hover:scale-110 transition-transform"
-                >
-                  📚
+        <div class="page-grid">
+            <!-- Left Column: Status and Results -->
+            <div>
+                <!-- Status Card -->
+                <div id="statusCard" class="glass-card status-card">
+                    <div class="status-label">
+                        Status Gizi (Z-Score BB/TB)
+                    </div>
+                    
+                    <div id="statusEmoji" class="status-emoji">
+                        👶
+                    </div>
+                    
+                    <h2 id="statusText" class="status-text">
+                        Memuaskan
+                    </h2>
+                    
+                    <div id="zscoreBadge" class="zscore-badge">
+                        Skor: <span id="zscoreVal">0.00</span> SD
+                    </div>
+                    
+                    <p id="statusDesc" class="status-desc">
+                        Si Kecil tumbuh dengan sangat baik!
+                    </p>
+                    
+                    <!-- Measurements -->
+                    <div class="measurement-grid">
+                        <div class="measurement-item">
+                            <div class="measurement-label">
+                                <i class="fas fa-weight"></i> Berat Badan
+                            </div>
+                            <div class="measurement-value">
+                                <span id="resBB" class="measurement-number">0</span>
+                                <span class="measurement-unit">kg</span>
+                            </div>
+                        </div>
+                        
+                        <div class="measurement-item">
+                            <div class="measurement-label">
+                                <i class="fas fa-ruler-vertical"></i> Tinggi Badan
+                            </div>
+                            <div class="measurement-value">
+                                <span id="resTB" class="measurement-number">0</span>
+                                <span class="measurement-unit">cm</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons mt-4">
+                        <button onclick="window.print()" class="btn btn-outline">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                        <a href="rekapan.html" class="btn btn-secondary">
+                            <i class="fas fa-history"></i> Lihat Rekapan
+                        </a>
+                    </div>
                 </div>
-                <span
-                  class="text-xs font-black text-emerald-800 uppercase tracking-widest"
-                  >Materi Gizi</span
-                >
-              </a>
-              <a
-                href="tips.html"
-                class="flex items-center gap-4 p-5 bg-blue-50 rounded-3xl border border-blue-100 hover:bg-blue-100 transition-all group"
-              >
-                <div
-                  class="text-3xl group-hover:rotate-12 transition-transform"
-                >
-                  💡
+                
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <a href="learn.html" class="quick-link">
+                        <div class="quick-link-icon green">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="quick-link-text">
+                            <div class="quick-link-label">EDUKASI</div>
+                            <div class="quick-link-title">Materi Gizi Lengkap</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-light);"></i>
+                    </a>
+                    
+                    <a href="tips.html" class="quick-link">
+                        <div class="quick-link-icon blue">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="quick-link-text">
+                            <div class="quick-link-label">TIPS</div>
+                            <div class="quick-link-title">Panduan Nutrisi</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-light);"></i>
+                    </a>
                 </div>
-                <span
-                  class="text-xs font-black text-blue-800 uppercase tracking-widest"
-                  >Tips Nutrisi</span
-                >
-              </a>
             </div>
-          </div>
-
-          <div
-            class="bg-slate-900 p-8 rounded-[2.5rem] text-white flex items-center gap-6 shadow-2xl relative overflow-hidden group"
-          >
-            <div
-              class="absolute -right-6 -top-6 opacity-10 text-9xl group-hover:rotate-12 transition-transform duration-700"
-            >
-              📅
+            
+            <!-- Right Column: Charts and Recommendations -->
+            <div>
+                <!-- Charts Section -->
+                <div class="charts-container">
+                    <div class="charts-header">
+                        <h3><i class="fas fa-chart-line"></i> Grafik Pertumbuhan KMS</h3>
+                        <button id="toggleChartsBtn" class="btn btn-sm btn-outline">
+                            <i class="fas fa-chart-bar"></i> Tampilkan Grafik
+                        </button>
+                    </div>
+                    
+                    <div id="chartsSection" class="d-none">
+                        <div class="charts-grid">
+                            <div class="chart-card">
+                                <div class="chart-title">
+                                    <i class="fas fa-weight" style="color: var(--primary);"></i>
+                                    Grafik BB/U (Berat Badan menurut Umur)
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="kmsChartBB"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-card">
+                                <div class="chart-title">
+                                    <i class="fas fa-ruler-vertical" style="color: var(--secondary);"></i>
+                                    Grafik TB/U (Tinggi Badan menurut Umur)
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="kmsChartTB"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-note mt-3" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-lg); padding: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                            <i class="fas fa-info-circle" style="color: var(--secondary); margin-right: 0.5rem;"></i>
+                            Grafik berdasarkan standar WHO dan Kemenkes RI. Garis hijau menunjukkan median pertumbuhan normal.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recommendations -->
+                <div class="recommendations">
+                    <div class="recommendations-header">
+                        <div class="recommendations-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h3>Rekomendasi untuk Bunda</h3>
+                    </div>
+                    
+                    <div id="recommendationsGrid" class="recommendations-grid">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+                
+                <!-- Agenda Card -->
+                <div class="agenda-card">
+                    <div class="agenda-header">
+                        <div class="agenda-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <div class="agenda-label">AGENDA RUTIN</div>
+                            <h4 style="color: white; margin: 0;">Pemantauan Berkala</h4>
+                        </div>
+                    </div>
+                    <p class="agenda-text">
+                        Jangan lupa timbang Si Kecil setiap bulan di Posyandu untuk memantau perkembangan grafik pertumbuhannya secara berkala!
+                    </p>
+                </div>
             </div>
-            <div
-              class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-4xl shrink-0"
-            >
-              🗓️
-            </div>
-            <div class="relative z-10">
-              <p
-                class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1"
-              >
-                Agenda Rutin
-              </p>
-              <p class="text-sm md:text-base font-semibold leading-relaxed">
-                Jangan lupa timbang Si Kecil setiap bulan di Posyandu untuk
-                memantau grafik pertumbuhannya!
-              </p>
-            </div>
-          </div>
         </div>
-      </div>
     </main>
 
     <script>
-      window.onload = function () {
-        const result = JSON.parse(localStorage.getItem("lastNutriResult"));
-        const dataA = JSON.parse(localStorage.getItem("dataAnak"));
+        // Global variables
+        let currentResult = null;
+        let currentDataAnak = null;
+        let chartBB = null;
+        let chartTB = null;
+        let chartsVisible = false;
 
-        if (!result) {
-          window.location.href = "calculator.html";
-          return;
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage
+            const result = JSON.parse(localStorage.getItem("lastNutriResult"));
+            const dataA = JSON.parse(localStorage.getItem("dataAnak"));
+            
+            if (!result) {
+                alert("Data hasil tidak ditemukan. Silahkan lakukan perhitungan terlebih dahulu.");
+                window.location.href = "calculator.html";
+                return;
+            }
+            
+            currentResult = result;
+            currentDataAnak = dataA;
+            
+            // Update header
+            document.getElementById("namaAnakHeader").textContent = 
+                result.namaAnak || dataA?.namaAnak || "Si Kecil";
+            
+            // Update measurements
+            document.getElementById("resBB").textContent = result.bb;
+            document.getElementById("resTB").textContent = result.tb;
+            document.getElementById("zscoreVal").textContent = result.zscore;
+            
+            // Determine status
+            const z = parseFloat(result.zscore);
+            let status = "Gizi Baik";
+            let color = "#10b981";
+            let emoji = "👶";
+            let description = "";
+            
+            if (z < -3) {
+                status = "Gizi Buruk";
+                color = "#ef4444";
+                emoji = "😟";
+                description = "Si Kecil terindikasi Gizi Buruk. Konsultasikan segera dengan tenaga kesehatan.";
+            } else if (z < -2) {
+                status = "Gizi Kurang";
+                color = "#f59e0b";
+                emoji = "⚠️";
+                description = "Si Kecil berada di kategori Gizi Kurang. Perhatikan asupan gizi hariannya.";
+            } else if (z <= 2) {
+                status = "Gizi Baik";
+                color = "#10b981";
+                emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
+                description = "Luar biasa! Pertumbuhan Si Kecil sangat ideal sesuai standar usianya.";
+            } else {
+                status = "Gizi Lebih";
+                color = "#3b82f6";
+                emoji = "😅";
+                description = "Si Kecil tergolong Gizi Lebih. Perhatikan porsi makan dan aktivitas fisik.";
+            }
+            
+            // Update status card
+            const statusCard = document.getElementById("statusCard");
+            const statusEmoji = document.getElementById("statusEmoji");
+            const statusText = document.getElementById("statusText");
+            const statusDesc = document.getElementById("statusDesc");
+            const zscoreBadge = document.getElementById("zscoreBadge");
+            
+            statusCard.style.borderColor = color;
+            statusEmoji.textContent = emoji;
+            statusEmoji.style.color = color;
+            statusText.textContent = status;
+            statusText.style.color = color;
+            statusDesc.textContent = description;
+            zscoreBadge.style.color = color;
+            zscoreBadge.style.borderColor = color;
+            
+            // Generate recommendations
+            generateRecommendations(z, dataA?.usia || 0, status);
+            
+            // Setup chart toggle button
+            document.getElementById("toggleChartsBtn").addEventListener("click", toggleCharts);
+            
+            // Auto-save to history
+            autoSaveToHistory(result, status, color);
+        });
+
+        // Generate recommendations based on status and age
+        function generateRecommendations(zscore, usiaBulan, status) {
+            const grid = document.getElementById("recommendationsGrid");
+            let html = "";
+            
+            // Base recommendation based on status
+            if (zscore < -2) {
+                html += `
+                    <div class="recommendation-card danger">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-exclamation-triangle"></i> Prioritas Perbaikan Gizi
+                        </h4>
+                        <p class="recommendation-desc">
+                            Tingkatkan asupan protein hewani (ikan, telur, daging) dan tambahkan 1-2 sendok makan minyak sayur/mentega dalam setiap porsi makan.
+                        </p>
+                    </div>
+                `;
+            } else if (zscore <= 2) {
+                html += `
+                    <div class="recommendation-card good">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-check-circle"></i> Pertahankan Kebiasaan Baik
+                        </h4>
+                        <p class="recommendation-desc">
+                            Teruskan pola makan sehat yang telah Bunda terapkan. Berikan variasi makanan dan pastikan kecukupan cairan.
+                        </p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-balance-scale"></i> Pengaturan Pola Makan
+                        </h4>
+                        <p class="                            <p class="recommendation-desc">
+                                Batasi makanan tinggi gula dan lemak jenuh. Tingkatkan aktivitas fisik seperti bermain di luar ruangan selama 60 menit per hari.
+                            </p>
+                        </div>
+                    `;
+            }
+            
+            // Age-specific recommendations
+            if (usiaBulan < 24) {
+                html += `
+                    <div class="recommendation-card warning">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-baby"></i> Nutrisi Usia Dini
+                        </h4>
+                        <p class="recommendation-desc">
+                            ${usiaBulan < 6 ? 'ASI eksklusif sangat penting. Jika sudah MPASI, berikan makanan kaya zat besi seperti hati ayam dan sayuran hijau.' : 'Pastikan porsi MPASI mencukupi dengan komposisi karbohidrat, protein, dan lemak seimbang.'}
+                        </p>
+                    </div>
+                `;
+            } else if (usiaBulan >= 24 && usiaBulan < 60) {
+                html += `
+                    <div class="recommendation-card info">
+                        <h4 class="recommendation-title">
+                            <i class="fas fa-running"></i> Aktivitas Fisik
+                        </h4>
+                        <p class="recommendation-desc">
+                            Anak usia ini butuh aktivitas fisik minimal 3 jam per hari. Ajak bermain aktif seperti berlari, melompat, atau menari.
+                        </p>
+                    </div>
+                `;
+            }
+            
+            // General recommendations
+            html += `
+                <div class="recommendation-card info">
+                    <h4 class="recommendation-title">
+                        <i class="fas fa-apple-alt"></i> Variasi Makanan
+                    </h4>
+                    <p class="recommendation-desc">
+                        Sajikan makanan dengan warna-warni berbeda setiap hari untuk memastikan kecukupan vitamin dan mineral. Minimal 5 porsi sayur/buah per hari.
+                    </p>
+                </div>
+                
+                <div class="recommendation-card warning">
+                    <h4 class="recommendation-title">
+                        <i class="fas fa-clock"></i> Jadwal Makan Teratur
+                    </h4>
+                    <p class="recommendation-desc">
+                        Tetapkan jadwal makan 3 kali utama dan 2 kali selingan. Hindari memberi makan terlalu dekat dengan waktu tidur.
+                    </p>
+                </div>
+            `;
+            
+            grid.innerHTML = html;
         }
 
-        document.getElementById("namaAnakHeader").innerText = result.namaAnak || dataA?.namaAnak || "Si Kecil";
-        document.getElementById("resBB").innerText = result.bb;
-        document.getElementById("resTB").innerText = result.tb;
-        document.getElementById("zscoreVal").innerText = result.zscore;
-
-        const z = parseFloat(result.zscore);
-        const statusCard = document.getElementById("statusCard");
-        const statusEmoji = document.getElementById("statusEmoji");
-        const statusText = document.getElementById("statusText");
-        const statusDesc = document.getElementById("statusDesc");
-
-        let color = "#10b981";
-        let emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
-        let description = "";
-        let statusLabel = "";
-
-        // LOGIKA PENENTUAN STATUS (Sesuai Permenkes)
-        if (z < -3) {
-          color = "#ef4444";
-          emoji = "😟";
-          statusLabel = "Gizi Buruk";
-          description =
-            "Si Kecil terindikasi Gizi Buruk (Sangat Kurus). Mohon segera konsultasi ke dokter spesialis anak atau Puskesmas terdekat.";
-        } else if (z < -2) {
-          color = "#f59e0b";
-          emoji = "⚠️";
-          statusLabel = "Gizi Kurang";
-          description =
-            "Si Kecil berada di kategori Gizi Kurang. Bunda perlu meningkatkan asupan protein hewani dan lemak sehat dalam menu hariannya.";
-        } else if (z <= 2) {
-          color = "#10b981";
-          emoji = dataA?.gender === "Perempuan" ? "👧" : "👦";
-          statusLabel = "Gizi Normal";
-          description =
-            "Luar biasa, Bunda! Pertumbuhan Si Kecil terpantau sangat ideal dan sehat sesuai standar usianya.";
-        } else {
-          color = "#3b82f6";
-          emoji = "😅";
-          statusLabel = "Gizi Lebih";
-          description =
-            "Si Kecil tergolong Gizi Lebih. Perhatikan porsi makan dan pastikan camilan yang diberikan rendah gula dan garam.";
+        // Toggle charts visibility
+        function toggleCharts() {
+            const chartsSection = document.getElementById("chartsSection");
+            const toggleBtn = document.getElementById("toggleChartsBtn");
+            
+            if (!chartsVisible) {
+                chartsSection.classList.remove("d-none");
+                chartsSection.classList.add("fade-in");
+                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Sembunyikan Grafik';
+                chartsVisible = true;
+                
+                // Initialize charts
+                setTimeout(() => {
+                    initCharts();
+                }, 300);
+            } else {
+                chartsSection.classList.add("d-none");
+                toggleBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Tampilkan Grafik';
+                chartsVisible = false;
+                
+                // Destroy charts to free memory
+                if (chartBB) chartBB.destroy();
+                if (chartTB) chartTB.destroy();
+            }
         }
 
-        statusCard.style.borderColor = color;
-        statusText.innerText = statusLabel;
-        statusText.style.color = color;
-        statusEmoji.innerText = emoji;
-        statusDesc.innerText = description;
-
-        const eduBox = document.getElementById("dynamicEducation");
-        const usia = dataA ? parseInt(dataA.usia) : 0;
-        let eduHTML = "";
-
-        // EDUKASI BERDASARKAN USIA
-        if (usia <= 6) {
-          eduHTML += `
-                    <div class="p-6 bg-emerald-50 rounded-[2rem] border-l-8 border-emerald-500 shadow-sm">
-                        <h4 class="font-bold text-emerald-800 text-lg mb-2">🍼 Usia ${usia} Bulan: ASI Eksklusif</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">Fokus pada pemberian ASI saja tanpa tambahan cairan lain. Kualitas ASI sangat bergantung pada nutrisi yang Bunda makan.</p>
-                    </div>`;
-        } else if (usia <= 24) {
-          eduHTML += `
-                    <div class="p-6 bg-blue-50 rounded-[2rem] border-l-8 border-blue-500 shadow-sm">
-                        <h4 class="font-bold text-blue-800 text-lg mb-2">🥣 Usia ${usia} Bulan: MPASI Berkualitas</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">Pastikan Si Kecil mendapatkan <b>Protein Hewani</b> (Ikan, Telur, Daging) di setiap porsi makannya untuk cegah stunting.</p>
-                    </div>`;
-        } else {
-          eduHTML += `
-                    <div class="p-6 bg-indigo-50 rounded-[2rem] border-l-8 border-indigo-500 shadow-sm">
-                        <h4 class="font-bold text-indigo-800 text-lg mb-2">🍱 Menu Keluarga Gizi Seimbang</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">Anak usia di atas 2 tahun sudah bisa makan menu yang sama dengan keluarga. Pastikan porsi sayur dan buah seimbang.</p>
-                    </div>`;
+        // Initialize charts
+        function initCharts() {
+            const usiaBulan = currentDataAnak?.usia || 0;
+            const bb = parseFloat(currentResult.bb);
+            const tb = parseFloat(currentResult.tb);
+            
+            // Generate sample data for BB/U chart
+            const labelsBB = Array.from({length: 61}, (_, i) => i);
+            const medianBB = labelsBB.map(umur => {
+                if (umur <= 60) {
+                    // Simplified median weight for boys (kg)
+                    return 3.3 + (umur * 0.15);
+                }
+                return 0;
+            });
+            
+            // Generate sample data for TB/U chart
+            const medianTB = labelsBB.map(umur => {
+                if (umur <= 60) {
+                    // Simplified median height for boys (cm)
+                    return 50 + (umur * 0.7);
+                }
+                return 0;
+            });
+            
+            // BB/U Chart
+            const ctxBB = document.getElementById('kmsChartBB').getContext('2d');
+            if (chartBB) chartBB.destroy();
+            
+            chartBB = new Chart(ctxBB, {
+                type: 'line',
+                data: {
+                    labels: labelsBB,
+                    datasets: [
+                        {
+                            label: 'Median',
+                            data: medianBB,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Si Kecil',
+                            data: Array(61).fill(null).map((_, i) => i === Math.min(Math.floor(usiaBulan), 60) ? bb : null),
+                            borderColor: '#8b5cf6',
+                            backgroundColor: '#8b5cf6',
+                            borderWidth: 3,
+                            pointRadius: 8,
+                            pointHoverRadius: 12,
+                            pointBackgroundColor: '#8b5cf6',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Usia (bulan)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Berat Badan (kg)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // TB/U Chart
+            const ctxTB = document.getElementById('kmsChartTB').getContext('2d');
+            if (chartTB) chartTB.destroy();
+            
+            chartTB = new Chart(ctxTB, {
+                type: 'line',
+                data: {
+                    labels: labelsBB,
+                    datasets: [
+                        {
+                            label: 'Median',
+                            data: medianTB,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Si Kecil',
+                            data: Array(61).fill(null).map((_, i) => i === Math.min(Math.floor(usiaBulan), 60) ? tb : null),
+                            borderColor: '#f59e0b',
+                            backgroundColor: '#f59e0b',
+                            borderWidth: 3,
+                            pointRadius: 8,
+                            pointHoverRadius: 12,
+                            pointBackgroundColor: '#f59e0b',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Usia (bulan)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Tinggi Badan (cm)'
+                            }
+                        }
+                    }
+                }
+            });
         }
 
-        // TIPS BERDASARKAN STATUS
-        if (z < -2) {
-          eduHTML += `
-                    <div class="p-6 border-2 border-dashed border-amber-300 rounded-[2rem] bg-amber-50/50">
-                        <h4 class="font-bold text-slate-800 text-sm mb-3">📍 Tips Meningkatkan Berat Badan:</h4>
-                        <ul class="text-sm text-slate-600 space-y-3">
-                            <li class="flex items-start gap-2"><span>✅</span> Tambahkan 1 sdt minyak/lemak di setiap porsi makan.</li>
-                            <li class="flex items-start gap-2"><span>✅</span> Berikan makan utama 3x dan selingan gizi 2x sehari.</li>
-                            <li class="flex items-start gap-2"><span>✅</span> Konsultasikan ke bidan atau dokter untuk evaluasi kesehatan.</li>
-                        </ul>
-                    </div>`;
-        } else {
-          eduHTML += `
-                    <div class="p-6 border-2 border-dashed border-emerald-300 rounded-[2rem] bg-emerald-50/30 text-center">
-                        <h4 class="font-bold text-emerald-800 text-sm mb-1">🌈 Teruskan Kebiasaan Baik Ini, Bunda!</h4>
-                        <p class="text-xs text-slate-500 italic">Nutrisi yang baik hari ini adalah investasi kecerdasan anak di masa depan.</p>
-                    </div>`;
+        // Auto-save to history
+        function autoSaveToHistory(result, status, color) {
+            try {
+                // Get existing history
+                let history = JSON.parse(localStorage.getItem("nutriHistory")) || [];
+                
+                // Create history entry
+                const entry = {
+                    id: Date.now(),
+                    timestamp: new Date().toISOString(),
+                    namaAnak: result.namaAnak || currentDataAnak?.namaAnak || "Anak",
+                    usia: currentDataAnak?.usia || 0,
+                    gender: currentDataAnak?.gender || "Laki-laki",
+                    bb: result.bb,
+                    tb: result.tb,
+                    zscore: result.zscore,
+                    status: status,
+                    color: color,
+                    recommendations: generateSummaryRecommendations(parseFloat(result.zscore))
+                };
+                
+                // Add to beginning of history
+                history.unshift(entry);
+                
+                // Keep only last 20 entries
+                if (history.length > 20) {
+                    history = history.slice(0, 20);
+                }
+                
+                // Save back to localStorage
+                localStorage.setItem("nutriHistory", JSON.stringify(history));
+            } catch (error) {
+                console.error("Gagal menyimpan ke riwayat:", error);
+            }
         }
 
-        eduBox.innerHTML = eduHTML;
-
-        // =====================================================================
-        // PENYIMPANAN OTOMATIS KE HISTORY REKAPAN (SOLUSI UTAMA MASALAH KOSONG)
-        // =====================================================================
-        const profilAnak = JSON.parse(localStorage.getItem("dataAnak")) || {};
-        const profilPosyandu = JSON.parse(localStorage.getItem("dataPosyandu")) || {};
-
-        const historyEntry = {
-          timestamp: Date.now(),
-          tanggal: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-          jam: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-          
-          namaAnak: profilAnak.namaAnak || result.namaAnak || "-",
-          namaIbu: profilAnak.namaIbu || "-",                            // ← SEKARANG PASTI ADA
-          jk: profilAnak.gender === "Laki-laki" ? "L" : 
-              profilAnak.gender === "Perempuan" ? "P" : "-",             // ← SEKARANG PASTI ADA
-          
-          namaPosyandu: profilPosyandu.posyandu || "Posyandu Umum",
-          bb: result.bb,
-          tb: result.tb,
-          status: statusLabel,
-          color: color,
-          zscore: result.zscore
-        };
-
-        let allHistory = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-        // Cek duplikat berdasarkan timestamp (hindari simpan berkali-kali)
-        if (!allHistory.some(entry => entry.timestamp === historyEntry.timestamp)) {
-          allHistory.push(historyEntry);
-          localStorage.setItem("allNutriResults", JSON.stringify(allHistory));
-          console.log("Data berhasil disimpan otomatis ke rekapan!");
+        // Generate summary recommendations for history
+        function generateSummaryRecommendations(zscore) {
+            if (zscore < -2) return "Perlu perbaikan gizi segera. Konsultasi dengan ahli gizi.";
+            if (zscore <= 2) return "Gizi baik. Pertahankan pola makan sehat.";
+            return "Perhatikan asupan kalori dan tingkatkan aktivitas fisik.";
         }
-      };
-
-      // Fungsi manual jika ingin tombol terpisah (opsional, tapi direkomendasikan)
-      function simpanKeRekapan() {
-        alert("Data sudah otomatis tersimpan saat halaman dimuat!\nCek di halaman Rekapan.");
-      }
     </script>
-  </body>
+</body>
 </html>

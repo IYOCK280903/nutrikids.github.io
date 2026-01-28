@@ -1,331 +1,982 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pusat Edukasi Nutrisi - NutriKids</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
     
     <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        background-color: #f8fafc;
-      }
-      .tab-active {
-        background-color: #1b6bec;
-        color: white;
-        transform: translateY(-2px);
-      }
-      .gradient-text {
-        background: linear-gradient(90deg, #1b6bec, #10b981);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .card-shadow {
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-      }
+        :root {
+            --primary: #1b6bec;
+            --primary-dark: #0d4bc2;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --bg-light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        
+        .nav-pill.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(27, 107, 236, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .nav-pill:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .accordion-item {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .accordion-header {
+            padding: 1.5rem 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        
+        .accordion-content.active {
+            max-height: 500px;
+            padding-bottom: 1.5rem;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        
+        .progress-ring__circle {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        
+        .badge-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .badge-blue {
+            background: rgba(27, 107, 236, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(27, 107, 236, 0.2);
+        }
     </style>
-  </head>
-  <body class="pb-20">
-       <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-            
-            <div class="flex items-center gap-3">
-               
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-100/50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-heartbeat text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+                        <p class="text-xs text-slate-500 font-medium">Pusat Edukasi Nutrisi</p>
+                    </div>
                 </a>
-                <a href="hasil.html" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-700 transition shadow-lg shadow-slate-200">
-                    Kembali
-                </a>
+                
+                <div class="flex items-center gap-3">
+                    <a href="hasil.html" class="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali ke Hasil</span>
+                    </a>
+                    <button id="darkModeToggle" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition">
+                        <i class="fas fa-moon text-slate-600"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-4 mt-10">
-      <div id="personalizedAlert" class="mb-12 hidden"></div>
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Personalized Alert -->
+        <div id="personalizedAlert" class="mb-8 fade-in"></div>
 
-      <section class="mb-16">
-        <h2 class="text-4xl font-extrabold text-slate-800 mb-4 text-center">
-          Pusat Edukasi Nutrisi
-        </h2>
-        <p class="text-center text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Panduan resmi berdasarkan standar Antropometri Permenkes RI No. 2
-          Tahun 2020 untuk memastikan Si Kecil tumbuh optimal di masa Golden
-          Age.
-        </p>
-      </section>
-
-      <div class="flex flex-wrap justify-center gap-3 mb-10">
-        <button
-          onclick="switchTab('dasar')"
-          id="btn-dasar"
-          class="tab-btn tab-active px-6 py-3 rounded-2xl font-bold transition-all shadow-md"
-        >
-          Apa itu Gizi?
-        </button>
-        <button
-          onclick="switchTab('status')"
-          id="btn-status"
-          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
-        >
-          Kategori Status
-        </button>
-        <button
-          onclick="switchTab('zscore')"
-          id="btn-zscore"
-          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
-        >
-          Mengenal Z-Score
-        </button>
-        <button
-          onclick="switchTab('dampak')"
-          id="btn-dampak"
-          class="tab-btn bg-white text-slate-600 px-6 py-3 rounded-2xl font-bold transition-all shadow-sm"
-        >
-          Dampak Jangka Panjang
-        </button>
-      </div>
-
-      <div id="content-area">
-        <div id="tab-dasar" class="tab-content block space-y-6">
-          <div
-            class="bg-white p-8 rounded-[2.5rem] card-shadow border border-slate-50"
-          >
-            <h3
-              class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3"
-            >
-              <span class="p-2 bg-blue-100 rounded-lg">🥗</span> Pengertian Gizi
-              Anak
-            </h3>
-            <p class="text-slate-600 leading-relaxed mb-4">
-              Status gizi adalah cerminan dari keseimbangan antara asupan zat
-              gizi yang dikonsumsi (karbohidrat, protein, lemak, vitamin, dan
-              mineral) dengan kebutuhan tubuh anak untuk pertumbuhan dan
-              metabolisme.
+        <!-- Hero Section -->
+        <section class="mb-12 text-center">
+            <div class="inline-block mb-4">
+                <span class="badge badge-green">
+                    <i class="fas fa-graduation-cap mr-1"></i> Materi Resmi
+                </span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
+                Pusat <span class="gradient-text">Edukasi Nutrisi</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-8">
+                Panduan lengkap berdasarkan standar Kemenkes RI No. 2 Tahun 2020 dan WHO untuk memastikan pertumbuhan optimal anak di masa Golden Age (0-5 tahun).
             </p>
-            <p class="text-slate-600 leading-relaxed mb-6">
-              Masa balita adalah periode <b>"Golden Age"</b> di mana
-              perkembangan sel otak dan fisik berlangsung sangat pesat.
-              Ketidakseimbangan nutrisi pada masa ini dapat berakibat permanen.
-            </p>
-            <div class="grid md:grid-cols-3 gap-4">
-              <div
-                class="p-4 bg-emerald-50 rounded-3xl border border-emerald-100"
-              >
-                <p class="font-bold text-emerald-800 mb-1">Makro Gizi</p>
-                <p class="text-xs text-emerald-600">
-                  Energi, Karbohidrat, Protein, dan Lemak.
-                </p>
-              </div>
-              <div class="p-4 bg-blue-50 rounded-3xl border border-blue-100">
-                <p class="font-bold text-blue-800 mb-1">Mikro Gizi</p>
-                <p class="text-xs text-blue-600">
-                  Vitamin dan Mineral untuk imun tubuh.
-                </p>
-              </div>
-              <div
-                class="p-4 bg-purple-50 rounded-3xl border border-purple-100"
-              >
-                <p class="font-bold text-purple-800 mb-1">Protein Hewani</p>
-                <p class="text-xs text-purple-600">
-                  Penting untuk mencegah stunting (Telur/Ikan).
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-status" class="tab-content hidden space-y-6">
-          <div class="grid gap-6">
-            <div
-              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-red-500 card-shadow"
-            >
-              <h4 class="text-xl font-bold text-red-600 mb-2">
-                Gizi Buruk & Kurang (Wasting)
-              </h4>
-              <p class="text-slate-600 text-sm leading-relaxed">
-                Kondisi akut akibat asupan energi dan protein yang sangat
-                rendah. Anak terlihat kurus, daya tahan tubuh rendah, dan
-                berisiko tinggi terkena penyakit menular atau kematian jika
-                tidak ditangani medis.
-              </p>
-            </div>
-            <div
-              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-emerald-500 card-shadow"
-            >
-              <h4 class="text-xl font-bold text-emerald-600 mb-2">
-                Gizi Normal
-              </h4>
-              <p class="text-slate-600 text-sm leading-relaxed">
-                Status ideal di mana proporsi tubuh anak seimbang sesuai standar
-                WHO. Hal ini menunjukkan asupan nutrisi mencukupi untuk
-                pertumbuhan otak dan fisik.
-              </p>
-            </div>
-            <div
-              class="bg-white p-6 rounded-[2rem] border-l-[12px] border-orange-500 card-shadow"
-            >
-              <h4 class="text-xl font-bold text-orange-600 mb-2">
-                Gizi Lebih & Obesitas
-              </h4>
-              <p class="text-slate-600 text-sm leading-relaxed">
-                Kelebihan asupan zat gizi yang disimpan sebagai lemak tubuh
-                secara berlebih. Berisiko menyebabkan penyakit metabolik seperti
-                hipertensi sejak dini.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-zscore" class="tab-content hidden space-y-6">
-          <div class="bg-white p-8 rounded-[2.5rem] card-shadow text-center">
-            <h3 class="text-2xl font-bold text-slate-800 mb-4">
-              Cara Membaca Z-Score
-            </h3>
-            <p class="text-slate-500 mb-8">
-              Z-Score BB/TB digunakan untuk menentukan apakah berat badan anak
-              sesuai dengan tinggi badannya saat ini.
-            </p>
-
-            <div
-              class="bg-slate-50 p-6 rounded-3xl inline-block border border-slate-100 text-sm font-mono text-blue-600 mb-8"
-            >
-              Z-Score = (Nilai Ukur Anak - Median) / Simpang Baku
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div class="p-4 bg-red-100 rounded-2xl">
-                <span class="block font-bold"> < -3 SD </span
-                ><span class="text-xs">Buruk</span>
-              </div>
-              <div class="p-4 bg-orange-100 rounded-2xl">
-                <span class="block font-bold"> -3 s/d -2 </span
-                ><span class="text-xs">Kurang</span>
-              </div>
-              <div class="p-4 bg-emerald-100 rounded-2xl">
-                <span class="block font-bold"> -2 s/d +1 </span
-                ><span class="text-xs">Normal</span>
-              </div>
-              <div class="p-4 bg-blue-100 rounded-2xl">
-                <span class="block font-bold"> > +2 SD </span
-                ><span class="text-xs">Lebih</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-dampak" class="tab-content hidden space-y-6">
-          <div
-            class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl"
-          >
-            <h3 class="text-2xl font-bold mb-6">
-              Mengapa Nutrisi Tidak Bisa Menunggu?
-            </h3>
-            <div class="space-y-6">
-              <div class="flex gap-4">
-                <span class="text-3xl text-blue-400">🧠</span>
-                <div>
-                  <h5 class="font-bold">Kecerdasan (IQ)</h5>
-                  <p class="text-sm text-slate-300">
-                    Kegagalan tumbuh kembang (stunting) dapat menyebabkan
-                    penurunan fungsi kognitif permanen.
-                  </p>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-2xl font-bold text-blue-600">0-5</div>
+                    <div class="text-xs text-slate-500 font-medium">Tahun Kritis</div>
                 </div>
-              </div>
-              <div class="flex gap-4">
-                <span class="text-3xl text-emerald-400">⚡</span>
-                <div>
-                  <h5 class="font-bold">Kualitas Hidup Dewasa</h5>
-                  <p class="text-sm text-slate-300">
-                    Anak dengan gizi kurang berisiko memiliki produktivitas
-                    ekonomi yang lebih rendah saat dewasa.
-                  </p>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-2xl font-bold text-emerald-600">6</div>
+                    <div class="text-xs text-slate-500 font-medium">Zat Gizi Utama</div>
                 </div>
-              </div>
-              <div class="flex gap-4">
-                <span class="text-3xl text-red-400">🏥</span>
-                <div>
-                  <h5 class="font-bold">Resistensi Penyakit</h5>
-                  <p class="text-sm text-slate-300">
-                    Gizi buruk melemahkan sistem imun, membuat anak rentan
-                    terhadap infeksi berulang.
-                  </p>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-2xl font-bold text-purple-600">80%</div>
+                    <div class="text-xs text-slate-500 font-medium">Otak Berkembang</div>
                 </div>
-              </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="text-2xl font-bold text-orange-600">±12</div>
+                    <div class="text-xs text-slate-500 font-medium">Kali Timbang/Tahun</div>
+                </div>
             </div>
-          </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <button onclick="switchTab('dasar')" id="btn-dasar" class="nav-pill active px-6 py-3 rounded-2xl font-bold bg-white">
+                <i class="fas fa-book-medical mr-2"></i>Dasar Gizi
+            </button>
+            <button onclick="switchTab('status')" id="btn-status" class="nav-pill px-6 py-3 rounded-2xl font-bold bg-white">
+                <i class="fas fa-chart-line mr-2"></i>Kategori Status
+            </button>
+            <button onclick="switchTab('zscore')" id="btn-zscore" class="nav-pill px-6 py-3 rounded-2xl font-bold bg-white">
+                <i class="fas fa-calculator mr-2"></i>Z-Score & Grafik
+            </button>
+            <button onclick="switchTab('dampak')" id="btn-dampak" class="nav-pill px-6 py-3 rounded-2xl font-bold bg-white">
+                <i class="fas fa-exclamation-triangle mr-2"></i>Dampak & Solusi
+            </button>
+            <button onclick="switchTab('tips')" id="btn-tips" class="nav-pill px-6 py-3 rounded-2xl font-bold bg-white">
+                <i class="fas fa-lightbulb mr-2"></i>Tips Praktis
+            </button>
         </div>
-      </div>
 
-      <div class="mt-16 flex flex-col md:flex-row gap-4">
-        <a
-          href="calculator.html"
-          class="flex-1 bg-[#1b6bec] text-white text-center py-5 rounded-[2rem] font-bold shadow-lg hover:scale-[1.02] transition"
-          >Hitung Ulang Gizi 🚀</a
-        >
-      </div>
-    </main>
-
-    <script>
-      function switchTab(tabId) {
-        // Sembunyikan semua konten
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((c) => c.classList.add("hidden"));
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((c) => c.classList.remove("block"));
-
-        // Atur gaya tombol
-        document.querySelectorAll(".tab-btn").forEach((b) => {
-          b.classList.remove("tab-active", "shadow-md");
-          b.classList.add("bg-white", "text-slate-600", "shadow-sm");
-        });
-
-        // Tampilkan konten yang dipilih
-        const activeContent = document.getElementById("tab-" + tabId);
-        activeContent.classList.remove("hidden");
-        activeContent.classList.add("block");
-
-        // Aktifkan tombol yang dipilih
-        const activeBtn = document.getElementById("btn-" + tabId);
-        activeBtn.classList.add("tab-active", "shadow-md");
-        activeBtn.classList.remove("bg-white", "text-slate-600", "shadow-sm");
-      }
-
-      // Logic Smart Notification
-      window.onload = function () {
-        const lastResult = JSON.parse(localStorage.getItem("lastNutriResult"));
-        const alertBox = document.getElementById("personalizedAlert");
-
-        if (lastResult) {
-          alertBox.classList.remove("hidden");
-          const status = lastResult.status.toLowerCase();
-          let bgColor = "bg-blue-500";
-          let emoji = "💡";
-          let message = `Pelajari cara menjaga kondisi <b>${lastResult.status}</b> Si Kecil tetap optimal.`;
-
-          if (status.includes("buruk") || status.includes("kurang")) {
-            bgColor = "bg-red-500";
-            emoji = "⚠️";
-            message = `Perhatian Bunda! Hasil terakhir menunjukkan <b>${lastResult.status}</b>. Segera pelajari penanganannya di bawah ini.`;
-          }
-
-          alertBox.innerHTML = `
-                    <div class="${bgColor} p-6 rounded-[2.5rem] text-white flex items-center gap-5 shadow-xl transition hover:scale-[1.01]">
-                        <div class="text-4xl">${emoji}</div>
+        <!-- Content Area -->
+        <div id="content-area" class="fade-in">
+            <!-- Tab 1: Dasar Gizi -->
+            <div id="tab-dasar" class="tab-content space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
+                            <i class="fas fa-book-medical text-3xl text-blue-600"></i>
+                        </div>
                         <div>
-                            <p class="text-xs font-black uppercase tracking-widest opacity-80 mb-1">Edukasi Khusus Untuk Bunda ${lastResult.namaAnak}</p>
-                            <p class="text-sm font-medium leading-relaxed">${message}</p>
+                            <h3 class="text-2xl font-bold text-slate-800">Dasar-Dasar Nutrisi Anak</h3>
+                            <p class="text-slate-500">Memahami prinsip gizi untuk tumbuh kembang optimal</p>
                         </div>
                     </div>
-                `;
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="text-xl font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fas fa-brain text-blue-500"></i> Golden Age (0-5 Tahun)
+                            </h4>
+                            <p class="text-slate-600">
+                                Periode kritis di mana 80% perkembangan otak terjadi. Nutrisi yang tepat pada masa ini menentukan kecerdasan, kemampuan belajar, dan kesehatan jangka panjang.
+                            </p>
+                            <div class="bg-blue-50 p-4 rounded-2xl">
+                                <p class="text-sm font-bold text-blue-800 mb-1">Fakta Penting:</p>
+                                <p class="text-sm text-blue-700">Kekurangan gizi pada 1000 hari pertama kehidupan dapat menyebabkan kerusakan otak permanen.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="text-xl font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fas fa-apple-alt text-emerald-500"></i> 6 Zat Gizi Esensial
+                            </h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-emerald-50 p-3 rounded-xl">
+                                    <p class="font-bold text-emerald-700 text-sm">Karbohidrat</p>
+                                    <p class="text-xs text-emerald-600">Energi utama</p>
+                                </div>
+                                <div class="bg-blue-50 p-3 rounded-xl">
+                                    <p class="font-bold text-blue-700 text-sm">Protein</p>
+                                    <p class="text-xs text-blue-600">Pembangun sel</p>
+                                </div>
+                                <div class="bg-yellow-50 p-3 rounded-xl">
+                                    <p class="font-bold text-yellow-700 text-sm">Lemak</p>
+                                    <p class="text-xs text-yellow-600">Otak & hormon</p>
+                                </div>
+                                <div class="bg-purple-50 p-3 rounded-xl">
+                                    <p class="font-bold text-purple-700 text-sm">Vitamin</p>
+                                    <p class="text-xs text-purple-600">Metabolisme</p>
+                                </div>
+                                <div class="bg-red-50 p-3 rounded-xl">
+                                    <p class="font-bold text-red-700 text-sm">Mineral</p>
+                                    <p class="text-xs text-red-600">Tulang & darah</p>
+                                </div>
+                                <div class="bg-cyan-50 p-3 rounded-xl">
+                                    <p class="font-bold text-cyan-700 text-sm">Air</p>
+                                    <p class="text-xs text-cyan-600">Transportasi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Accordion FAQ -->
+                    <div class="mt-8">
+                        <h4 class="text-xl font-bold text-slate-800 mb-4">Pertanyaan Umum</h4>
+                        <div class="space-y-2">
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-slate-700">Berapa kali anak harus makan dalam sehari?</span>
+                                    <i class="fas fa-chevron-down text-slate-400 transition-transform"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p class="text-slate-600 text-sm pl-2">Anak usia 1-3 tahun: 3x makan utama + 2x selingan. Anak usia 4-5 tahun: 3x makan utama + 1x selingan. Pastikan jarak makan 2-3 jam.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span class="font-bold text-slate-700">Apa tanda anak kekurangan gizi?</span>
+                                    <i class="fas fa-chevron-down text-slate-400 transition-transform"></i>
+                                </div>
+                                <div class="accordion-content">
+                                    <p class="text-slate-600 text-sm pl-2">Berat badan tidak naik 2 bulan berturut-turut, sering sakit, lesu, rambut tipis/kusam, perkembangan motorik terlambat.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Kategori Status -->
+            <div id="tab-status" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">Kategori Status Gizi Menurut WHO & Kemenkes RI</h3>
+                    
+                    <div class="grid gap-6">
+                        <!-- Gizi Buruk -->
+                        <div class="bg-gradient-to-r from-red-50 to-red-100 p-6 rounded-3xl border-l-4 border-red-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-exclamation text-white"></i>
+                                        </div>
+                                        <h4 class="text-xl font-bold text-red-700">Gizi Buruk</h4>
+                                    </div>
+                                    <p class="text-red-600 font-bold mb-1">Z-Score: < -3 SD</p>
+                                </div>
+                                <span class="status-badge bg-red-500 text-white">Krisis</span>
+                            </div>
+                            <p class="text-slate-700 mb-4">
+                                Kondisi darurat gizi yang memerlukan intervensi medis segera. Anak mengalami defisit berat badan sangat parah terhadap tinggi badan.
+                            </p>
+                            <div class="bg-white/50 p-4 rounded-2xl">
+                                <p class="text-sm font-bold text-red-700 mb-2">Tindakan Segera:</p>
+                                <ul class="text-sm text-red-600 list-disc pl-5 space-y-1">
+                                    <li>Bawa ke Puskesmas/Rumah Sakit</li>
+                                    <li>Program PMT (Pemberian Makanan Tambahan) medis</li>
+                                    <li>Pemantauan ketat setiap minggu</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Gizi Kurang -->
+                        <div class="bg-gradient-to-r from-orange-50 to-orange-100 p-6 rounded-3xl border-l-4 border-orange-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                        <h4 class="text-xl font-bold text-orange-700">Gizi Kurang</h4>
+                                    </div>
+                                    <p class="text-orange-600 font-bold mb-1">Z-Score: -3 s/d -2 SD</p>
+                                </div>
+                                <span class="status-badge bg-orange-500 text-white">Waspada</span>
+                            </div>
+                            <p class="text-slate-700 mb-4">
+                                Anak memiliki berat badan di bawah normal untuk tinggi badannya. Berisiko menjadi gizi buruk jika tidak ditangani.
+                            </p>
+                            <div class="bg-white/50 p-4 rounded-2xl">
+                                <p class="text-sm font-bold text-orange-700 mb-2">Rekomendasi:</p>
+                                <ul class="text-sm text-orange-600 list-disc pl-5 space-y-1">
+                                    <li>Tingkatkan frekuensi makan (5-6x/hari)</li>
+                                    <li>Tambahkan minyak/mentega (1-2 sdm per porsi)</li>
+                                    <li>Prioritaskan protein hewani (telur, ikan, hati)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Gizi Baik -->
+                        <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 p-6 rounded-3xl border-l-4 border-emerald-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-check-circle text-white"></i>
+                                        </div>
+                                        <h4 class="text-xl font-bold text-emerald-700">Gizi Baik/Normal</h4>
+                                    </div>
+                                    <p class="text-emerald-600 font-bold mb-1">Z-Score: -2 s/d +1 SD</p>
+                                </div>
+                                <span class="status-badge bg-emerald-500 text-white">Optimal</span>
+                            </div>
+                            <p class="text-slate-700 mb-4">
+                                Status ideal dimana berat badan sesuai dengan tinggi badan. Pertumbuhan dan perkembangan berjalan optimal.
+                            </p>
+                            <div class="bg-white/50 p-4 rounded-2xl">
+                                <p class="text-sm font-bold text-emerald-700 mb-2">Tips Pertahankan:</p>
+                                <ul class="text-sm text-emerald-600 list-disc pl-5 space-y-1">
+                                    <li>Variasi makanan setiap hari</li>
+                                    <li>Jadwal makan teratur</li>
+                                    <li>Aktivitas fisik cukup</li>
+                                    <li>Pantau setiap bulan di Posyandu</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Gizi Lebih -->
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-3xl border-l-4 border-blue-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-weight text-white"></i>
+                                        </div>
+                                        <h4 class="text-xl font-bold text-blue-700">Gizi Lebih/Risiko Obesitas</h4>
+                                    </div>
+                                    <p class="text-blue-600 font-bold mb-1">Z-Score: > +1 SD</p>
+                                </div>
+                                <span class="status-badge bg-blue-500 text-white">Perhatian</span>
+                            </div>
+                            <p class="text-slate-700 mb-4">
+                                Berat badan berlebih terhadap tinggi badan. Berisiko penyakit degeneratif (diabetes, hipertensi) sejak dini.
+                            </p>
+                            <div class="bg-white/50 p-4 rounded-2xl">
+                                <p class="text-sm font-bold text-blue-700 mb-2">Penanganan:</p>
+                                <ul class="text-sm text-blue-600 list-disc pl-5 space-y-1">
+                                    <li>Batasi gula & makanan olahan</li>
+                                    <li>Tingkatkan aktivitas fisik (minimal 1 jam/hari)</li>
+                                    <li>Perbanyak sayur & buah</li>
+                                    <li>Hindari minuman manis kemasan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Z-Score & Grafik -->
+            <div id="tab-zscore" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">Memahami Z-Score dan Grafik Pertumbuhan</h3>
+                    
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-3xl text-white">
+                                <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <i class="fas fa-calculator"></i> Apa itu Z-Score?
+                                </h4>
+                                <p class="text-slate-200 mb-4">
+                                    Z-Score adalah ukuran statistik yang menunjukkan seberapa jauh suatu nilai (berat/tinggi anak) dari nilai rata-rata (median) populasi sehat seusianya, diukur dalam satuan Simpang Baku (SD).
+                                </p>
+                                <div class="bg-white/10 p-4 rounded-2xl">
+                                    <p class="font-mono text-sm text-center">
+                                        Z-Score = (Nilai Anak - Median Populasi) ÷ Simpang Baku
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-3xl border border-slate-200">
+                                <h4 class="text-xl font-bold text-slate-800 mb-4">Interpretasi Z-Score BB/TB</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
+                                        <span class="font-bold text-red-700">< -3 SD</span>
+                                        <span class="text-sm font-bold text-red-600">Gizi Buruk</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-orange-50 rounded-xl">
+                                        <span class="font-bold text-orange-700">-3 s/d -2 SD</span>
+                                        <span class="text-sm font-bold text-orange-600">Gizi Kurang</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
+                                        <span class="font-bold text-emerald-700">-2 s/d +1 SD</span>
+                                        <span class="text-sm font-bold text-emerald-600">Gizi Baik</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
+                                        <span class="font-bold text-blue-700">+1 s/d +2 SD</span>
+                                        <span class="text-sm font-bold text-blue-600">Beresiko Lebih</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
+                                        <span class="font-bold text-purple-700">> +2 SD</span>
+                                        <span class="text-sm font-bold text-purple-600">Gizi Lebih</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-3xl border border-slate-200">
+                                <h4 class="text-xl font-bold text-slate-800 mb-4">3 Indikator Penting</h4>
+                                
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-blue-50 rounded-2xl">
+                                        <h5 class="font-bold text-blue-700 mb-2 flex items-center gap-2">
+                                            <i class="fas fa-weight"></i> BB/U (Berat Badan menurut Umur)
+                                        </h5>
+                                        <p class="text-sm text-blue-600">
+                                            Menunjukkan kecukupan gizi secara umum. Untuk mendeteksi underweight atau overweight.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="p-4 bg-emerald-50 rounded-2xl">
+                                        <h5 class="font-bold text-emerald-700 mb-2 flex items-center gap-2">
+                                            <i class="fas fa-ruler-vertical"></i> TB/U (Tinggi Badan menurut Umur)
+                                        </h5>
+                                        <p class="text-sm text-emerald-600">
+                                            Indikator stunting (pendek). Menggambarkan status gizi jangka panjang.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="p-4 bg-purple-50 rounded-2xl">
+                                        <h5 class="font-bold text-purple-700 mb-2 flex items-center gap-2">
+                                            <i class="fas fa-balance-scale"></i> BB/TB (Berat Badan menurut Tinggi Badan)
+                                        </h5>
+                                        <p class="text-sm text-purple-600">
+                                            Indikator wasting (kurus) atau overweight. Paling akurat untuk status gizi saat ini.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-3xl border border-cyan-200">
+                                <h4 class="text-xl font-bold text-slate-800 mb-4">Tips Membaca KMS</h4>
+                                <ul class="space-y-2 text-slate-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check-circle text-cyan-500 mt-1"></i>
+                                        <span>Plot setiap bulan untuk melihat tren</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check-circle text-cyan-500 mt-1"></i>
+                                        <span>Garis hijau = median pertumbuhan normal</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check-circle text-cyan-500 mt-1"></i>
+                                        <span>Naik 1 garis = pertumbuhan baik</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check-circle text-cyan-500 mt-1"></i>
+                                        <span>Turun 2 garis = perlu waspada</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Dampak & Solusi -->
+            <div id="tab-dampak" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">Dampak Jangka Panjang dan Solusinya</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-xl font-bold text-red-700 mb-4 flex items-center gap-2">
+                                <i class="fas fa-exclamation-circle"></i> Dampak Negatif
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                <div class="p-4 bg-red-50 rounded-2xl">
+                                    <h5 class="font-bold text-red-700 mb-2">Gangguan Kognitif</h5>
+                                    <p class="text-sm text-red-600">
+                                        IQ lebih rendah 10-15 poin, kesulitan belajar, daya konsentrasi berkurang.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-orange-50 rounded-2xl">
+                                    <h5 class="font-bold text-orange-700 mb-2">Rentan Penyakit</h5>
+                                    <p class="text-sm text-orange-600">
+                                        Daya tahan tubuh lemah, sering infeksi, risiko penyakit kronis di masa dewasa.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-purple-50 rounded-2xl">
+                                    <h5 class="font-bold text-purple-700 mb-2">Produktivitas Rendah</h5>
+                                    <p class="text-sm text-purple-600">
+                                        Potensi pendapatan 20% lebih rendah saat dewasa akibat keterbatasan fisik & kognitif.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-slate-50 rounded-2xl">
+                                    <h5 class="font-bold text-slate-700 mb-2">Siklus Generasi</h5>
+                                    <p class="text-sm text-slate-600">
+                                        Anak perempuan yang stunting berisiko melahirkan bayi berat lahir rendah (BBLR).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-xl font-bold text-emerald-700 mb-4 flex items-center gap-2">
+                                <i class="fas fa-heartbeat"></i> Solusi & Pencegahan
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                <div class="p-4 bg-emerald-50 rounded-2xl">
+                                    <h5 class="font-bold text-emerald-700 mb-2">1000 HPK</h5>
+                                    <p class="text-sm text-emerald-600">
+                                        Fokus pada 1000 Hari Pertama Kehidupan (dari janin hingga usia 2 tahun).
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-blue-50 rounded-2xl">
+                                    <h5 class="font-bold text-blue-700 mb-2">Protein Hewani</h5>
+                                    <p class="text-sm text-blue-600">
+                                        Telur, ikan, ayam, hati - minimal 1x sehari untuk cegah stunting.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-cyan-50 rounded-2xl">
+                                    <h5 class="font-bold text-cyan-700 mb-2">ASI Eksklusif</h5>
+                                    <p class="text-sm text-cyan-600">
+                                        ASI hingga 6 bulan, dilanjutkan MPASI bergizi dengan fortifikasi.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-yellow-50 rounded-2xl">
+                                    <h5 class="font-bold text-yellow-700 mb-2">Posyandu Rutin</h5>
+                                    <p class="text-sm text-yellow-600">
+                                        Timbang dan ukur tinggi badan setiap bulan, konsultasi dengan kader.
+                                    </p>
+                                </div>
+                                
+                                <div class="p-4 bg-pink-50 rounded-2xl">
+                                    <h5 class="font-bold text-pink-700 mb-2">Akses Sanitasi</h5>
+                                    <p class="text-sm text-pink-600">
+                                        Air bersih, cuci tangan pakai sabun, jamban sehat untuk cegah infeksi.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Story -->
+                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-3xl border border-blue-200">
+                        <h4 class="text-xl font-bold text-blue-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-star"></i> Kisah Sukses
+                        </h4>
+                        <p class="text-blue-700 italic">
+                            "Budi (3 tahun) awalnya tergolong gizi kurang dengan Z-Score -2.3. Setelah 6 bulan program perbaikan gizi dengan telur setiap hari dan minyak tambahan, Z-Scorenya naik menjadi -0.8 (gizi baik). Kini ia aktif bermain dan jarang sakit."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Tips Praktis -->
+            <div id="tab-tips" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-6">Tips Praktis untuk Bunda Sehari-hari</h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-utensils text-emerald-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 mb-2">Pola Makan</h4>
+                            <p class="text-sm text-slate-600">
+                                3x makan utama + 2x selingan. Jarak makan 2-3 jam. Porsi kecil tapi sering.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl border border-blue-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-carrot text-blue-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 mb-2">Menu Seimbang</h4>
+                            <p class="text-sm text-slate-600">
+                                Setiap porsi: karbohidrat + protein + sayur + tambahan minyak/lemak.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl border border-purple-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-glass-whiskey text-purple-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 mb-2">Hidrasi</h4>
+                            <p class="text-sm text-slate-600">
+                                Air putih 4-6 gelas/hari. Hindari jus kemasan & minuman manis.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Meal Plan Example -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-slate-800 mb-4">Contoh Menu Sehari (Usia 2-5 tahun)</h4>
+                        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-3xl">
+                            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <div class="font-bold text-blue-700 mb-1">Pagi</div>
+                                    <p class="text-sm text-blue-600">Nasi tim + telur + wortel</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-bold text-emerald-700 mb-1">Selingan</div>
+                                    <p class="text-sm text-emerald-600">Pisang + susu</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-bold text-orange-700 mb-1">Siang</div>
+                                    <p class="text-sm text-orange-600">Nasi + ikan + sayur</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-bold text-purple-700 mb-1">Malam</div>
+                                    <p class="text-sm text-purple-600">Nasi + ayam + tempe</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Warning Section -->
+                    <div class="bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-3xl border-l-4 border-red-500">
+                        <h4 class="text-xl font-bold text-red-700 mb-4 flex items-center gap-2">
+                            <i class="fas fa-ban"></i> Yang Perlu Dihindari
+                        </h4>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-times-circle text-red-500 mt-1"></i>
+                                <div>
+                                    <p class="font-bold text-red-700 text-sm">Makanan Olahan</p>
+                                    <p class="text-xs text-red-600">Sosis, nugget, mi instan berlebihan</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-times-circle text-red-500 mt-1"></i>
+                                <div>
+                                    <p class="font-bold text-red-700 text-sm">Gula Berlebihan</p>
+                                    <p class="text-xs text-red-600">Permen, coklat, minuman soda</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-times-circle text-red-500 mt-1"></i>
+                                <div>
+                                    <p class="font-bold text-red-700 text-sm">Gadget Berlebihan</p>
+                                    <p class="text-xs text-red-600">Maksimal 1 jam/hari dengan pengawasan</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-times-circle text-red-500 mt-1"></i>
+                                <div>
+                                    <p class="font-bold text-red-700 text-sm">Pola Tidur Buruk</p>
+                                    <p class="text-xs text-red-600">Anak perlu tidur 10-13 jam/hari</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-12 flex flex-col sm:flex-row gap-4">
+            <a href="calculator.html" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] pulse-animation">
+                <i class="fas fa-calculator mr-2"></i> Hitung Status Gizi Anak
+            </a>
+            <a href="tips.html" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-center py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
+                <i class="fas fa-lightbulb mr-2"></i> Lihat Tips Lengkap
+            </a>
+        </div>
+    </main>
+    
+    <!-- Floating Action Button -->
+    <a href="#personalizedAlert" class="floating-btn w-14 h-14 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition">
+        <i class="fas fa-arrow-up text-white text-xl"></i>
+    </a>
+
+    <!-- JavaScript -->
+    <script>
+        // Tab Switching Function
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('block');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.nav-pill').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.remove('hidden');
+            activeTab.classList.add('block');
+            
+            // Activate selected button
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.add('active');
+            
+            // Add fade-in animation
+            activeTab.classList.add('fade-in');
+            setTimeout(() => {
+                activeTab.classList.remove('fade-in');
+            }, 500);
         }
-      };
+        
+        // Accordion Toggle
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+        
+        // Dark Mode Toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            const icon = this.querySelector('i');
+            
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Check saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('darkModeToggle').querySelector('i').classList.replace('fa-moon', 'fa-sun');
+        }
+        
+        // Personalized Alert
+        window.addEventListener('DOMContentLoaded', function() {
+            const lastResult = JSON.parse(localStorage.getItem('lastNutriResult'));
+            const alertBox = document.getElementById('personalizedAlert');
+            
+            if (lastResult && lastResult.namaAnak) {
+                const zscore = parseFloat(lastResult.zscore);
+                let status = lastResult.status || 'Tidak Diketahui';
+                let bgColor = 'from-blue-500 to-blue-600';
+                let emoji = '💡';
+                let title = 'Informasi Penting';
+                let message = `Pelajari cara menjaga kondisi <b>${status}</b> ${lastResult.namaAnak} tetap optimal.`;
+                let actionText = '';
+                
+                if (zscore < -2) {
+                    bgColor = 'from-red-500 to-orange-500';
+                    emoji = '⚠️';
+                    title = 'Perhatian Bunda!';
+                    message = `Hasil terakhir menunjukkan ${lastResult.namaAnak} tergolong <b>${status}</b>. Segera pelajari penanganannya di bawah.`;
+                    actionText = 'Lihat Solusi';
+                } else if (zscore > 1) {
+                    bgColor = 'from-blue-500 to-purple-500';
+                    emoji = '⚖️';
+                    title = 'Perhatian';
+                    message = `${lastResult.namaAnak} berisiko <b>${status}</b>. Pelajari cara mengatur pola makan yang tepat.`;
+                    actionText = 'Lihat Tips';
+                } else {
+                    bgColor = 'from-emerald-500 to-teal-500';
+                    emoji = '🎉';
+                    title = 'Bagus!';
+                    message = `${lastResult.namaAnak} memiliki status gizi <b>${status}</b>. Pertahankan dengan tips di bawah.`;
+                    actionText = 'Lihat Tips';
+                }
+                
+                alertBox.innerHTML = `
+                    <div class="bg-gradient-to-r ${bgColor} p-6 rounded-3xl text-white flex flex-col md:flex-row items-center gap-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                        <div class="text-5xl">${emoji}</div>
+                        <div class="flex-1">
+                            <p class="text-xs font-black uppercase tracking-widest opacity-90 mb-2">${title} • ${lastResult.namaAnak}</p>
+                            <p class="text-sm md:text-base font-medium leading-relaxed">${message}</p>
+                        </div>
+                        ${actionText ? `<button onclick="switchTab('${zscore < -2 ? 'dampak' : 'tips'}')" class="px-6 py-2.5 bg-white/20 backdrop-blur-sm rounded-xl font-bold hover:bg-white/30 transition">${actionText}</button>` : ''}
+                    </div>
+                `;
+                alertBox.classList.remove('hidden');
+            }
+        });
+        
+        // Progress Rings Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressRings = document.querySelectorAll('.progress-ring__circle');
+            progressRings.forEach(ring => {
+                const offset = 283 - (283 * (parseFloat(ring.dataset.progress) / 100));
+                ring.style.strokeDashoffset = offset;
+            });
+        });
+        
+        // Add scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all cards
+        document.querySelectorAll('.glass-card, .bg-gradient-to-r').forEach(el => {
+            observer.observe(el);
+        });
     </script>
-  </body>
+    
+    <!-- Dark Mode Styles -->
+    <style>
+        .dark body {
+            background-color: #0f172a;
+            color: #cbd5e1;
+        }
+        
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(100, 116, 139, 0.3);
+        }
+        
+        .dark .text-slate-800 {
+            color: #f1f5f9;
+        }
+        
+        .dark .text-slate-600 {
+            color: #94a3b8;
+        }
+        
+        .dark .text-slate-500 {
+            color: #64748b;
+        }
+        
+        .dark .bg-white {
+            background-color: #1e293b;
+        }
+        
+        .dark .border-slate-100 {
+            border-color: #334155;
+        }
+        
+        .dark .bg-slate-50 {
+            background-color: #1e293b;
+        }
+        
+        .dark .bg-slate-800 {
+            background-color: #0f172a;
+        }
+        
+        .dark .bg-slate-900 {
+            background-color: #020617;
+        }
+    </style>
+</body>
 </html>

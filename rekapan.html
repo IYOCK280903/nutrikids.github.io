@@ -6,263 +6,1179 @@
     <title>Rekapan Data Posyandu - NutriKids</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        body { font-family: "Poppins", sans-serif; background-color: #f1f5f9; }
-        .glass-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .table-header { color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --primary: #1b6bec;
+            --primary-dark: #0d4bc2;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --bg-light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .badge-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .badge-blue {
+            background: rgba(27, 107, 236, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(27, 107, 236, 0.2);
+        }
+        
+        .badge-purple {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .table-row {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .table-row:hover {
+            background: rgba(59, 130, 246, 0.03);
+            transform: translateX(4px);
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .filter-pill {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .filter-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(27, 107, 236, 0.2);
+        }
+        
+        .filter-pill:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .date-input {
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
-<body class="pb-20">
-    <nav class="bg-white py-4 px-10 flex justify-between items-center shadow-md sticky top-0 z-50">
-        <h1 class="text-2xl font-black text-blue-600">Nutri<span class="text-emerald-500">Kids</span></h1>
-        <div class="flex gap-3">
-            <a href="hasil.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Kembali</a>
-            <a href="konsultasi.html" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-red-200">Konsultasi</a>
-        </div>
-    </nav>
-
-    <main class="max-w-6xl mx-auto px-6 mt-10">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-black text-slate-800">Rekapan Data Posyandu</h2>
-            <p class="text-slate-500 text-sm mt-2">Cari nama anak untuk melihat detail profil dan riwayat pemeriksaan.</p>
-        </div>
-
-        <div id="detailAnakSection" class="hidden mb-8 animate-fade-in">
-            <div class="glass-card p-8 border-l-8 border-blue-500 bg-gradient-to-r from-white to-blue-50">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-blue-600 font-black text-xs uppercase tracking-widest mb-1">Profil Lengkap Anak</p>
-                        <h3 class="text-3xl font-black text-slate-800 uppercase" id="detNamaAnak">-</h3>
-                        <p class="text-slate-500 font-bold mt-1 flex items-center gap-2">
-                            <span class="bg-blue-500 text-white p-1 rounded-md text-[10px]">LOKASI</span>
-                            <span id="detPosyandu">-</span>
-                        </p>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <header class="sticky-header border-b border-slate-100/50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-heartbeat text-white text-xl"></i>
                     </div>
-                    <div class="flex gap-2">
-                        <button id="btnEditAnak" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-blue-200">
-                            ✏️ Edit Profil & Data
+                    <div>
+                        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+                        <p class="text-xs text-slate-500 font-medium">Rekapan Data Posyandu</p>
+                    </div>
+                </a>
+                
+                <div class="flex items-center gap-3">
+                    <a href="hasil.html" class="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali ke Hasil</span>
+                    </a>
+                    <a href="konsultasi.html" class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-comment-medical"></i>
+                        <span>Konsultasi</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-10 fade-in">
+            <div class="inline-block mb-4">
+                <span class="badge-blue">
+                    <i class="fas fa-database mr-1"></i> Database Terintegrasi
+                </span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
+                Rekapan Data <span class="gradient-text">Posyandu</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                Pantau riwayat perkembangan gizi anak dengan analisis lengkap dan visualisasi data.
+            </p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div id="statsOverview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Total Data</p>
+                        <p class="text-2xl font-bold text-slate-800" id="totalData">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-database text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Status Baik</p>
+                        <p class="text-2xl font-bold text-emerald-600" id="goodStatus">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-check-circle text-emerald-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Perlu Perhatian</p>
+                        <p class="text-2xl font-bold text-orange-600" id="warningStatus">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Anak Terdaftar</p>
+                        <p class="text-2xl font-bold text-purple-600" id="uniqueChildren">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-child text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="glass-card p-6 mb-8 rounded-3xl">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-5 top-5 text-slate-400"></i>
+                    <input type="text" id="searchBox" onkeyup="renderTable()" 
+                           placeholder="Cari berdasarkan nama anak, posyandu, atau status..." 
+                           class="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all" />
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <select id="statusFilter" onchange="renderTable()" class="px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700">
+                        <option value="">Semua Status</option>
+                        <option value="Gizi Baik">Gizi Baik</option>
+                        <option value="Gizi Kurang">Gizi Kurang</option>
+                        <option value="Gizi Buruk">Gizi Buruk</option>
+                        <option value="Gizi Lebih">Gizi Lebih</option>
+                    </select>
+                    
+                    <select id="posyanduFilter" onchange="renderTable()" class="px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700">
+                        <option value="">Semua Posyandu</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Date Range Filter -->
+            <div class="grid md:grid-cols-3 gap-4 mt-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Dari Tanggal</label>
+                    <input type="date" id="dateFrom" onchange="renderTable()" 
+                           class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700 date-input" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Sampai Tanggal</label>
+                    <input type="date" id="dateTo" onchange="renderTable()" 
+                           class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700 date-input" />
+                </div>
+                <div class="flex items-end">
+                    <button onclick="resetDateFilters()" class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-medium transition">
+                        Reset Filter Tanggal
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Quick Filters -->
+            <div class="flex flex-wrap gap-2 mt-4">
+                <div class="filter-pill active" onclick="setDateFilter('all')">Semua</div>
+                <div class="filter-pill" onclick="setDateFilter('today')">Hari Ini</div>
+                <div class="filter-pill" onclick="setDateFilter('week')">Minggu Ini</div>
+                <div class="filter-pill" onclick="setDateFilter('month')">Bulan Ini</div>
+                <div class="filter-pill" onclick="setDateFilter('year')">Tahun Ini</div>
+            </div>
+        </div>
+
+        <!-- Child Detail Section -->
+        <div id="detailAnakSection" class="hidden mb-8 fade-in">
+            <div class="glass-card p-8 rounded-3xl border-l-8 border-blue-500 bg-gradient-to-r from-white to-blue-50/50">
+                <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                <i class="fas fa-child text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-blue-600 font-bold text-xs uppercase tracking-widest mb-1">Profil Lengkap Anak</p>
+                                <h3 class="text-3xl font-black text-slate-800 uppercase" id="detNamaAnak">-</h3>
+                                <p class="text-slate-500 font-medium mt-1 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                                    <span id="detPosyandu">-</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Nama Ibu</p>
+                                <p class="font-bold text-slate-700" id="detNamaIbu">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Jenis Kelamin</p>
+                                <p class="font-bold text-slate-700" id="detJK">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Usia</p>
+                                <p class="font-bold text-slate-700" id="detUsia">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <p class="text-xs text-slate-400 font-bold uppercase mb-1">Terakhir Diukur</p>
+                                <p class="font-bold text-slate-700" id="detTerakhir">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button id="btnEditAnak" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                            <i class="fas fa-edit"></i>
+                            <span>Edit Profil</span>
                         </button>
-                        <button onclick="tutupDetail()" class="bg-white/80 hover:bg-white p-2 rounded-full text-slate-400 hover:text-red-500 transition shadow-sm border border-slate-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                        <button onclick="tutupDetail()" class="flex items-center gap-2 px-5 py-3 bg-white text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all border border-slate-200">
+                            <i class="fas fa-times"></i>
+                            <span>Tutup</span>
                         </button>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Nama Ibu</p>
-                        <p class="font-bold text-slate-700" id="detNamaIbu">-</p>
+                <!-- Recent Measurements -->
+                <div class="mt-6">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">Riwayat Pengukuran Terakhir</h4>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-5 rounded-2xl">
+                            <p class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Berat Badan</p>
+                            <p class="text-3xl font-black" id="detBB">- kg</p>
+                            <p class="text-xs opacity-80 mt-2" id="detBBDate">Terakhir diukur</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-5 rounded-2xl">
+                            <p class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Tinggi Badan</p>
+                            <p class="text-3xl font-black" id="detTB">- cm</p>
+                            <p class="text-xs opacity-80 mt-2" id="detTBDate">Terakhir diukur</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-5 rounded-2xl">
+                            <p class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Status Gizi</p>
+                            <p class="text-3xl font-black uppercase" id="detStatus">-</p>
+                            <p class="text-xs opacity-80 mt-2">Skor: <span id="detZScore">0.00 SD</span></p>
+                        </div>
                     </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Jenis Kelamin</p>
-                        <p class="font-bold text-slate-700" id="detJK">-</p>
+                </div>
+                
+                <!-- Chart Section -->
+                <div class="mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-lg font-bold text-slate-800">Perkembangan Berat Badan</h4>
+                        <button onclick="toggleChart()" class="text-sm text-blue-600 font-bold hover:text-blue-700">
+                            <i class="fas fa-chart-line mr-1"></i>
+                            <span id="chartToggleText">Tampilkan Grafik</span>
+                        </button>
                     </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Berat Badan</p>
-                        <p class="font-black text-emerald-600 text-lg" id="detBB">-</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Tinggi Badan</p>
-                        <p class="font-black text-blue-600 text-lg" id="detTB">-</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                        <p class="text-[10px] text-slate-400 font-black uppercase mb-1">Status Gizi</p>
-                        <p class="font-black" id="detStatus">-</p>
+                    <div id="weightChartContainer" class="hidden">
+                        <canvas id="weightChart" height="150"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-card p-6 mb-8 border-none ring-1 ring-slate-200">
-            <div class="relative">
-                <span class="absolute left-5 top-5 text-slate-400 text-xl">🔍</span>
-                <input type="text" id="searchBox" onkeyup="renderTable()" placeholder="Cari nama anak (contoh: Enu Jeje)..." 
-                    class="w-full pl-14 pr-6 py-5 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-blue-100 outline-none font-bold text-slate-700 shadow-inner transition-all" />
+        <!-- Main Table -->
+        <div class="glass-card overflow-hidden rounded-3xl">
+            <div class="p-6 border-b border-slate-100">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-slate-800">Riwayat Pemeriksaan</h3>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-slate-500" id="showingCount">Menampilkan 0 data</span>
+                        <button onclick="toggleSort()" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-700 font-medium transition">
+                            <i class="fas fa-sort-amount-down" id="sortIcon"></i>
+                            <span id="sortText">Terbaru</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tableContainer" class="hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Tanggal & Waktu</th>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Posyandu</th>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Nama Anak</th>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Pengukuran</th>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Status Gizi</th>
+                                <th class="p-6 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="emptyState" class="py-20 text-center">
+                <div class="text-6xl mb-6 opacity-20">📊</div>
+                <p class="text-slate-500 font-extrabold text-xl mb-2">Belum Ada Data</p>
+                <p class="text-slate-400 text-sm max-w-md mx-auto mb-6">
+                    Mulai dengan menginput data anak melalui kalkulator gizi untuk melihat rekapan di sini.
+                </p>
+                <a href="calculator.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                    <i class="fas fa-calculator"></i>
+                    <span>Input Data Baru</span>
+                </a>
             </div>
         </div>
 
-        <div class="glass-card overflow-hidden border-none ring-1 ring-slate-200">
-            <div id="tableContainer" class="hidden overflow-x-auto">
-                <table class="w-full text-left" id="rekapanTable">
-                    <thead class="bg-slate-50 border-b border-slate-100">
-                        <tr>
-                            <th class="p-6 table-header text-center">Tanggal & Jam</th>
-                            <th class="p-6 table-header">Posyandu</th>
-                            <th class="p-6 table-header">Nama Anak</th>
-                            <th class="p-6 table-header text-center">BB / TB</th>
-                            <th class="p-6 table-header text-center">Status Gizi</th>
-                            <th class="p-6 table-header text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="divide-y divide-slate-50 font-bold text-slate-600 text-sm"></tbody>
-                </table>
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex gap-2">
+                <button onclick="clearAllData()" class="flex items-center gap-2 px-5 py-3 text-red-600 hover:text-red-700 font-bold rounded-xl hover:bg-red-50 transition border border-red-200">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Reset Semua Data</span>
+                </button>
+                <button onclick="importData()" class="flex items-center gap-2 px-5 py-3 text-blue-600 hover:text-blue-700 font-bold rounded-xl hover:bg-blue-50 transition border border-blue-200">
+                    <i class="fas fa-file-import"></i>
+                    <span>Import Data</span>
+                </button>
             </div>
-
-            <div id="emptyState" class="py-32 text-center">
-                <div class="text-6xl mb-4">📂</div>
-                <p class="text-slate-500 font-extrabold text-lg">Data Tidak Ditemukan</p>
-                <p class="text-slate-400 text-sm mt-1 uppercase tracking-widest">Coba ketik nama anak lain atau isi data baru</p>
+            
+            <div class="flex gap-2">
+                
+                <button onclick="exportToExcel()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Export Excel</span>
+                </button>
             </div>
-        </div>
-
-        <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <button onclick="clearAllData()" class="text-red-400 hover:text-red-600 font-bold text-xs px-6 py-3 rounded-xl hover:bg-red-50 transition uppercase tracking-widest">
-                🗑️ Reset Semua Rekapan
-            </button>
-            <button onclick="exportToExcel()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-black shadow-xl transition-all flex items-center gap-3 active:scale-95">
-                📗 DOWNLOAD LAPORAN EXCEL
-            </button>
         </div>
     </main>
+    
+    <!-- Floating Action Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="floating-btn w-14 h-14 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition">
+        <i class="fas fa-arrow-up text-white text-xl"></i>
+    </button>
 
+    <!-- JavaScript -->
     <script>
-        // Ambil profil terbaru berdasarkan nama anak (case-insensitive)
-        function getLatestProfile(name) {
-            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            const normalized = name.trim().toLowerCase();
-
-            const matchingRecords = allData
-                .filter(item => (item.namaAnak || "").trim().toLowerCase() === normalized)
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-            return matchingRecords[0] || null;
+        // Global variables
+        let currentSort = 'desc';
+        let currentDateFilter = 'all';
+        let weightChart = null;
+        let isChartVisible = false;
+        
+        // Format date utilities
+        const formatDate = {
+            // Format timestamp to readable date
+            toReadable: (timestamp) => {
+                if (!timestamp) return '-';
+                const date = new Date(parseInt(timestamp));
+                return date.toLocaleDateString('id-ID', {
+                    weekday: 'short',
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            },
+            
+            // Format timestamp to readable time
+            toTime: (timestamp) => {
+                if (!timestamp) return '-';
+                const date = new Date(parseInt(timestamp));
+                return date.toLocaleTimeString('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+            },
+            
+            // Format to date only (YYYY-MM-DD)
+            toInputDate: (timestamp) => {
+                if (!timestamp) return '';
+                const date = new Date(parseInt(timestamp));
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            },
+            
+            // Format to full date string
+            toFullDate: (timestamp) => {
+                if (!timestamp) return '-';
+                const date = new Date(parseInt(timestamp));
+                return date.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            },
+            
+            // Format to chart label (short)
+            toChartLabel: (timestamp) => {
+                if (!timestamp) return '';
+                const date = new Date(parseInt(timestamp));
+                return date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short'
+                });
+            },
+            
+            // Check if date is within range
+            isWithinRange: (timestamp, fromDate, toDate) => {
+                if (!timestamp) return false;
+                const date = new Date(parseInt(timestamp));
+                const from = fromDate ? new Date(fromDate) : null;
+                const to = toDate ? new Date(toDate) : null;
+                
+                if (from && date < from) return false;
+                if (to) {
+                    // Set to date to end of day
+                    const toEndOfDay = new Date(to);
+                    toEndOfDay.setHours(23, 59, 59, 999);
+                    if (date > toEndOfDay) return false;
+                }
+                return true;
+            }
+        };
+        
+        // Initialize page
+        function initPage() {
+            renderTable();
+            updateStats();
+            populatePosyanduFilter();
+            setupDefaultDates();
         }
-
+        
+        // Set default date filters
+        function setupDefaultDates() {
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            // Set default "from" to first day of current month
+            document.getElementById('dateFrom').value = formatDate.toInputDate(firstDayOfMonth.getTime());
+            
+            // Set default "to" to today
+            document.getElementById('dateTo').value = formatDate.toInputDate(today.getTime());
+        }
+        
+        // Render table with filtering
         function renderTable() {
             const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            const query = document.getElementById("searchBox").value.trim();
-            const queryLower = query.toLowerCase();
-
+            const query = document.getElementById("searchBox").value.trim().toLowerCase();
+            const statusFilter = document.getElementById("statusFilter").value;
+            const posyanduFilter = document.getElementById("posyanduFilter").value;
+            const dateFrom = document.getElementById("dateFrom").value;
+            const dateTo = document.getElementById("dateTo").value;
+            
+            let filteredData = allData;
+            
+            // Apply search filter
+            if (query) {
+                filteredData = filteredData.filter(item =>
+                    (item.namaAnak || "").toLowerCase().includes(query) ||
+                    (item.namaPosyandu || "").toLowerCase().includes(query) ||
+                    (item.status || "").toLowerCase().includes(query) ||
+                    (item.namaIbu || "").toLowerCase().includes(query)
+                );
+            }
+            
+            // Apply status filter
+            if (statusFilter) {
+                filteredData = filteredData.filter(item => item.status === statusFilter);
+            }
+            
+            // Apply posyandu filter
+            if (posyanduFilter) {
+                filteredData = filteredData.filter(item => item.namaPosyandu === posyanduFilter);
+            }
+            
+            // Apply date range filter
+            filteredData = filteredData.filter(item => 
+                formatDate.isWithinRange(item.timestamp, dateFrom, dateTo)
+            );
+            
+            // Apply quick date filter
+            if (currentDateFilter !== 'all') {
+                const now = new Date();
+                filteredData = filteredData.filter(item => {
+                    if (!item.timestamp) return false;
+                    const itemDate = new Date(parseInt(item.timestamp));
+                    
+                    switch(currentDateFilter) {
+                        case 'today':
+                            return itemDate.toDateString() === now.toDateString();
+                        case 'week':
+                            const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+                            return itemDate >= weekAgo;
+                        case 'month':
+                            return itemDate.getMonth() === now.getMonth() && 
+                                   itemDate.getFullYear() === now.getFullYear();
+                        case 'year':
+                            return itemDate.getFullYear() === now.getFullYear();
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Sort data
+            filteredData.sort((a, b) => {
+                const timeA = parseInt(a.timestamp) || 0;
+                const timeB = parseInt(b.timestamp) || 0;
+                return currentSort === 'desc' ? timeB - timeA : timeA - timeB;
+            });
+            
+            // Update UI
+            updateTableUI(filteredData);
+            updateStats(filteredData, allData);
+            
+            // Show child detail if search matches exactly one child
+            if (query && filteredData.length > 0) {
+                const firstChild = filteredData[0];
+                if (filteredData.every(item => item.namaAnak === firstChild.namaAnak)) {
+                    showChildDetail(firstChild.namaAnak);
+                }
+            }
+        }
+        
+        // Update table UI
+        function updateTableUI(data) {
             const tableBody = document.getElementById("tableBody");
-            const detailSection = document.getElementById("detailAnakSection");
             const tableContainer = document.getElementById("tableContainer");
             const emptyState = document.getElementById("emptyState");
-
-            tableBody.innerHTML = "";
-
-            // Filter semua data yang relevan dengan query
-            const filteredData = allData.filter(item =>
-                (item.namaAnak || "").toLowerCase().includes(queryLower) ||
-                (item.namaPosyandu || "").toLowerCase().includes(queryLower)
-            );
-
-            // BAGIAN PROFIL ANAK
-            if (query.length >= 2) {
-                const latest = getLatestProfile(query);
-
-                if (latest) {
-                    detailSection.classList.remove("hidden");
-
-                    document.getElementById("detNamaAnak").textContent = latest.namaAnak || "-";
-                    document.getElementById("detPosyandu").textContent = latest.namaPosyandu || "Posyandu Umum";
-                    
-                    document.getElementById("detNamaIbu").textContent = latest.namaIbu?.trim() || "-";
-
-                    let jkDisplay = "-";
-                    const jkVal = (latest.jk || "").trim().toUpperCase();
-                    if (jkVal === "L") jkDisplay = "Laki-laki";
-                    else if (jkVal === "P") jkDisplay = "Perempuan";
-                    document.getElementById("detJK").textContent = jkDisplay;
-
-                    document.getElementById("detBB").textContent = (latest.bb ?? "-") + " kg";
-                    document.getElementById("detTB").textContent = (latest.tb ?? "-") + " cm";
-                    document.getElementById("detStatus").textContent = latest.status || "NORMAL";
-                    document.getElementById("detStatus").style.color = latest.color || "#64748b";
-
-                    // Tombol edit
-                    document.getElementById("btnEditAnak").onclick = function() {
-                        localStorage.setItem("dataAnak", JSON.stringify({
-                            namaAnak: latest.namaAnak || "",
-                            namaIbu: latest.namaIbu || "",
-                            jk: latest.jk || "L"
-                        }));
-                        window.location.href = "inputData.html";
-                    };
-                } else {
-                    detailSection.classList.add("hidden");
-                }
-            } else {
-                detailSection.classList.add("hidden");
-            }
-
-            // BAGIAN TABEL RIWAYAT + TOMBOL HAPUS PER BARIS
-            if (filteredData.length > 0) {
-                emptyState.classList.add("hidden");
+            const showingCount = document.getElementById("showingCount");
+            
+            showingCount.textContent = `Menampilkan ${data.length} data`;
+            
+            if (data.length > 0) {
                 tableContainer.classList.remove("hidden");
-
-                filteredData
-                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
-                    .forEach(item => {
-                        const timestampStr = item.timestamp.toString(); // pastikan string untuk onclick
-                        tableBody.innerHTML += `
-                            <tr class="hover:bg-blue-50/50 transition border-b border-slate-50">
-                                <td class="p-6 text-center">
-                                    <div class="text-slate-800">${item.tanggal || '-'}</div>
-                                    <div class="text-[10px] text-blue-400 mt-1 uppercase font-black">Jam ${item.jam || '-'}</div>
-                                </td>
-                                <td class="p-6 text-blue-600 font-extrabold uppercase">${item.namaPosyandu || 'Posyandu Umum'}</td>
-                                <td class="p-6 text-slate-800 font-bold">${item.namaAnak || '-'}</td>
-                                <td class="p-6 text-center">
-                                    <span class="bg-slate-100 px-3 py-1 rounded-lg text-slate-700">${item.bb ?? 0}kg / ${item.tb ?? 0}cm</span>
-                                </td>
-                                <td class="p-6 text-center">
-                                    <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase inline-block border shadow-sm" 
-                                        style="background: ${(item.color || '#64748b')}15; color: ${item.color || '#64748b'}; border-color: ${(item.color || '#64748b')}40">
-                                        ${item.status || 'NORMAL'}
-                                    </span>
-                                </td>
-                                <td class="p-6 text-center">
-                                    <button onclick="deleteRow('${timestampStr}')" class="text-red-500 hover:text-red-700 transition p-2 hover:bg-red-50 rounded-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
+                emptyState.classList.add("hidden");
+                
+                let html = '';
+                data.forEach(item => {
+                    const dateStr = formatDate.toReadable(item.timestamp);
+                    const timeStr = formatDate.toTime(item.timestamp);
+                    
+                    let statusColor = '#64748b';
+                    let statusClass = 'badge-blue';
+                    
+                    if (item.status?.includes('Baik')) {
+                        statusColor = '#10b981';
+                        statusClass = 'badge-green';
+                    } else if (item.status?.includes('Kurang') || item.status?.includes('Buruk')) {
+                        statusColor = '#f59e0b';
+                        statusClass = 'badge-yellow';
+                    } else if (item.status?.includes('Lebih')) {
+                        statusColor = '#1b6bec';
+                        statusClass = 'badge-blue';
+                    }
+                    
+                    html += `
+                        <tr class="table-row">
+                            <td class="p-6">
+                                <div class="font-bold text-slate-800">${dateStr}</div>
+                                <div class="text-xs text-slate-400 mt-1">${timeStr}</div>
+                            </td>
+                            <td class="p-6">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                                    <span class="font-bold text-slate-700">${item.namaPosyandu || 'Posyandu Umum'}</span>
+                                </div>
+                            </td>
+                            <td class="p-6">
+                                <div class="font-bold text-slate-800">${item.namaAnak || '-'}</div>
+                                <div class="text-xs text-slate-400 mt-1">${item.namaIbu || '-'}</div>
+                            </td>
+                            <td class="p-6">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-weight text-emerald-500"></i>
+                                        <span class="font-bold text-slate-700">${item.bb || 0} kg</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-ruler-vertical text-blue-500"></i>
+                                        <span class="font-bold text-slate-700">${item.tb || 0} cm</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-6">
+                                <span class="${statusClass}">
+                                    <i class="fas fa-chart-line"></i>
+                                    ${item.status || 'NORMAL'}
+                                </span>
+                                <div class="text-xs text-slate-400 mt-1">Z-Score: ${item.zscore || '0.00'} SD</div>
+                            </td>
+                            <td class="p-6">
+                                <div class="flex gap-2">
+                                    <button onclick="viewDetails('${item.timestamp}')" class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 flex items-center justify-center transition">
+                                        <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
-                            </tr>`;
-                    });
+                                    <button onclick="deleteRow('${item.timestamp}')" class="w-10 h-10 rounded-xl bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                tableBody.innerHTML = html;
             } else {
-                emptyState.classList.remove("hidden");
                 tableContainer.classList.add("hidden");
+                emptyState.classList.remove("hidden");
             }
         }
-
-        // FUNGSI HAPUS SATU BARIS DATA
+        
+        // Update statistics
+        function updateStats(filteredData = [], allData = []) {
+            if (!allData.length) allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            
+            const total = allData.length;
+            const good = allData.filter(item => item.status?.includes('Baik')).length;
+            const warning = allData.filter(item => 
+                item.status?.includes('Kurang') || 
+                item.status?.includes('Buruk') || 
+                item.status?.includes('Lebih')
+            ).length;
+            
+            // Count unique children
+            const uniqueChildren = new Set(allData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean));
+            
+            document.getElementById('totalData').textContent = total;
+            document.getElementById('goodStatus').textContent = good;
+            document.getElementById('warningStatus').textContent = warning;
+            document.getElementById('uniqueChildren').textContent = uniqueChildren.size;
+        }
+        
+        // Populate posyandu filter
+        function populatePosyanduFilter() {
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            const posyandus = new Set(allData.map(item => item.namaPosyandu).filter(Boolean));
+            
+            const select = document.getElementById('posyanduFilter');
+            // Clear existing options except first
+            select.innerHTML = '<option value="">Semua Posyandu</option>';
+            
+            posyandus.forEach(posyandu => {
+                const option = document.createElement('option');
+                option.value = posyandu;
+                option.textContent = posyandu;
+                select.appendChild(option);
+            });
+        }
+        
+        // Show child detail
+        function showChildDetail(childName) {
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            const childRecords = allData
+                .filter(item => item.namaAnak?.toLowerCase() === childName.toLowerCase())
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            if (childRecords.length === 0) return;
+            
+            const latest = childRecords[0];
+            const detailSection = document.getElementById('detailAnakSection');
+            
+            // Fill basic info
+            document.getElementById('detNamaAnak').textContent = latest.namaAnak || '-';
+            document.getElementById('detPosyandu').textContent = latest.namaPosyandu || 'Posyandu Umum';
+            document.getElementById('detNamaIbu').textContent = latest.namaIbu || '-';
+            
+            // Gender
+            const gender = latest.jk === 'L' ? 'Laki-laki' : latest.jk === 'P' ? 'Perempuan' : '-';
+            document.getElementById('detJK').textContent = gender;
+            
+            // Age
+            if (latest.usia) {
+                document.getElementById('detUsia').textContent = `${latest.usia} bulan`;
+            } else {
+                document.getElementById('detUsia').textContent = '-';
+            }
+            
+            // Last measurement
+            if (latest.timestamp) {
+                document.getElementById('detTerakhir').textContent = formatDate.toFullDate(latest.timestamp);
+            }
+            
+            // Measurements
+            document.getElementById('detBB').textContent = `${latest.bb || 0} kg`;
+            document.getElementById('detTB').textContent = `${latest.tb || 0} cm`;
+            document.getElementById('detStatus').textContent = latest.status || 'NORMAL';
+            document.getElementById('detZScore').textContent = `${latest.zscore || '0.00'} SD`;
+            
+            // Measurement dates
+            document.getElementById('detBBDate').textContent = `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}`;
+            document.getElementById('detTBDate').textContent = `Terakhir diukur: ${formatDate.toReadable(latest.timestamp)}`;
+            
+            // Status color
+            let statusColor = '#64748b';
+            if (latest.status?.includes('Baik')) statusColor = '#10b981';
+            else if (latest.status?.includes('Kurang') || latest.status?.includes('Buruk')) statusColor = '#f59e0b';
+            else if (latest.status?.includes('Lebih')) statusColor = '#1b6bec';
+            
+            document.getElementById('detStatus').style.color = statusColor;
+            
+            // Setup edit button
+            document.getElementById('btnEditAnak').onclick = function() {
+                localStorage.setItem("dataAnak", JSON.stringify({
+                    namaAnak: latest.namaAnak || "",
+                    namaIbu: latest.namaIbu || "",
+                    jk: latest.jk || "L",
+                    usia: latest.usia || 0,
+                    namaPosyandu: latest.namaPosyandu || ""
+                }));
+                window.location.href = "inputData.html";
+            };
+            
+            // Show detail section
+            detailSection.classList.remove('hidden');
+            
+            // Prepare weight chart data
+            prepareWeightChart(childRecords);
+        }
+        
+        // Prepare weight chart
+        function prepareWeightChart(records) {
+            const sortedRecords = records.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            
+            const labels = sortedRecords.map(record => formatDate.toChartLabel(record.timestamp));
+            const weights = sortedRecords.map(record => parseFloat(record.bb) || 0);
+            
+            // Destroy existing chart
+            if (weightChart) {
+                weightChart.destroy();
+            }
+            
+            // Initialize chart when shown
+            if (isChartVisible) {
+                initWeightChart(labels, weights);
+            }
+        }
+        
+        // Initialize weight chart
+        function initWeightChart(labels, weights) {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            
+            weightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Berat Badan (kg)',
+                        data: weights,
+                        borderColor: '#1b6bec',
+                        backgroundColor: 'rgba(27, 107, 236, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#1b6bec',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                borderDash: [5, 5]
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Toggle chart visibility
+        function toggleChart() {
+            const container = document.getElementById('weightChartContainer');
+            const toggleText = document.getElementById('chartToggleText');
+            
+            if (isChartVisible) {
+                container.classList.add('hidden');
+                toggleText.innerHTML = '<i class="fas fa-chart-line mr-1"></i>Tampilkan Grafik';
+                isChartVisible = false;
+            } else {
+                container.classList.remove('hidden');
+                toggleText.innerHTML = '<i class="fas fa-eye-slash mr-1"></i>Sembunyikan Grafik';
+                isChartVisible = true;
+                
+                // Initialize chart if not already
+                if (!weightChart) {
+                    const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+                    const childName = document.getElementById('detNamaAnak').textContent;
+                    const childRecords = allData.filter(item => 
+                        item.namaAnak?.toLowerCase() === childName.toLowerCase()
+                    );
+                    prepareWeightChart(childRecords);
+                }
+            }
+        }
+        
+        // Toggle sort order
+        function toggleSort() {
+            const sortIcon = document.getElementById('sortIcon');
+            const sortText = document.getElementById('sortText');
+            
+            if (currentSort === 'desc') {
+                currentSort = 'asc';
+                sortIcon.className = 'fas fa-sort-amount-up';
+                sortText.textContent = 'Terlama';
+            } else {
+                currentSort = 'desc';
+                sortIcon.className = 'fas fa-sort-amount-down';
+                sortText.textContent = 'Terbaru';
+            }
+            
+            renderTable();
+        }
+        
+        // Set date filter
+        function setDateFilter(filter) {
+            currentDateFilter = filter;
+            
+            // Clear date inputs
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            
+            // Update active state
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderTable();
+        }
+        
+        // Reset date filters
+        function resetDateFilters() {
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            currentDateFilter = 'all';
+            
+            // Reset quick filter pills
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            document.querySelectorAll('.filter-pill')[0].classList.add('active');
+            
+            renderTable();
+        }
+        
+        // View details
+        function viewDetails(timestamp) {
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            const record = allData.find(item => item.timestamp == timestamp);
+            
+            if (record) {
+                localStorage.setItem('lastNutriResult', JSON.stringify(record));
+                window.location.href = 'hasil.html';
+            }
+        }
+        
+        // Delete row
         function deleteRow(timestamp) {
-            if (!confirm("Yakin ingin menghapus data pemeriksaan ini?")) return;
-
+            if (!confirm('Yakin ingin menghapus data ini?')) return;
+            
             let allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
-            allData = allData.filter(item => item.timestamp != timestamp); // hapus berdasarkan timestamp
+            allData = allData.filter(item => item.timestamp != timestamp);
             localStorage.setItem("allNutriResults", JSON.stringify(allData));
-
-            // Refresh tabel setelah hapus
+            
             renderTable();
         }
-
+        
+        // Close detail
         function tutupDetail() {
-            document.getElementById("detailAnakSection").classList.add("hidden");
-            document.getElementById("searchBox").value = "";
+            document.getElementById('detailAnakSection').classList.add('hidden');
+            document.getElementById('searchBox').value = '';
             renderTable();
         }
-
+        
+        // Clear all data
         function clearAllData() {
-            if (!confirm("Hapus SEMUA rekapan secara permanen?")) return;
+            if (!confirm('Hapus SEMUA data rekapan? Tindakan ini tidak dapat dibatalkan.')) return;
+            
             localStorage.removeItem("allNutriResults");
             renderTable();
+            
+            // Show success message
+            alert('Semua data telah berhasil dihapus.');
         }
-
+        
+        // Import data
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json,.xlsx,.xls';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (file.name.endsWith('.json')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+                            
+                            // Validate and fix timestamp format
+                            const validatedData = importedData.map(item => {
+                                // Ensure timestamp exists
+                                if (!item.timestamp) {
+                                    item.timestamp = Date.now().toString();
+                                }
+                                
+                                // Ensure timestamp is string
+                                item.timestamp = String(item.timestamp);
+                                
+                                return item;
+                            });
+                            
+                            // Merge data, avoid duplicates
+                            const newData = [...existingData];
+                            validatedData.forEach(item => {
+                                if (!existingData.some(existing => existing.timestamp === item.timestamp)) {
+                                    newData.push(item);
+                                }
+                            });
+                            
+                            localStorage.setItem("allNutriResults", JSON.stringify(newData));
+                            renderTable();
+                            alert(`Berhasil mengimpor ${validatedData.length} data.`);
+                        } catch (error) {
+                            alert('Gagal membaca file JSON. Format tidak valid.');
+                        }
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert('Fitur import Excel dalam pengembangan. Gunakan format JSON.');
+                }
+            };
+            
+            input.click();
+        }
+        
+        // Export to Excel with proper date formatting
         function exportToExcel() {
-            const table = document.getElementById("rekapanTable");
-            if (table.rows.length <= 1) return alert("Tidak ada data");
-            const wb = XLSX.utils.table_to_book(table);
-            XLSX.writeFile(wb, "Laporan_NutriKids.xlsx");
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            
+            if (allData.length === 0) {
+                alert('Tidak ada data untuk diexport.');
+                return;
+            }
+            
+            // Convert to worksheet with formatted dates
+            const worksheetData = allData.map(item => ({
+                'Tanggal': formatDate.toReadable(item.timestamp),
+                'Waktu': formatDate.toTime(item.timestamp),
+                'Posyandu': item.namaPosyandu || '',
+                'Nama Anak': item.namaAnak || '',
+                'Nama Ibu': item.namaIbu || '',
+                'Jenis Kelamin': item.jk === 'L' ? 'Laki-laki' : item.jk === 'P' ? 'Perempuan' : '',
+                'Usia (bulan)': item.usia || '',
+                'Berat Badan (kg)': item.bb || '',
+                'Tinggi Badan (cm)': item.tb || '',
+                'Z-Score': item.zscore || '',
+                'Status Gizi': item.status || '',
+                'Timestamp': item.timestamp || ''
+            }));
+            
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data NutriKids');
+            
+            // Generate filename with current date
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0].replace(/-/g, '');
+            XLSX.writeFile(workbook, `Laporan_NutriKids_${dateStr}.xlsx`);
         }
-
-        window.onload = renderTable;
+        
+        // Export to PDF
+        function exportToPDF() {
+            alert('Fitur export PDF dalam pengembangan. Untuk saat ini, gunakan export Excel.');
+        }
+        
+        // Fix existing data timestamps on load
+        function fixExistingTimestamps() {
+            const allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            let needsFix = false;
+            
+            const fixedData = allData.map(item => {
+                // If timestamp is missing or invalid, create one
+                if (!item.timestamp || isNaN(parseInt(item.timestamp))) {
+                    needsFix = true;
+                    // Create timestamp from current date minus random days (for demo)
+                    const daysAgo = Math.floor(Math.random() * 365);
+                    const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+                    item.timestamp = date.getTime().toString();
+                }
+                
+                // If tanggal/jam exist but timestamp doesn't, parse them
+                if (!item.timestamp && item.tanggal && item.jam) {
+                    try {
+                        const [day, month, year] = item.tanggal.split('/');
+                        const [hour, minute] = item.jam.split(':');
+                        const date = new Date(year, month - 1, day, hour, minute);
+                        item.timestamp = date.getTime().toString();
+                        needsFix = true;
+                    } catch (e) {
+                        // If parsing fails, use current timestamp
+                        item.timestamp = Date.now().toString();
+                        needsFix = true;
+                    }
+                }
+                
+                return item;
+            });
+            
+            if (needsFix) {
+                localStorage.setItem("allNutriResults", JSON.stringify(fixedData));
+                console.log('Fixed timestamps for existing data');
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            fixExistingTimestamps();
+            initPage();
+        });
     </script>
 </body>
 </html>

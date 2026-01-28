@@ -1,203 +1,890 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tips Nutrisi Pintar - NutriKids</title>
-    <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body class="bg-slate-50 font-sans min-h-screen">
-    <div class="grid-bg"></div>
-<style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-        .tab-active { background-color: #1b6bec; color: white; transform: translateY(-2px); }
-        .gradient-text { background: linear-gradient(90deg, #1b6bec, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary: #1b6bec;
+            --primary-dark: #0d4bc2;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --bg-light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        
+        .nav-pill.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(27, 107, 236, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .nav-pill:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(27, 107, 236, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        
+        .badge-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .badge-blue {
+            background: rgba(27, 107, 236, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(27, 107, 236, 0.2);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .meal-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .meal-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(27, 107, 236, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tip-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: currentColor;
+            opacity: 0.2;
+        }
     </style>
 </head>
-<body class="pb-20">
-
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-             <a
-          href="hasil.html"
-          class="bg-slate-800 text-white px-5 py-2 rounded-2xl text-sm font-bold hover:bg-slate-700 transition"
-          >Kembali</a
-        >
-      </div>
-            
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <header class="sticky-header border-b border-slate-100/50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-heartbeat text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+                        <p class="text-xs text-slate-500 font-medium">Tips & Panduan Nutrisi</p>
+                    </div>
+                </a>
+                
+                <div class="flex items-center gap-3">
+                    <a href="hasil.html" class="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali ke Hasil</span>
+                    </a>
+                    <button onclick="window.print()" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition">
+                        <i class="fas fa-print text-slate-600"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
-         
-    <main class="max-w-4xl mx-auto p-6 mt-10">
-        <div id="smart-advice-card" class="mb-10 hidden">
-            <div class="glass-card p-6 border-l-8 border-emerald-400 shadow-xl bg-white/80">
-                <div class="flex items-center gap-4 mb-4">
-                    <span class="text-4xl">✨</span>
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800">Analisis Khusus <span id="display-child-name" class="highlight">Anak</span></h2>
-                        <p class="text-xs text-slate-500">Berdasarkan data pemeriksaan terakhir</p>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Smart Advice Card -->
+        <div id="smart-advice-card" class="mb-10 fade-in">
+            <div class="glass-card rounded-3xl overflow-hidden border-l-8" id="advice-border">
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-2xl flex items-center justify-center" id="advice-emoji">
+                                <span class="text-3xl">✨</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Tips Khusus untuk 
+                                    <span id="display-child-name" class="text-blue-600">Si Kecil</span>
+                                </h2>
+                                <p class="text-sm text-slate-500">Rekomendasi berdasarkan data terakhir</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="badge" id="status-badge">Status Gizi</span>
+                            <span class="text-sm font-bold text-slate-700" id="display-zscore">0.00 SD</span>
+                        </div>
                     </div>
-                </div>
-                <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
-                    <div class="flex justify-between items-center mb-2">
-                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Status Gizi (Z-Score)</p>
-                        <span id="display-zscore" class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded-full text-slate-600">0.00 SD</span>
+                    
+                    <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-800" id="display-status">Status Gizi Normal</h3>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Prioritas</div>
+                        </div>
+                        
+                        <div id="status-recommendation" class="text-slate-700 mb-4">
+                            Rekomendasi akan muncul di sini berdasarkan status gizi anak.
+                        </div>
+                        
+                        <!-- Progress Indicators -->
+                        <div class="grid grid-cols-2 gap-4 mt-6">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs font-bold text-slate-600">Kepatuhan Menu</span>
+                                    <span class="text-xs font-bold text-slate-600" id="menu-compliance">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-emerald-500" id="menu-progress" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs font-bold text-slate-600">Konsistensi</span>
+                                    <span class="text-xs font-bold text-slate-600" id="consistency">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-blue-500" id="consistency-progress" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p id="display-status" class="text-2xl font-black uppercase tracking-tight mb-2"></p>
-                    <div id="status-recommendation" class="text-slate-600 text-sm leading-relaxed border-t border-slate-200/50 pt-3 mt-2"></div>
                 </div>
             </div>
         </div>
 
-        <header class="mb-8">
-            <h1 class="text-3xl font-extrabold text-slate-800 mb-2">Panduan Gizi Berdasarkan <span class="highlight">Usia</span></h1>
-            <p class="text-slate-500 text-sm">Tips nutrisi terbaik yang disesuaikan dengan tahap pertumbuhan Si Kecil.</p>
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <div class="inline-block mb-4">
+                <span class="badge badge-blue">
+                    <i class="fas fa-lightbulb mr-1"></i> Panduan Praktis
+                </span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
+                Tips Nutrisi <span class="gradient-text">Pintar</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                Panduan nutrisi berdasarkan usia dan tahap perkembangan anak. Disesuaikan dengan standar WHO dan Kemenkes RI.
+            </p>
         </header>
 
-        <div class="flex overflow-x-auto gap-3 pb-4 no-scrollbar mb-8">
-            <button id="tab-btn-0-6" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '0-6')">0-6 Bulan</button>
-            <button id="tab-btn-6-12" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '6-12')">6-12 Bulan</button>
-            <button id="tab-btn-12-24" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '12-24')">12-24 Bulan</button>
-            <button id="tab-btn-2-5" class="tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600" onclick="switchTab(this, '2-5')">2-5 Tahun</button>
+        <!-- Age Navigation -->
+        <div class="flex overflow-x-auto gap-3 pb-4 no-scrollbar mb-10">
+            <button id="tab-btn-0-6" class="nav-pill active px-6 py-3 font-bold whitespace-nowrap" onclick="switchTab(this, '0-6')">
+                <i class="fas fa-baby mr-2"></i>0-6 Bulan
+            </button>
+            <button id="tab-btn-6-12" class="nav-pill px-6 py-3 font-bold whitespace-nowrap" onclick="switchTab(this, '6-12')">
+                <i class="fas fa-baby-carriage mr-2"></i>6-12 Bulan
+            </button>
+            <button id="tab-btn-12-24" class="nav-pill px-6 py-3 font-bold whitespace-nowrap" onclick="switchTab(this, '12-24')">
+                <i class="fas fa-child mr-2"></i>12-24 Bulan
+            </button>
+            <button id="tab-btn-2-5" class="nav-pill px-6 py-3 font-bold whitespace-nowrap" onclick="switchTab(this, '2-5')">
+                <i class="fas fa-running mr-2"></i>2-5 Tahun
+            </button>
         </div>
 
-        <div id="content-area" class="space-y-6">
-            <div id="content-0-6" class="tab-content hidden">
-                <div class="glass-card p-8 border-l-8 !border-blue-400 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <span class="text-4xl">🍼</span>
-                        <h3 class="text-xl font-bold">Usia 0-6 Bulan: ASI Eksklusif</h3>
+        <!-- Content Area -->
+        <div id="content-area" class="fade-in">
+            <!-- Tab 1: 0-6 Bulan -->
+            <div id="content-0-6" class="tab-content space-y-6">
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-blue-500">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-baby text-3xl text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Usia 0-6 Bulan: ASI Eksklusif</h3>
+                            <p class="text-slate-500">Fokus pada ASI untuk pertumbuhan optimal</p>
+                        </div>
                     </div>
-                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
-                        <li><b>Hanya ASI:</b> Bayi cukup mendapatkan ASI saja tanpa air putih, madu, atau pisang.</li>
-                        <li><b>Sesuai Permintaan:</b> Susui bayi sesering mungkin, minimal 8-12 kali dalam 24 jam.</li>
-                        <li><b>Tanda Bahaya:</b> Jika bayi lemas atau malas menyusu, segera konsultasi ke tenaga kesehatan.</li>
-                    </ul>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="p-5 bg-blue-50 rounded-2xl">
+                                <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> Prinsip Utama
+                                </h4>
+                                <ul class="space-y-3 text-blue-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-blue-500 mt-1"></i>
+                                        <span><b>Hanya ASI:</b> Bayi cukup mendapatkan ASI saja tanpa air putih, madu, atau pisang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-blue-500 mt-1"></i>
+                                        <span><b>Sesuai Permintaan:</b> Susui bayi sesering mungkin, minimal 8-12 kali dalam 24 jam.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-blue-500 mt-1"></i>
+                                        <span><b>Posisi Menyusui Benar:</b> Pastikan bayi menyusu dengan posisi dan perlekatan yang tepat.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-red-50 rounded-2xl">
+                                <h4 class="font-bold text-red-800 mb-3 flex items-center gap-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Tanda Bahaya
+                                </h4>
+                                <ul class="space-y-2 text-red-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-times text-red-500 mt-1"></i>
+                                        <span>Bayi lemas atau malas menyusu</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-times text-red-500 mt-1"></i>
+                                        <span>Popok basah kurang dari 6 kali sehari</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-times text-red-500 mt-1"></i>
+                                        <span>Berat badan tidak naik setelah 2 minggu</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="p-5 bg-emerald-50 rounded-2xl">
+                                <h4 class="font-bold text-emerald-800 mb-3 flex items-center gap-2">
+                                    <i class="fas fa-heart"></i> Tips untuk Ibu
+                                </h4>
+                                <ul class="space-y-3 text-emerald-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-utensils text-emerald-500 mt-1"></i>
+                                        <span>Konsumsi makanan bergizi dan minum air yang cukup</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-bed text-emerald-500 mt-1"></i>
+                                        <span>Istirahat yang cukup untuk menjaga produksi ASI</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-hands-helping text-emerald-500 mt-1"></i>
+                                        <span>Minta dukungan keluarga dalam perawatan bayi</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-purple-50 rounded-2xl">
+                                <h4 class="font-bold text-purple-800 mb-3">💡 Fakta Penting</h4>
+                                <p class="text-purple-700 text-sm">
+                                    Kolostrum (ASI hari pertama) mengandung antibodi tinggi yang melindungi bayi dari infeksi. Jangan dibuang!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="content-6-12" class="tab-content hidden">
-                <div class="glass-card p-8 border-l-8 !border-emerald-400 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <span class="text-4xl">🥣</span>
-                        <h3 class="text-xl font-bold">Usia 6-12 Bulan: Mulai MPASI</h3>
+            <!-- Tab 2: 6-12 Bulan -->
+            <div id="content-6-12" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-emerald-500">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center">
+                            <i class="fas fa-baby-carriage text-3xl text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Usia 6-12 Bulan: Mulai MPASI</h3>
+                            <p class="text-slate-500">Periode pengenalan makanan pendamping ASI</p>
+                        </div>
                     </div>
-                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
-                        <li><b>Menu Gizi Seimbang:</b> Pastikan mengandung Protein Hewani (telur/ikan) untuk cegah stunting.</li>
-                        <li><b>Tekstur:</b> Mulai dari bubur kental (lumat) lalu naik tekstur secara bertahap.</li>
-                        <li><b>Frekuensi:</b> Makan utama 2-3 kali sehari ditambah selingan 1-2 kali.</li>
-                    </ul>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="p-5 bg-emerald-50 rounded-2xl">
+                                <h4 class="font-bold text-emerald-800 mb-3">🥣 Prinsip MPASI</h4>
+                                <ul class="space-y-3 text-emerald-700">
+                                    <li><b>Menu Gizi Seimbang:</b> Pastikan mengandung Protein Hewani (telur/ikan) untuk cegah stunting.</li>
+                                    <li><b>Tekstur Bertahap:</b> Mulai dari bubur kental (6m), lalu naik ke makanan lumat (8m), dan cincang halus (10m).</li>
+                                    <li><b>Frekuensi:</b> Makan utama 2-3 kali sehari ditambah selingan 1-2 kali.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-orange-50 rounded-2xl">
+                                <h4 class="font-bold text-orange-800 mb-3">⚠️ Pantau Alergi</h4>
+                                <p class="text-orange-700 text-sm mb-3">
+                                    Perkenalkan satu jenis makanan baru setiap 3-4 hari untuk memantau reaksi alergi.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-xs px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Telur</span>
+                                    <span class="text-xs px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Ikan</span>
+                                    <span class="text-xs px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Kacang</span>
+                                    <span class="text-xs px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Susu Sapi</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="p-5 bg-blue-50 rounded-2xl">
+                                <h4 class="font-bold text-blue-800 mb-3">📋 Contoh Menu Sehari</h4>
+                                <div class="space-y-3 text-blue-700">
+                                    <div class="flex justify-between items-center p-3 bg-white/50 rounded-xl">
+                                        <span class="font-bold">Pagi</span>
+                                        <span class="text-sm">Bubur beras + hati ayam + wortel</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-white/50 rounded-xl">
+                                        <span class="font-bold">Siang</span>
+                                        <span class="text-sm">Nasi tim + ikan + bayam</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-white/50 rounded-xl">
+                                        <span class="font-bold">Selingan</span>
+                                        <span class="text-sm">Pisang lumat/susu</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-white/50 rounded-xl">
+                                        <span class="font-bold">Malam</span>
+                                        <span class="text-sm">Nasi tim + tempe + labu kuning</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-5 bg-purple-50 rounded-2xl">
+                                <h4 class="font-bold text-purple-800 mb-3">💡 Tips Tambahan</h4>
+                                <ul class="space-y-2 text-purple-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-plus text-purple-500 mt-1"></i>
+                                        <span>Tambahkan 1-2 sendok minyak/mentega untuk energi ekstra</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-plus text-purple-500 mt-1"></i>
+                                        <span>ASI tetap diberikan sesuai permintaan</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-plus text-purple-500 mt-1"></i>
+                                        <span>Hindari garam dan gula berlebihan</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="content-12-24" class="tab-content hidden">
-                <div class="glass-card p-8 border-l-8 !border-amber-400 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <span class="text-4xl">🍗</span>
-                        <h3 class="text-xl font-bold">Usia 12-24 Bulan: Makanan Keluarga</h3>
+            <!-- Tab 3: 12-24 Bulan -->
+            <div id="content-12-24" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-amber-500">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center">
+                            <i class="fas fa-child text-3xl text-amber-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Usia 12-24 Bulan: Makanan Keluarga</h3>
+                            <p class="text-slate-500">Transisi ke makanan keluarga dengan penyesuaian</p>
+                        </div>
                     </div>
-                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
-                        <li><b>Menu Keluarga:</b> Si Kecil sudah bisa makan menu yang sama dengan keluarga (kurangi garam/gula berlebih).</li>
-                        <li><b>Protein Hewani:</b> Sangat penting untuk pertumbuhan fisik dan kecerdasan otak.</li>
-                        <li><b>Susu:</b> ASI tetap dilanjutkan hingga usia 2 tahun.</li>
-                    </ul>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="p-5 bg-amber-50 rounded-2xl">
+                                <h4 class="font-bold text-amber-800 mb-3">🍗 Pola Makan</h4>
+                                <ul class="space-y-3 text-amber-700">
+                                    <li><b>Menu Keluarga:</b> Si Kecil sudah bisa makan menu yang sama dengan keluarga (kurangi garam/gula berlebih).</li>
+                                    <li><b>Protein Hewani:</b> Sangat penting untuk pertumbuhan fisik dan kecerdasan otak.</li>
+                                    <li><b>Susu:</b> ASI tetap dilanjutkan hingga usia 2 tahun.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-emerald-50 rounded-2xl">
+                                <h4 class="font-bold text-emerald-800 mb-3">✅ Kebiasaan Baik</h4>
+                                <ul class="space-y-2 text-emerald-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-emerald-500 mt-1"></i>
+                                        <span>Makan bersama keluarga di meja makan</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-emerald-500 mt-1"></i>
+                                        <span>Minum dari gelas, bukan botol</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-emerald-500 mt-1"></i>
+                                        <span>Cuci tangan sebelum dan sesudah makan</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="p-5 bg-red-50 rounded-2xl">
+                                <h4 class="font-bold text-red-800 mb-3">🚫 Yang Dihindari</h4>
+                                <ul class="space-y-2 text-red-700">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-ban text-red-500 mt-1"></i>
+                                        <span>Makanan terlalu keras atau berisiko tersedak</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-ban text-red-500 mt-1"></i>
+                                        <span>Minuman manis kemasan</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-ban text-red-500 mt-1"></i>
+                                        <span>Makan sambil menonton TV/gadget</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-blue-50 rounded-2xl">
+                                <h4 class="font-bold text-blue-800 mb-3">📊 Asupan Harian</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-bold text-blue-700">Energi</span>
+                                            <span class="text-sm text-blue-600">1000-1300 kkal</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill bg-blue-500" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-bold text-blue-700">Protein</span>
+                                            <span class="text-sm text-blue-600">25-30 gram</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill bg-emerald-500" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="content-2-5" class="tab-content hidden">
-                <div class="glass-card p-8 border-l-8 !border-purple-400 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <span class="text-4xl">🥦</span>
-                        <h3 class="text-xl font-bold">Usia 2-5 Tahun: Pola Makan Sehat</h3>
+            <!-- Tab 4: 2-5 Tahun -->
+            <div id="content-2-5" class="tab-content hidden space-y-6">
+                <div class="glass-card p-8 rounded-3xl border-l-8 border-purple-500">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center">
+                            <i class="fas fa-running text-3xl text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800">Usia 2-5 Tahun: Pola Makan Sehat</h3>
+                            <p class="text-slate-500">Membangun kebiasaan makan sehat seumur hidup</p>
+                        </div>
                     </div>
-                    <ul class="text-slate-600 space-y-3 list-disc ml-5 text-sm">
-                        <li><b>Variasi Menu:</b> Biasakan makan sayur dan buah setiap hari agar anak tidak bosan.</li>
-                        <li><b>Batasi Gula:</b> Kurangi jajanan manis, minuman kemasan, dan gorengan berlebih.</li>
-                        <li><b>Aktivitas:</b> Ajak anak lebih aktif bergerak untuk menjaga berat badan ideal.</li>
-                    </ul>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="p-5 bg-purple-50 rounded-2xl">
+                                <h4 class="font-bold text-purple-800 mb-3">🥦 Prinsip Utama</h4>
+                                <ul class="space-y-3 text-purple-700">
+                                    <li><b>Variasi Menu:</b> Biasakan makan sayur dan buah setiap hari agar anak tidak bosan.</li>
+                                    <li><b>Batasi Gula:</b> Kurangi jajanan manis, minuman kemasan, dan gorengan berlebih.</li>
+                                    <li><b>Aktivitas:</b> Ajak anak lebih aktif bergerak untuk menjaga berat badan ideal.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="p-5 bg-emerald-50 rounded-2xl">
+                                <h4 class="font-bold text-emerald-800 mb-3">🍽️ Jadwal Ideal</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-sun text-emerald-600"></i>
+                                            </div>
+                                            <span class="font-bold text-emerald-700">Pagi (07:00)</span>
+                                        </div>
+                                        <span class="text-sm text-emerald-600">Nasi + telur + sayur</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-clock text-blue-600"></i>
+                                            </div>
+                                            <span class="font-bold text-blue-700">Selingan (10:00)</span>
+                                        </div>
+                                        <span class="text-sm text-blue-600">Buah/susu</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-sun text-orange-600"></i>
+                                            </div>
+                                            <span class="font-bold text-orange-700">Siang (12:00)</span>
+                                        </div>
+                                        <span class="text-sm text-orange-600">Nasi + ikan + sayur</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-moon text-red-600"></i>
+                                            </div>
+                                            <span class="font-bold text-red-700">Malam (18:00)</span>
+                                        </div>
+                                        <span class="text-sm text-red-600">Nasi + ayam + tempe</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="p-5 bg-red-50 rounded-2xl">
+                                <h4 class="font-bold text-red-800 mb-3">⚠️ Tantangan Umum</h4>
+                                <div class="space-y-3 text-red-700">
+                                    <div class="p-3 bg-white/50 rounded-xl">
+                                        <p class="font-bold mb-1">Pilih-pilih makanan</p>
+                                        <p class="text-xs">Sajikan dengan kreatif, libatkan anak dalam persiapan</p>
+                                    </div>
+                                    <div class="p-3 bg-white/50 rounded-xl">
+                                        <p class="font-bold mb-1">Tidak suka sayur</p>
+                                        <p class="text-xs">Campurkan dengan makanan favorit, buat bentuk menarik</p>
+                                    </div>
+                                    <div class="p-3 bg-white/50 rounded-xl">
+                                        <p class="font-bold mb-1">Suka jajanan</p>
+                                        <p class="text-xs">Sediakan camilan sehat di rumah, batasi uang jajan</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-5 bg-blue-50 rounded-2xl">
+                                <h4 class="font-bold text-blue-800 mb-3">📈 Indikator Sehat</h4>
+                                <ul class="space-y-2 text-blue-700">
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-check-circle text-blue-500"></i>
+                                        <span>Berat badan naik sesuai kurva KMS</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-check-circle text-blue-500"></i>
+                                        <span>Aktif bermain dan bergerak</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-check-circle text-blue-500"></i>
+                                        <span>Jarang sakit (maksimal 3x batuk pilek/tahun)</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i class="fas fa-check-circle text-blue-500"></i>
+                                        <span>Tidur nyenyak 10-12 jam/hari</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="mt-12 text-center space-y-4">
-            <a href="calculator.html" class="btn-primary w-full md:w-auto px-10 py-4 shadow-lg inline-block">
-                🔄 Hitung Ulang Data Gizi
+        
+        <!-- Universal Tips Section -->
+        <div class="mt-16">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
+                <i class="fas fa-star text-yellow-500 mr-2"></i> Tips Universal untuk Semua Usia
+            </h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="tip-card glass-card p-6 rounded-2xl text-blue-700">
+                    <h4 class="font-bold mb-3">💧 Hidrasi Cukup</h4>
+                    <p class="text-sm">Pastikan anak minum air putih yang cukup sesuai usia. Hindari minuman manis kemasan.</p>
+                </div>
+                <div class="tip-card glass-card p-6 rounded-2xl text-emerald-700">
+                    <h4 class="font-bold mb-3">🏃‍♂️ Aktivitas Fisik</h4>
+                    <p class="text-sm">Anak perlu aktivitas fisik minimal 1 jam per hari untuk pertumbuhan optimal.</p>
+                </div>
+                <div class="tip-card glass-card p-6 rounded-2xl text-purple-700">
+                    <h4 class="font-bold mb-3">😴 Tidur Berkualitas</h4>
+                    <p class="text-sm">Tidur cukup penting untuk produksi hormon pertumbuhan dan perkembangan otak.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-12 flex flex-col sm:flex-row gap-4">
+            <a href="calculator.html" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] pulse">
+                <i class="fas fa-calculator mr-2"></i> Hitung Status Gizi
             </a>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">NutriKids © 2026 - Standar Antropometri Kemenkes</p>
+            <a href="learn.html" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-center py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
+                <i class="fas fa-book mr-2"></i> Baca Materi Lengkap
+            </a>
         </div>
     </main>
+    
+    <!-- Floating Action Button -->
+    <a href="#" class="floating-btn w-14 h-14 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up text-white text-xl"></i>
+    </a>
 
+    <!-- JavaScript -->
     <script>
+        // Initialize Tips Page
         function initTipsPage() {
-            // Ambil data profil dasar dan hasil kalkulator
             const dataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
             const giziResult = JSON.parse(localStorage.getItem('lastNutriResult')) || null;
-
-            // Jika ada data profil, aktifkan kartu analisis pintar
-            if (dataAnak) {
-                document.getElementById('smart-advice-card').classList.remove('hidden');
-                document.getElementById('display-child-name').innerText = dataAnak.namaAnak;
+            
+            // Show smart advice card
+            const adviceCard = document.getElementById('smart-advice-card');
+            adviceCard.classList.remove('hidden');
+            
+            // Fill child data
+            if (dataAnak && dataAnak.namaAnak) {
+                document.getElementById('display-child-name').textContent = dataAnak.namaAnak;
                 
-                // Pilih tab otomatis berdasarkan usia yang diinput
-                const age = parseInt(dataAnak.usia);
+                // Auto select tab based on age
+                const age = parseInt(dataAnak.usia) || 0;
                 if (age <= 6) autoSelectTab('0-6');
                 else if (age <= 12) autoSelectTab('6-12');
                 else if (age <= 24) autoSelectTab('12-24');
                 else autoSelectTab('2-5');
             } else {
-                // Jika tidak ada data, default ke tab 0-6
                 autoSelectTab('0-6');
             }
-
-            // Jika ada hasil perhitungan gizi, berikan rekomendasi spesifik
+            
+            // Fill nutrition result data
             if (giziResult) {
-                const statusEl = document.getElementById('display-status');
-                const adviceEl = document.getElementById('status-recommendation');
-                const zscoreEl = document.getElementById('display-zscore');
-
-                statusEl.innerText = giziResult.status;
-                zscoreEl.innerText = giziResult.zscore + " SD";
-
-                if (giziResult.status.includes("LEBIH")) {
-                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-blue-500";
-                    adviceEl.innerHTML = "⚠️ <b>Rekomendasi:</b> Perhatikan porsi makan dan ajak Si Kecil lebih aktif bergerak. Batasi camilan tinggi gula.";
-                } else if (giziResult.status.includes("KURANG") || giziResult.status.includes("BURUK")) {
-                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-orange-500";
-                    adviceEl.innerHTML = "⚠️ <b>Rekomendasi:</b> Tambahkan porsi Protein Hewani (telur/ikan) dan Lemak sehat (santan/minyak) di setiap piringnya.";
+                const zscore = parseFloat(giziResult.zscore) || 0;
+                const status = giziResult.status || 'Status Tidak Diketahui';
+                
+                // Update display
+                document.getElementById('display-status').textContent = status;
+                document.getElementById('display-zscore').textContent = `${zscore.toFixed(2)} SD`;
+                
+                // Set colors and recommendations based on status
+                let borderColor = 'border-emerald-500';
+                let badgeClass = 'badge-green';
+                let badgeText = 'Optimal';
+                let emoji = '✨';
+                let recommendations = '';
+                let menuProgress = 70;
+                let consistencyProgress = 60;
+                
+                if (status.includes('BURUK') || status.includes('KURANG')) {
+                    borderColor = 'border-red-500';
+                    badgeClass = 'badge-red';
+                    badgeText = 'Perlu Perhatian';
+                    emoji = '⚠️';
+                    recommendations = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-red-600">Prioritas:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-red-700">
+                                <li>Tambah frekuensi makan menjadi 5-6x sehari</li>
+                                <li>Tambahkan 1-2 sendok minyak/mentega per porsi</li>
+                                <li>Fokus pada protein hewani (telur, ikan, hati)</li>
+                                <li>Konsultasi ke Posyandu/Puskesmas terdekat</li>
+                            </ul>
+                        </div>
+                    `;
+                    menuProgress = 40;
+                    consistencyProgress = 50;
+                } else if (status.includes('LEBIH')) {
+                    borderColor = 'border-blue-500';
+                    badgeClass = 'badge-blue';
+                    badgeText = 'Perhatian';
+                    emoji = '⚖️';
+                    recommendations = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-blue-600">Prioritas:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-blue-700">
+                                <li>Batasi gula dan makanan olahan</li>
+                                <li>Tingkatkan aktivitas fisik minimal 1 jam/hari</li>
+                                <li>Perbanyak sayur dan buah dalam menu</li>
+                                <li>Hindari minuman manis kemasan</li>
+                            </ul>
+                        </div>
+                    `;
+                    menuProgress = 60;
+                    consistencyProgress = 70;
                 } else {
-                    statusEl.className = "text-2xl font-black uppercase tracking-tight mb-2 text-emerald-500";
-                    adviceEl.innerHTML = "✅ <b>Rekomendasi:</b> Luar biasa! Pertahankan jadwal makan yang teratur dan variasikan menu setiap hari agar Si Kecil tidak bosan.";
+                    borderColor = 'border-emerald-500';
+                    badgeClass = 'badge-green';
+                    badgeText = 'Optimal';
+                    emoji = '🎉';
+                    recommendations = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-emerald-600">Pertahankan:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-emerald-700">
+                                <li>Teruskan pola makan sehat yang telah diterapkan</li>
+                                <li>Variasi menu setiap hari agar tidak bosan</li>
+                                <li>Jadwal makan teratur 3x utama + 2x selingan</li>
+                                <li>Pantau berat badan setiap bulan di Posyandu</li>
+                            </ul>
+                        </div>
+                    `;
+                    menuProgress = 85;
+                    consistencyProgress = 75;
                 }
+                
+                // Apply changes
+                document.getElementById('advice-border').classList.add(borderColor);
+                document.getElementById('status-badge').className = `badge ${badgeClass}`;
+                document.getElementById('status-badge').textContent = badgeText;
+                document.getElementById('advice-emoji').innerHTML = `<span class="text-3xl">${emoji}</span>`;
+                document.getElementById('status-recommendation').innerHTML = recommendations;
+                
+                // Update progress bars
+                setTimeout(() => {
+                    document.getElementById('menu-progress').style.width = `${menuProgress}%`;
+                    document.getElementById('consistency-progress').style.width = `${consistencyProgress}%`;
+                    document.getElementById('menu-compliance').textContent = `${menuProgress}%`;
+                    document.getElementById('consistency').textContent = `${consistencyProgress}%`;
+                }, 300);
             }
         }
-
-        function autoSelectTab(tabName) {
-            const btn = document.getElementById('tab-btn-' + tabName);
-            if(btn) switchTab(btn, tabName);
-        }
-
+        
+        // Tab switching
         function switchTab(btn, tabName) {
-            // Sembunyikan semua konten
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            
-            // Reset semua gaya tombol
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.className = "tab-btn glass-card px-8 py-3 font-bold whitespace-nowrap text-slate-600 transition-all";
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('fade-in');
             });
             
-            // Tampilkan konten yang dipilih
-            const content = document.getElementById('content-' + tabName);
-            if(content) content.classList.remove('hidden');
+            // Reset all buttons
+            document.querySelectorAll('.nav-pill').forEach(b => {
+                b.classList.remove('active');
+            });
             
-            // Aktifkan tombol yang dipilih
-            btn.className = "tab-btn bg-emerald-500 shadow-lg shadow-emerald-100 px-8 py-3 font-bold whitespace-nowrap text-white rounded-2xl transition-all scale-105";
+            // Show selected content
+            const content = document.getElementById(`content-${tabName}`);
+            if (content) {
+                content.classList.remove('hidden');
+                content.classList.add('fade-in');
+            }
+            
+            // Activate selected button
+            btn.classList.add('active');
+            
+            // Smooth scroll to content
+            content.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-
-        window.onload = initTipsPage;
+        
+        function autoSelectTab(tabName) {
+            const btn = document.getElementById(`tab-btn-${tabName}`);
+            if (btn) switchTab(btn, tabName);
+        }
+        
+        // Print function
+        window.printPage = function() {
+            const printContent = document.querySelector('main').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = `
+                <div class="p-8 max-w-4xl mx-auto">
+                    <h1 class="text-3xl font-bold text-center mb-6">Tips Nutrisi NutriKids</h1>
+                    ${printContent}
+                </div>
+            `;
+            
+            window.print();
+            document.body.innerHTML = originalContent;
+            initTipsPage();
+        };
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initTipsPage);
     </script>
 </body>
 </html>

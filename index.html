@@ -1,103 +1,350 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NutriKids - Pantau Tumbuh Kembang Si Kecil</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Poppins", sans-serif;
-      }
-      .gradient-text {
-        background: linear-gradient(90deg, #10b981, #3b82f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-    </style>
-  </head>
-  <body class="bg-slate-50">
-    <header
-      class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100"
-    >
-      <div
-        class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center"
-      >
-        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-
-        <div class="md:hidden text-slate-600 font-bold">Menu</div>
-      </div>
+    <link href="style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-bg"></div>
+    
+    <!-- Header/Navigation -->
+    <header class="nav-container">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="index.html" class="brand">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>NutriKids</span>
+                </a>
+                
+                <div class="nav-links">
+                    
+                    
+                </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-12">
-      <div class="flex flex-col md:flex-row items-center gap-12">
-        <div class="flex-1 space-y-6">
-          <div
-            class="inline-block bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
-          >
-            ✨ Sahabat Bunda & Si Kecil
-          </div>
-
-          <h1
-            class="text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight"
-          >
-            Pastikan Masa Depan
-            <span class="text-emerald-500">Si Kecil</span> Dimulai dari Gizi
-            Seimbang
-          </h1>
-
-          <p class="text-slate-500 text-lg leading-relaxed">
-            Hai Bunda! Yuk, jadi pahlawan kesehatan bagi buah hati dengan pantau
-            status gizi secara akurat, mudah, dan menyenangkan.
-          </p>
-
-          <div class="pt-4">
-            <a
-              href="inputData.html"
-              class="inline-block bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-3xl font-bold shadow-lg shadow-emerald-200 transition-all transform hover:scale-105"
-            >
-              🚀 Mulai Input Data
-            </a>
-          </div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="badge badge-new animate-bounce-subtle">
+                        <i class="fas fa-star"></i> Sahabat Bunda & Si Kecil
+                    </div>
+                    
+                    <h1 class="main-title">
+                        Pastikan Masa Depan 
+                        <span class="highlight">Si Kecil</span> 
+                        Dimulai dari Gizi Seimbang
+                    </h1>
+                    
+                    <p class="main-description">
+                        Hai Bunda! Yuk, jadi pahlawan kesehatan bagi buah hati dengan pantau 
+                        status gizi secara akurat, mudah, dan menyenangkan. NutriKids membantu 
+                        Anda memantau tumbuh kembang anak berdasarkan standar Kemenkes RI.
+                    </p>
+                    
+                    <div class="pt-4">
+                        <a href="inputData.html" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> Mulai Input Data
+                        </a>
+                        <a href="#features" class="btn btn-outline ml-4">
+                            <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
+                        </a>
+                    </div>
+                </div>
+                <div class="illustration-wrapper">
+                    <div class="image-circle-container float-anim">
+                        <img src="LUCU.png" alt="NutriKids - Anak Sehat" class="hero-img-final" />
+                    </div>
+                    <div class="glow-circle-bg"></div>
+                    
+                    <!-- Floating Emojis -->
+                    <div class="floating-emoji e-1">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <div class="floating-emoji e-2">
+                        <i class="fas fa-carrot"></i>
+                    </div>
+                    <div class="floating-emoji e-3">
+                        <i class="fas fa-glass-whiskey"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="flex-1 relative">
-          <div
-            class="relative w-full max-w-md mx-auto aspect-square bg-emerald-50 rounded-full flex items-center justify-center overflow-hidden"
-          >
-            <img
-              src="LUCU.png"
-              alt="Hero NutriKids"
-              class="w-4/5 object-contain z-10"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-tr from-emerald-100/50 to-transparent"
-            ></div>
-          </div>
-
-          <div
-            class="absolute top-10 right-0 bg-white p-3 rounded-2xl shadow-xl text-2xl animate-bounce"
-          >
-            🍎
-          </div>
-          <div
-            class="absolute bottom-10 left-0 bg-white p-3 rounded-2xl shadow-xl text-2xl animate-bounce"
-            style="animation-delay: 1s"
-          >
-            🥦
-          </div>
-          <div
-            class="absolute top-1/2 -right-4 bg-white p-3 rounded-2xl shadow-xl text-2xl animate-pulse"
-          >
-            🥛
-          </div>
+    <!-- Features Section -->
+    <section id="features" class="py-6">
+        <div class="container">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-slate-800 mb-3">
+                    Kenapa Memilih NutriKids?
+                </h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">
+                    Platform lengkap untuk memantau tumbuh kembang anak dengan standar akurat
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-5">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Akurat & Terpercaya</h3>
+                    <p class="text-slate-500">
+                        Menggunakan standar antropometri Kemenkes RI dan WHO untuk perhitungan Z-Score yang akurat.
+                    </p>
+                </div>
+                
+                <div class="glass-card p-5">
+                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mb-4">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Mudah Digunakan</h3>
+                    <p class="text-slate-500">
+                        Interface yang ramah pengguna, bisa diakses dari smartphone maupun komputer.
+                    </p>
+                </div>
+                
+                <div class="glass-card p-5">
+                    <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-4">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Rekaman Lengkap</h3>
+                    <p class="text-slate-500">
+                        Simpan dan pantau riwayat perkembangan anak dari waktu ke waktu dalam satu platform.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </main>
-  </body>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-6">
+        <div class="container">
+            <div class="glass-card p-6 text-center" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); color: white;">
+                <h2 class="text-3xl font-bold mb-3">Siap Mulai Pantau Tumbuh Kembang Si Kecil?</h2>
+                <p class="mb-4 opacity-90">
+                    Bergabung dengan ribuan Bunda yang telah menggunakan NutriKids untuk memastikan gizi optimal bagi buah hati.
+                </p>
+                <a href="inputData.html" class="btn bg-white text-emerald-600 hover:bg-slate-100 inline-flex items-center gap-2">
+                    <i class="fas fa-play-circle"></i> Mulai Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>NutriKids</h4>
+                    <p>Platform pemantauan tumbuh kembang anak berbasis standar Kemenkes RI dan WHO.</p>
+                    <div class="flex gap-3 mt-3">
+                        <a href="#" class="text-slate-500 hover:text-emerald-600">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-slate-500 hover:text-emerald-600">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-slate-500 hover:text-emerald-600">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="inputData.html">Input Data</a></li>
+                        <li><a href="calculator.html">Kalkulator Gizi</a></li>
+                        <li><a href="hasil.html">Hasil Analisis</a></li>
+                        <li><a href="rekapan.html">Rekapan</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Edukasi</h4>
+                    <ul>
+                        <li><a href="tips.html">Tips Nutrisi</a></li>
+                        <li><a href="learn.html">Materi Gizi</a></li>
+                        <li><a href="#features">Tentang Kami</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope mr-2"></i> info@nutrikids.id</li>
+                        <li><i class="fas fa-phone mr-2"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 NutriKids. Hak Cipta Dilindungi. | Dibuat dengan <i class="fas fa-heart text-red-500"></i> untuk kesehatan anak Indonesia</p>
+                <p class="text-sm mt-2">Sumber data: Kemenkes RI PMK No. 2 Tahun 2020 tentang Standar Antropometri Anak</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = menuToggle.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-inner') && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <!-- Tailwind Grid Utility (inline untuk compatibility) -->
+    <style>
+        .grid {
+            display: grid;
+        }
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        @media (min-width: 768px) {
+            .md\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        .gap-6 {
+            gap: 1.5rem;
+        }
+        .gap-3 {
+            gap: 0.75rem;
+        }
+        .ml-4 {
+            margin-left: 1rem;
+        }
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+        .py-6 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+        .text-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+        .text-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        .opacity-90 {
+            opacity: 0.9;
+        }
+        .bg-emerald-100 {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        .text-emerald-600 {
+            color: #059669;
+        }
+        .bg-blue-100 {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .text-blue-600 {
+            color: #2563eb;
+        }
+        .bg-purple-100 {
+            background-color: rgba(168, 85, 247, 0.1);
+        }
+        .text-purple-600 {
+            color: #7c3aed;
+        }
+        .text-red-500 {
+            color: #ef4444;
+        }
+        .inline-flex {
+            display: inline-flex;
+        }
+        .max-w-2xl {
+            max-width: 42rem;
+        }
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</body>
 </html>

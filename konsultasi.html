@@ -3,101 +3,870 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konsultasi Ahli - NutriKids</title>
+    <title>Konsultasi Ahli Gizi - NutriKids</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #1b6bec;
+            --primary-dark: #0d4bc2;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --bg-light: #f8fafc;
+        }
+        
         body { 
             font-family: 'Poppins', sans-serif; 
-            background-color: #f8fafc;
-            background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            position: relative;
+            color: var(--text-main);
         }
+        
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(27, 107, 236, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -10;
+        }
+        
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 2.5rem;
             border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
+        
         .gradient-text {
-            background: linear-gradient(90deg, #1b6bec, #10b981);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+        
+        .highlight { 
+            color: var(--primary); 
+            font-weight: 700; 
+            background: linear-gradient(120deg, rgba(27, 107, 236, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+        
         .contact-icon {
             transition: all 0.3s ease;
         }
+        
         .contact-card:hover .contact-icon {
             transform: scale(1.1) rotate(5deg);
         }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 1rem 1.25rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        .message-bubble.user {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        .message-bubble.assistant {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: var(--text-main);
+            margin-right: auto;
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        
+        .expert-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .expert-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(27, 107, 236, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chat-input {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 1rem;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .badge-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .badge-yellow {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .badge-blue {
+            background: rgba(27, 107, 236, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(27, 107, 236, 0.2);
+        }
     </style>
 </head>
-<body class="pb-20">
+<body class="min-h-screen">
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-            <nav class="hidden md:flex gap-6 text-sm font-bold text-slate-600">
+    <div class="grid-bg"></div>
+
+    <!-- Navigation -->
+    <header class="sticky-header border-b border-slate-100/50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-heartbeat text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
+                        <p class="text-xs text-slate-500 font-medium">Konsultasi Ahli Gizi</p>
+                    </div>
+                </a>
                 
-            </nav>
-            <a href="rekapan.html" class="bg-slate-800 text-white px-5 py-2 rounded-2xl text-sm font-bold hover:bg-slate-700 transition">Kembali</a>
+                <div class="flex items-center gap-3">
+                    <a href="rekapan.html" class="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali ke Rekapan</span>
+                    </a>
+                    <button onclick="window.print()" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition">
+                        <i class="fas fa-print text-slate-600"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 mt-12 mb-20">
-        <div class="text-center mb-12">
-            <span class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">💬 Layanan Dukungan</span>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mt-4 leading-tight">
-                Konsultasi dengan <span class="text-blue-600">Ahli Gizi</span>
-            </h1>
-            <p class="text-slate-500 mt-4 max-w-lg mx-auto italic">
-                "Bunda tidak sendirian. Kami siap membantu memantau tumbuh kembang Si Kecil lebih mendalam."
-            </p>
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Smart Advice Card -->
+        <div id="smart-advice-card" class="mb-10 fade-in">
+            <div class="glass-card rounded-3xl overflow-hidden border-l-8" id="advice-border">
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-2xl flex items-center justify-center" id="advice-emoji">
+                                <span class="text-3xl">💬</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Rekomendasi Konsultasi untuk 
+                                    <span id="display-child-name" class="text-blue-600">Si Kecil</span>
+                                </h2>
+                                <p class="text-sm text-slate-500">Saran ahli berdasarkan data terakhir</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="status-badge" id="status-badge">Status</span>
+                            <span class="text-sm font-bold text-slate-700" id="display-zscore">0.00 SD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-800" id="display-status">Status Gizi Normal</h3>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Prioritas</div>
+                        </div>
+                        
+                        <div id="status-advice" class="text-slate-700 mb-4">
+                            Rekomendasi konsultasi akan muncul di sini berdasarkan status gizi anak.
+                        </div>
+                        
+                        <!-- Consultation Type -->
+                        <div class="mt-4">
+                            <p class="text-sm font-bold text-slate-600 mb-2">Jenis Konsultasi Disarankan:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium" id="consult-type-1">Konsultasi Rutin</span>
+                                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium" id="consult-type-2">Pola Makan</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium" id="consult-type-3">Monitor Berkala</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="grid gap-6">
+        <!-- Header Section -->
+        <header class="mb-12 text-center fade-in">
+            <div class="inline-block mb-4">
+                <span class="badge-blue">
+                    <i class="fas fa-comment-medical mr-1"></i> Konsultasi Online
+                </span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
+                Konsultasi dengan <span class="gradient-text">Ahli Gizi</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                Dapatkan saran personal dari ahli gizi anak berpengalaman untuk pertumbuhan optimal Si Kecil.
+            </p>
+        </header>
+
+        <!-- Quick Action Cards -->
+        <div class="grid md:grid-cols-2 gap-6 mb-10">
+            <!-- Chat Simulation -->
+            <div class="glass-card p-8 rounded-3xl border-l-8 border-emerald-500">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-6">
+                        <i class="fas fa-comments text-white text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-3">Chat Instan Simulasi</h2>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        Coba simulasi konsultasi dengan AI assistant kami. Dapatkan saran cepat tentang pola makan dan nutrisi.
+                    </p>
+                    <button onclick="toggleChat()" 
+                            class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl pulse">
+                        <i class="fas fa-comment-dots mr-2"></i> Coba Chat Simulasi
+                    </button>
+                </div>
+            </div>
+            
+            <!-- WhatsApp Consultation -->
+            <div class="glass-card p-8 rounded-3xl border-l-8 border-blue-500">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6">
+                        <i class="fab fa-whatsapp text-white text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-3">Konsultasi via WhatsApp</h2>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        Konsultasi langsung dengan ahli gizi kami via WhatsApp. Kirim foto menu atau KMS untuk analisis mendalam.
+                    </p>
+                    <a href="https://wa.me/6281234567890?text=Halo%20NutriKids,%20saya%20ingin%20konsultasi%20tentang%20gizi%20anak" 
+                       target="_blank"
+                       class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Chat via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        
+                
+              
+
+        <!-- What You Can Consult -->
+        <div class="glass-card p-8 rounded-3xl mb-10">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
+                <i class="fas fa-question-circle text-orange-500 mr-2"></i> Apa yang Bisa Dikonsultasikan?
+            </h3>
             
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="glass-card p-8 shadow-xl hover:shadow-2xl transition contact-card border-none">
-                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mb-6 contact-icon">📧</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Hubungi via Email</h3>
-                    <p class="text-blue-600 font-bold text-lg mb-4">info@nutrikids.id</p>
-                    <p class="text-sm text-slate-500 leading-relaxed">Kirim pertanyaan tentang gizi anak, hasil pemeriksaan, atau konsultasi umum kapan saja.</p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-2xl">
+                        <i class="fas fa-weight text-blue-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-blue-800 mb-1">Berat Badan Tidak Naik</h4>
+                            <p class="text-sm text-blue-700">Anak sulit naik berat badan dalam 2 bulan berturut-turut.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-2xl">
+                        <i class="fas fa-apple-alt text-emerald-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-emerald-800 mb-1">Pola Makan Buruk</h4>
+                            <p class="text-sm text-emerald-700">Anak pilih-pilih makanan atau sulit makan sayur.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-2xl">
+                        <i class="fas fa-chart-line text-purple-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-purple-800 mb-1">Status Gizi Merah</h4>
+                            <p class="text-sm text-purple-700">Hasil analisis menunjukkan gizi kurang/buruk/lebih.</p>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="glass-card p-8 shadow-xl hover:shadow-2xl transition contact-card border-none">
-                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 contact-icon">📞</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Layanan Telepon</h3>
-                    <p class="text-blue-600 font-bold text-lg mb-4">0821-4495-4323</p>
-                    <p class="text-sm text-slate-500 leading-relaxed">Hubungi kami pada jam kerja (06.00 - 23.59 WIB) untuk konsultasi langsung via suara ya ❤️.</p>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl">
+                        <i class="fas fa-baby text-orange-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-orange-800 mb-1">MPASI & Transisi</h4>
+                            <p class="text-sm text-orange-700">Bingung mulai MPASI atau transisi ke makanan keluarga.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-3 p-4 bg-red-50 rounded-2xl">
+                        <i class="fas fa-allergies text-red-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-red-800 mb-1">Kecurigaan Alergi</h4>
+                            <p class="text-sm text-red-700">Anak menunjukkan gejala alergi terhadap makanan tertentu.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-3 p-4 bg-cyan-50 rounded-2xl">
+                        <i class="fas fa-calendar-alt text-cyan-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-cyan-800 mb-1">Jadwal & Porsi</h4>
+                            <p class="text-sm text-cyan-700">Perlu bantuan menyusun jadwal makan dan porsi yang tepat.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="glass-card p-8 shadow-xl flex flex-col md:flex-row items-center gap-8 border-none">
-                <div class="w-20 h-20 bg-orange-100 text-orange-600 rounded-[2rem] flex items-center justify-center text-4xl shrink-0">📍</div>
-                <div class="text-center md:text-left">
-                    <h3 class="text-xl font-bold text-slate-800 mb-1">Lokasi Kantor Kami</h3>
-                    <p class="text-slate-600 font-medium mb-2 text-lg">KPK BOYS HOME🚀Yogyakarta,Indonesia</p>
-                    <p class="text-sm text-slate-400">Silakan buat janji temu terlebih dahulu melalui email atau WhatsApp untuk kunjungan langsung.Kami siap melayani dengan sepenuh hati🙏</p>
+        <!-- Emergency Warning -->
+        <div class="glass-card p-6 border-l-8 border-red-500 bg-gradient-to-r from-red-50 to-orange-50 mb-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                    </div>
                 </div>
-            </div>
-
-            <div class="bg-amber-50 border-2 border-dashed border-amber-200 p-8 rounded-[2.5rem] flex gap-6 items-start">
-                <div class="text-3xl">⚠️</div>
-                <div>
-                    <h4 class="font-extrabold text-amber-800 text-lg mb-1">Pesan Penting untuk Bunda</h4>
-                    <p class="text-sm text-amber-700 leading-relaxed font-medium">
-                        Informasi di NutriKids bersifat edukatif. Untuk kondisi medis darurat, diagnosis penyakit, atau penanganan klinis, 
-                        harap <b>selalu prioritaskan pemeriksaan langsung</b> ke dokter spesialis anak, bidan, atau Puskesmas terdekat.
+                <div class="flex-1">
+                    <h4 class="text-xl font-bold text-red-800 mb-2">Peringatan Penting</h4>
+                    <p class="text-red-700">
+                        Layanan ini bersifat edukatif dan pendampingan. Untuk kondisi darurat (anak lemas, kejang, demam tinggi, tidak sadar), 
+                        <span class="font-bold">SEGERA BAWA KE DOKTER ANAK, PUSKESMAS, ATAU RUMAH SAKIT TERDEKAT.</span>
                     </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preparation Tips -->
+        <div class="glass-card p-8 rounded-3xl mb-10">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
+                <i class="fas fa-clipboard-list text-green-500 mr-2"></i> Persiapan Sebelum Konsultasi
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-weight text-blue-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-2">Data Antropometri</h4>
+                    <p class="text-sm text-slate-600">Siapkan data berat & tinggi badan terbaru, usia, dan riwayat pengukuran.</p>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-camera text-emerald-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-2">Foto Menu</h4>
+                    <p class="text-sm text-slate-600">Foto makanan harian anak (1-2 hari) untuk analisis pola makan.</p>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-sticky-note text-purple-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-2">Catatan Keluhan</h4>
+                    <p class="text-sm text-slate-600">Tulis keluhan spesifik: nafsu makan, BAB, tidur, atau perilaku makan.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="text-center text-slate-400 text-xs mt-10">
-        &copy; 2026 NutriKids Indonesia - Sahabat Tumbuh Kembang Si Kecil
+    <!-- Chat Window -->
+    <div id="chat-window" class="fixed bottom-24 right-6 w-96 bg-white rounded-3xl shadow-2xl hidden overflow-hidden z-50 border border-slate-200" style="height: 600px;">
+        <div class="bg-gradient-to-r from-blue-600 to-emerald-500 text-white p-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <i class="fas fa-robot text-white"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">AI Nutrition Assistant</h4>
+                    <p class="text-xs opacity-90">Online • Balas cepat</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-white text-3xl leading-none hover:opacity-80 transition">×</button>
+        </div>
+        
+        <div id="chat-messages" class="p-5 h-[440px] overflow-y-auto bg-slate-50">
+            <div class="message-bubble assistant">
+                Halo Bunda! 👋 Saya AI Assistant NutriKids. Saya siap membantu menjawab pertanyaan tentang nutrisi anak.<br><br>
+                Bisa ceritakan tentang Si Kecil: umur, berat badan, tinggi badan, atau keluhan spesifik apa yang Bunda alami?
+                <div class="message-time">Sekarang</div>
+            </div>
+            
+            <!-- Quick Questions -->
+            <div id="quick-questions" class="mt-4 mb-4">
+                <p class="text-xs text-slate-500 mb-2">Pertanyaan cepat:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="sendQuickQuestion('Berapa porsi MPASI untuk bayi 8 bulan?')" 
+                            class="px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-full text-xs transition">
+                        Porsi MPASI
+                    </button>
+                    <button onclick="sendQuickQuestion('Bagaimana cara menaikkan berat badan anak?')" 
+                            class="px-3 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-full text-xs transition">
+                        Naik BB
+                    </button>
+                    <button onclick="sendQuickQuestion('Makanan apa yang baik untuk anak susah makan?')" 
+                            class="px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-full text-xs transition">
+                        Susah Makan
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-4 border-t border-slate-100 bg-white">
+            <div class="flex">
+                <input id="chat-input" type="text" placeholder="Ketik pesan..." 
+                       class="flex-1 border border-slate-300 rounded-l-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 chat-input"
+                       onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()" 
+                        class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 rounded-r-2xl font-medium hover:opacity-90 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <p class="text-xs text-center text-slate-400 mt-3">
+                <i class="fas fa-info-circle mr-1"></i> Simulasi edukatif • Untuk konsultasi nyoba, gunakan WhatsApp
+            </p>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button onclick="toggleChat()" class="floating-btn w-16 h-16 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition">
+        <i class="fas fa-comment-dots text-white text-2xl"></i>
+    </button>
+
+    <footer class="text-center text-slate-400 text-xs mt-16 pb-8 px-4">
+        <div class="max-w-6xl mx-auto">
+            <p>© 2026 NutriKids Indonesia • Informasi ini bersifat edukatif dan bukan pengganti konsultasi medis langsung</p>
+            <p class="mt-2">
+                <a href="tel:+6281234567890" class="text-slate-500 hover:text-slate-700 mx-2"><i class="fas fa-phone mr-1"></i> 0812-3456-7890</a> •
+                <a href="mailto:konsultasi@nutrikids.id" class="text-slate-500 hover:text-slate-700 mx-2"><i class="fas fa-envelope mr-1"></i> konsultasi@nutrikids.id</a>
+            </p>
+        </div>
     </footer>
 
+    <script>
+        // Global variables
+        let isChatOpen = false;
+        let currentChildData = null;
+        
+        // Initialize consultation page
+        function initConsultationPage() {
+            const dataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
+            const giziResult = JSON.parse(localStorage.getItem('lastNutriResult')) || null;
+            currentChildData = dataAnak;
+            
+            // Show smart advice card
+            const adviceCard = document.getElementById('smart-advice-card');
+            adviceCard.classList.remove('hidden');
+            
+            // Fill child data
+            if (dataAnak && dataAnak.namaAnak) {
+                document.getElementById('display-child-name').textContent = dataAnak.namaAnak;
+            }
+            
+            // Fill nutrition result data
+            if (giziResult) {
+                const zscore = parseFloat(giziResult.zscore) || 0;
+                const status = giziResult.status || 'Status Tidak Diketahui';
+                
+                // Update display
+                document.getElementById('display-status').textContent = status;
+                document.getElementById('display-zscore').textContent = `${zscore.toFixed(2)} SD`;
+                
+                // Set colors and recommendations based on status
+                let borderColor = 'border-emerald-500';
+                let badgeClass = 'badge-green';
+                let badgeText = 'Optimal';
+                let emoji = '😊';
+                let advice = '';
+                let consultTypes = [];
+                
+                if (status.includes('BURUK') || status.includes('KURANG')) {
+                    borderColor = 'border-red-500';
+                    badgeClass = 'badge-red';
+                    badgeText = 'Perhatian';
+                    emoji = '⚠️';
+                    advice = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-red-600">Prioritas Konsultasi:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-red-700">
+                                <li>Segera konsultasi untuk program perbaikan gizi</li>
+                                <li>Butuh menu PMT (Pemberian Makanan Tambahan) khusus</li>
+                                <li>Monitoring ketat setiap minggu</li>
+                                <li>Konsultasi dengan dokter spesialis anak jika perlu</li>
+                            </ul>
+                        </div>
+                    `;
+                    consultTypes = ['Konsultasi Mendesak', 'PMT Khusus', 'Monitoring Ketat'];
+                } else if (status.includes('LEBIH')) {
+                    borderColor = 'border-blue-500';
+                    badgeClass = 'badge-blue';
+                    badgeText = 'Perhatian';
+                    emoji = '⚖️';
+                    advice = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-blue-600">Rekomendasi Konsultasi:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-blue-700">
+                                <li>Konsultasi pola makan untuk pengaturan kalori</li>
+                                <li>Program aktivitas fisik yang aman untuk anak</li>
+                                <li>Monitoring porsi dan jadwal makan</li>
+                                <li>Pencegahan komplikasi jangka panjang</li>
+                            </ul>
+                        </div>
+                    `;
+                    consultTypes = ['Pola Makan', 'Aktivitas Fisik', 'Monitoring Porsi'];
+                } else {
+                    borderColor = 'border-emerald-500';
+                    badgeClass = 'badge-green';
+                    badgeText = 'Optimal';
+                    emoji = '🎉';
+                    advice = `
+                        <div class="space-y-2">
+                            <p class="font-bold text-emerald-600">Konsultasi Pemeliharaan:</p>
+                            <ul class="list-disc pl-5 space-y-1 text-emerald-700">
+                                <li>Konsultasi rutin untuk mempertahankan status gizi</li>
+                                <li>Variasi menu agar anak tidak bosan</li>
+                                <li>Pencegahan masalah gizi di masa depan</li>
+                                <li>Optimalisasi tumbuh kembang</li>
+                            </ul>
+                        </div>
+                    `;
+                    consultTypes = ['Konsultasi Rutin', 'Variasi Menu', 'Optimalisasi'];
+                }
+                
+                // Apply changes
+                document.getElementById('advice-border').classList.add(borderColor);
+                document.getElementById('status-badge').className = `status-badge ${badgeClass}`;
+                document.getElementById('status-badge').textContent = badgeText;
+                document.getElementById('advice-emoji').innerHTML = `<span class="text-3xl">${emoji}</span>`;
+                document.getElementById('status-advice').innerHTML = advice;
+                
+                // Set consultation types
+                const consultElements = [
+                    document.getElementById('consult-type-1'),
+                    document.getElementById('consult-type-2'),
+                    document.getElementById('consult-type-3')
+                ];
+                
+                consultTypes.forEach((type, index) => {
+                    if (consultElements[index]) {
+                        consultElements[index].textContent = type;
+                    }
+                });
+            }
+            
+            // Load initial chat message with child data if available
+            if (dataAnak && giziResult) {
+                setTimeout(() => {
+                    addMessageToChat(`Halo! Saya melihat data ${dataAnak.namaAnak} (${dataAnak.usia || 0} bulan) dengan status gizi "${giziResult.status}". Ada yang bisa saya bantu spesifik tentang kondisi ini?`, false);
+                }, 1000);
+            }
+        }
+        
+        // Toggle chat window
+        function toggleChat() {
+            const chatWindow = document.getElementById('chat-window');
+            isChatOpen = !isChatOpen;
+            
+            if (isChatOpen) {
+                chatWindow.classList.remove('hidden');
+                chatWindow.classList.add('slide-in');
+                document.getElementById('chat-input').focus();
+                
+                // Scroll to bottom
+                setTimeout(() => {
+                    const messages = document.getElementById('chat-messages');
+                    messages.scrollTop = messages.scrollHeight;
+                }, 100);
+            } else {
+                chatWindow.classList.add('hidden');
+                chatWindow.classList.remove('slide-in');
+            }
+        }
+        
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessageToChat(message, true);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Generate AI response after delay
+            setTimeout(() => {
+                removeTypingIndicator();
+                const response = generateAIResponse(message);
+                addMessageToChat(response, false);
+            }, 1000 + Math.random() * 2000);
+        }
+        
+        // Send quick question
+        function sendQuickQuestion(question) {
+            const input = document.getElementById('chat-input');
+            input.value = question;
+            sendMessage();
+        }
+        
+        // Add message to chat
+        function addMessageToChat(message, isUser) {
+            const messages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.className = `message-bubble ${isUser ? 'user' : 'assistant'}`;
+            messageDiv.innerHTML = `
+                ${message}
+                <div class="message-time">${getCurrentTime()}</div>
+            `;
+            
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+            
+            // Remove quick questions after first user message
+            if (isUser) {
+                const quickQuestions = document.getElementById('quick-questions');
+                if (quickQuestions) {
+                    quickQuestions.style.display = 'none';
+                }
+            }
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messages = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <span class="text-slate-500 text-sm ml-2">AI Assistant mengetik...</span>
+            `;
+            
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Generate AI response
+        function generateAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            let response = '';
+            
+            // Context-aware responses based on child data
+            if (currentChildData) {
+                const childName = currentChildData.namaAnak || 'Si Kecil';
+                const childAge = currentChildData.usia || 0;
+                
+                // Check for specific keywords in message
+                if (message.includes('mpasi') || message.includes('makanan pendamping')) {
+                    if (childAge < 6) {
+                        response = `Untuk ${childName} (${childAge} bulan), masih dalam masa ASI eksklusif ya Bunda. MPASI bisa mulai usia 6 bulan dengan tekstur lumat.`;
+                    } else if (childAge <= 12) {
+                        response = `Untuk ${childName} (${childAge} bulan), MPASI sudah 2-3x sehari dengan porsi sekitar 125-250 ml. Pastikan ada protein hewani seperti telur/ikan setiap hari untuk cegah stunting.`;
+                    } else {
+                        response = `Untuk ${childName} (${childAge} bulan), sudah bisa makan makanan keluarga dengan porsi disesuaikan. Variasi menu penting agar tidak bosan.`;
+                    }
+                } else if (message.includes('berat') || message.includes('bb') || message.includes('naik')) {
+                    response = `Untuk menaikkan berat badan ${childName}, coba: 1) Tambah frekuensi makan (5-6x/hari), 2) Tambahkan minyak/mentega (1-2 sdm per porsi), 3) Fokus protein hewani (telur, ikan, hati), 4) Susu formula jika perlu.`;
+                } else if (message.includes('tinggi') || message.includes('tb') || message.includes('pendek')) {
+                    response = `Untuk tinggi badan ${childName}, penting: 1) Protein hewani setiap hari, 2) Tidur cukup (10-12 jam), 3) Aktivitas fisik, 4) Cukup kalsium dari susu/ikan. Pantau di KMS setiap bulan.`;
+                } else if (message.includes('susah makan') || message.includes('pilih-pilih')) {
+                    response = `Untuk ${childName} yang susah makan: 1) Sajikan kreatif (bentuk menarik), 2) Makan bersama keluarga, 3) Jangan paksa, 4) Batasi camilan sebelum makan, 5) Libatkan anak dalam menyiapkan makanan.`;
+                } else if (message.includes('alergi') || message.includes('gatal') || message.includes('ruam')) {
+                    response = `Jika ${childName} menunjukkan gejala alergi: 1) Catat makanan yang dicurigai, 2) Hindari makanan tersebut 2 minggu, 3) Konsultasi dokter untuk tes alergi jika berlanjut, 4) ASI tetap diteruskan.`;
+                } else if (message.includes('jadwal') || message.includes('porsi') || message.includes('frekuensi')) {
+                    if (childAge < 12) {
+                        response = `Jadwal ${childName}: ASI sesuai permintaan + MPASI 2-3x (pagi, siang, sore) + selingan 1-2x. Porsi: mulai 2-3 sendok makan, naik bertahap.`;
+                    } else {
+                        response = `Jadwal ${childName}: Makan utama 3x (pagi, siang, malam) + selingan 2x (pukul 10:00 & 16:00). Porsi: 1/4 - 1/3 porsi orang dewasa.`;
+                    }
+                } else {
+                    // General response
+                    const generalResponses = [
+                        `Terima kasih ceritanya tentang ${childName}. Untuk kondisi ini, saya sarankan konsultasi lebih detail dengan ahli gizi kami via WhatsApp untuk analisis mendalam.`,
+                        `Saya memahami kekhawatiran Bunda tentang ${childName}. Berdasarkan usia ${childAge} bulan, penting untuk memantau perkembangan di KMS setiap bulan.`,
+                        `Untuk ${childName}, saran saya: pantau berat & tinggi setiap bulan di Posyandu, variasi menu harian, dan cukup aktivitas fisik. Ada keluhan spesifik lain?`,
+                        `Berdasarkan data yang ada, ${childName} memerlukan perhatian pada [aspek tertentu]. Mau saya bantu susun rencana makan untuk minggu depan?`
+                    ];
+                    response = generalResponses[Math.floor(Math.random() * generalResponses.length)];
+                }
+            } else {
+                // Generic responses if no child data
+                const genericResponses = [
+                    "Terima kasih pertanyaannya! Untuk saran yang lebih personal, bisa ceritakan usia, berat, dan tinggi badan Si Kecil?",
+                    "Saya memahami kekhawatiran Bunda. Untuk analisis yang tepat, saya butuh informasi dasar tentang anak: usia, berat badan, tinggi badan, dan keluhan utama.",
+                    "Pertanyaan yang bagus! Bisa share data antropometri terbaru Si Kecil? Dengan begitu saya bisa beri saran yang lebih tepat.",
+                    "Saya siap membantu! Ceritakan lebih detail tentang Si Kecil: usia, berat badan saat lahir dan sekarang, serta pola makan sehari-hari."
+                ];
+                response = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+            }
+            
+            return response;
+        }
+        
+        // Get current time for chat
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
+        
+        // Share child data to chat
+        function shareChildData() {
+            const dataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
+            const giziResult = JSON.parse(localStorage.getItem('lastNutriResult')) || null;
+            
+            if (dataAnak && giziResult) {
+                const message = `Data ${dataAnak.namaAnak}: ${dataAnak.usia || 0} bulan, BB ${giziResult.bb || 0} kg, TB ${giziResult.tb || 0} cm, Status: ${giziResult.status || 'N/A'}, Z-Score: ${giziResult.zscore || '0.00'} SD.`;
+                addMessageToChat(message, true);
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Generate response
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    addMessageToChat(`Terima kasih sudah membagikan data ${dataAnak.namaAnak}. Saya lihat status gizi ${giziResult.status}. ${getRecommendationBasedOnStatus(giziResult.status)}`, false);
+                }, 1500);
+            } else {
+                addMessageToChat("Mohon input data anak terlebih dahulu melalui kalkulator gizi.", false);
+            }
+        }
+        
+        // Get recommendation based on status
+        function getRecommendationBasedOnStatus(status) {
+            if (status.includes('BURUK') || status.includes('KURANG')) {
+                return "Kondisi ini perlu perhatian khusus. Saya sarankan konsultasi mendesak dengan ahli gizi untuk program perbaikan gizi.";
+            } else if (status.includes('LEBIH')) {
+                return "Perlu pengaturan pola makan dan porsi. Saya bisa bantu susun menu sehat yang seimbang.";
+            } else {
+                return "Status gizi baik! Mari pertahankan dengan pola makan sehat dan variasi menu.";
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initConsultationPage);
+    </script>
 </body>
 </html>

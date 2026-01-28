@@ -4,159 +4,859 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Input - NutriKids</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-        .gradient-text { background: linear-gradient(90deg, #1b6bec, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: white; border-radius: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; transition: all 0.3s ease; }
-        .glass-card:hover { transform: translateY(-5px); }
+        /* Import CSS Variables dan Global Styles */
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #3b82f6;
+            --bg-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-2xl: 2.5rem;
+        }
+
+        /* RESET & BASE */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            color: var(--text-main); 
+            background-color: var(--bg-light); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Container */
+        .container { 
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 1.5rem; 
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* NAVIGATION */
+        .nav-container { 
+            padding: 1rem 0; 
+            width: 100%; 
+            z-index: 1000; 
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .brand { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span { 
+            color: var(--text-main); 
+        }
+
+        .nav-cta-box {
+            background: var(--primary);
+            color: var(--white) !important;
+            padding: 0.625rem 1.5rem !important;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .nav-cta-box:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #2563eb;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Form Selection Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .form-card {
+            text-align: center;
+            padding: 2.5rem;
+            cursor: pointer;
+            position: relative;
+            border-bottom: 8px solid;
+            transition: all 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .form-card.posyandu {
+            border-bottom-color: var(--primary);
+        }
+
+        .form-card.anak {
+            border-bottom-color: var(--secondary);
+        }
+
+        .form-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .form-card.posyandu .form-icon {
+            background: var(--bg-gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .form-card.anak .form-icon {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .form-card .btn {
+            font-size: 0.95rem;
+            padding: 0.75rem 1.5rem;
+            min-width: 140px;
+        }
+
+        /* Data Terdeteksi Section */
+        .data-section {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .section-title h3 i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .data-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 8px solid;
+            position: relative;
+        }
+
+        .data-card.posyandu {
+            border-left-color: var(--primary);
+        }
+
+        .data-card.anak {
+            border-left-color: var(--secondary);
+        }
+
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-label {
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-card.posyandu .data-label {
+            color: var(--primary);
+        }
+
+        .data-card.anak .data-label {
+            color: var(--secondary);
+        }
+
+        .data-status {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-empty {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .status-ready {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .data-content {
+            padding: 0.5rem 0;
+        }
+
+        .data-empty {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 2rem 0;
+        }
+
+        .data-filled {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .data-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .data-card.posyandu .data-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+
+        .data-card.anak .data-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--secondary);
+        }
+
+        .data-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .data-info h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+
+        .data-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.125rem;
+        }
+
+        .data-info p i {
+            margin-right: 0.25rem;
+        }
+
+        /* Confirmation Area */
+        .confirmation-area {
+            margin-top: 3rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .confirmation-area.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .confirmation-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            border: 2px solid var(--white);
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .confirmation-message {
+            font-size: 1.125rem;
+            color: var(--text-main);
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .confirmation-message i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-lg {
+            padding: 1.25rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 900;
+            min-width: 250px;
+        }
+
+        .reset-link {
+            color: var(--danger);
+            text-decoration: underline;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .reset-link:hover {
+            color: #dc2626;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* UTILITY CLASSES */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-5 { margin-top: 2rem; }
+        .mt-6 { margin-top: 3rem; }
+
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 2rem; }
+        .mb-6 { margin-bottom: 3rem; }
+
+        .d-flex { display: flex; }
+        .flex-column { flex-direction: column; }
+        .align-items-center { align-items: center; }
+        .justify-content-center { justify-content: center; }
+        .justify-content-between { justify-content: space-between; }
+
+        .w-100 { width: 100%; }
+        .h-100 { height: 100%; }
+
+        .d-none { display: none; }
+        .d-block { display: block; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-inner {
+                padding: 0.5rem 1rem;
+            }
+            
+            .brand {
+                font-size: 1.2rem;
+            }
+            
+            .nav-cta-box {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem;
+            }
+            
+            .form-card {
+                padding: 2rem;
+            }
+            
+            .confirmation-box {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+            }
+            
+            .btn-lg {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .form-card .btn {
+                width: 100%;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .nav-container,
+            .btn-print {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .glass-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
     </style>
 </head>
-<body class="pb-20">
-
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold gradient-text">NutriKids</h1>
-            <div class="flex gap-3">
-                <a href="index.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-2xl text-sm font-bold transition">Kembali</a>
-                <a href="rekapan.html" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-200">Cek Rekapan</a>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-bg"></div>
+    
+    <!-- Header/Navigation -->
+    <header class="nav-container">
+        <div class="container">
+            <div class="nav-inner">
+                <a href="index.html" class="brand">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>NutriKids</span>
+                </a>
+                <a href="index.html" class="nav-cta-box">
+                    <i class="fas fa-home"></i> Kembali ke Beranda
+                </a>
             </div>
         </div>
     </header>
 
-    <main class="container max-w-5xl mx-auto mt-10 px-4">
-        <div class="text-center mb-12">
-            <h1 class="text-3xl font-extrabold text-slate-800">Pilih Data yang Akan di Input</h1>
-            <p class="text-slate-500 mt-2">Lengkapi kedua data di bawah untuk menghitung gizi.</p>
+    <main class="container">
+        <div class="page-header">
+            <h1>Pilih Data yang Akan di Input</h1>
+            <p>Lengkapi kedua data di bawah untuk menghitung gizi Si Kecil dengan akurat</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 mb-16">
-            <a href="posyandu.html" class="glass-card p-10 flex flex-col items-center text-center border-b-8 border-emerald-500">
-                <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner">🏠</div>
-                <h2 class="text-2xl font-bold text-slate-800">Form Posyandu</h2>
-                <p class="text-slate-500 text-sm mt-3">Lokasi dan nama Kader pemeriksaan Bunda.</p>
-                <div id="btnP" class="mt-6 text-emerald-600 font-bold text-sm bg-emerald-50 px-6 py-2 rounded-full">Mulai Input →</div>
-            </a>
+        <div class="form-grid">
+            <!-- Form Posyandu Card -->
+            <div class="glass-card form-card posyandu" onclick="window.location.href='posyandu.html'">
+                <div class="form-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h2>Form Posyandu</h2>
+                <p>Lokasi dan nama kader pemeriksaan di posyandu Bunda</p>
+                <button class="btn btn-primary" id="btnP">
+                    Mulai Input <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
 
-            <a href="dataIbuAnak.html" class="glass-card p-10 flex flex-col items-center text-center border-b-8 border-blue-500">
-                <div class="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner">👩‍👦</div>
-                <h2 class="text-2xl font-bold text-slate-800">Form Ibu & Anak</h2>
-                <p class="text-slate-500 text-sm mt-3">Profil identitas Bunda dan Si Kecil.</p>
-                <div id="btnA" class="mt-6 text-blue-600 font-bold text-sm bg-blue-50 px-6 py-2 rounded-full">Mulai Input →</div>
-            </a>
+            <!-- Form Ibu & Anak Card -->
+            <div class="glass-card form-card anak" onclick="window.location.href='dataIbuAnak.html'">
+                <div class="form-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <h2>Form Ibu & Anak</h2>
+                <p>Profil identitas Bunda dan data lengkap Si Kecil</p>
+                <button class="btn btn-primary" id="btnA">
+                    Mulai Input <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="w-full bg-white/50 backdrop-blur-md rounded-[3rem] p-10 border border-white mb-20 shadow-xl">
-            <h3 class="text-center text-xl font-bold text-slate-800 mb-8 flex items-center justify-center gap-3">
-                <span class="text-2xl">📋</span> Data Terdeteksi
-            </h3>
+        <!-- Data Terdeteksi Section -->
+        <div class="data-section">
+            <div class="section-title">
+                <h3>
+                    <i class="fas fa-clipboard-check"></i>
+                    Data Terdeteksi
+                </h3>
+            </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-emerald-500 relative min-h-[140px]">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">PROFIL POSYANDU</span>
-                        <div id="statusP" class="text-[9px] px-2 py-1 rounded-full bg-slate-100 text-slate-400 font-bold uppercase">Belum Ada</div>
+            <div class="data-grid">
+                <!-- Posyandu Data Card -->
+                <div class="glass-card data-card posyandu">
+                    <div class="data-header">
+                        <span class="data-label">PROFIL POSYANDU</span>
+                        <span id="statusP" class="data-status status-empty">Belum Ada</span>
                     </div>
-                    <div id="rekapP">
-                        <div class="text-sm text-slate-400 italic text-center py-4">Isi data posyandu dulu Bunda...</div>
+                    <div class="data-content" id="rekapP">
+                        <div class="data-empty">
+                            Isi data posyandu dulu Bunda...
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-blue-500 relative min-h-[140px]">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">PROFIL ANAK</span>
-                        <div id="statusA" class="text-[9px] px-2 py-1 rounded-full bg-slate-100 text-slate-400 font-bold uppercase">Belum Ada</div>
+                <!-- Anak Data Card -->
+                <div class="glass-card data-card anak">
+                    <div class="data-header">
+                        <span class="data-label">PROFIL ANAK</span>
+                        <span id="statusA" class="data-status status-empty">Belum Ada</span>
                     </div>
-                    <div id="rekapA">
-                        <div class="text-sm text-slate-400 italic text-center py-4">Isi profil Si Kecil dulu Bunda...</div>
+                    <div class="data-content" id="rekapA">
+                        <div class="data-empty">
+                            Isi profil Si Kecil dulu Bunda...
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="areaKonfirmasi" class="mt-12 text-center hidden">
-                <div class="p-8 rounded-[2.5rem] bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-white shadow-inner">
-                    <p class="text-slate-700 font-bold mb-6 italic text-lg">"Data sudah siap Bunda! Yuk hitung status gizi sekarang."</p>
-                    <a href="calculator.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-black py-5 px-12 rounded-2xl text-lg shadow-xl transition-all hover:scale-105 active:scale-95">
-                        🚀 Lanjut ke Kalkulator
-                    </a>
-                    <button onclick="resetData()" class="block mx-auto mt-6 text-xs text-red-400 font-medium underline hover:text-red-600 transition">Hapus & Isi Ulang</button>
+            <!-- Confirmation Area -->
+            <div id="areaKonfirmasi" class="confirmation-area">
+                <div class="confirmation-box">
+                    <p class="confirmation-message">
+                        <i class="fas fa-check-circle"></i>
+                        "Data sudah siap Bunda! Yuk hitung status gizi sekarang."
+                    </p>
+                    <div class="action-buttons">
+                        <a href="calculator.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-rocket"></i> Lanjut ke Kalkulator
+                        </a>
+                        <button onclick="resetData()" class="reset-link">
+                            <i class="fas fa-redo"></i> Hapus & Isi Ulang
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
+        // Load data from localStorage
         function muatRekapan() {
             const dataP = JSON.parse(localStorage.getItem("dataPosyandu"));
             const dataA = JSON.parse(localStorage.getItem("dataAnak"));
 
-            // 1. Logika Tampilan Data Posyandu
+            // Update Posyandu Data
             if (dataP) {
-                const sP = document.getElementById("statusP");
-                sP.innerText = "SIAP ✅";
-                sP.className = "text-[9px] px-2 py-1 rounded-full bg-emerald-500 text-white font-bold uppercase";
-                document.getElementById("btnP").innerText = "Ubah Data Posyandu";
+                const statusP = document.getElementById("statusP");
+                statusP.textContent = "SIAP ✅";
+                statusP.className = "data-status status-ready";
+                
+                const btnP = document.getElementById("btnP");
+                btnP.innerHTML = 'Ubah Data <i class="fas fa-edit"></i>';
                 
                 document.getElementById("rekapP").innerHTML = `
-                    <div class="flex items-center gap-4 not-italic">
-                        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-3xl shrink-0">🏡</div>
-                        <div class="text-left">
-                            <h4 class="font-bold text-slate-800 text-lg leading-tight">${dataP.posyandu}</h4>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase mt-1">
-                                <span class="mr-1">👩‍⚕️</span> KADER: ${dataP.kader}
-                            </p>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase">
-                                <span class="mr-1">📍</span> WILAYAH: RT ${dataP.rt} / RW ${dataP.rw}
-                            </p>
+                    <div class="data-filled">
+                        <div class="data-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="data-info">
+                            <h4>${dataP.posyandu || 'Data Posyandu'}</h4>
+                            <p><i class="fas fa-user-nurse"></i> KADER: ${dataP.kader || '-'}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> WILAYAH: RT ${dataP.rt || '00'} / RW ${dataP.rw || '00'}</p>
+                            ${dataP.kelurahan ? `<p><i class="fas fa-map"></i> ${dataP.kelurahan}, ${dataP.kecamatan || ''}</p>` : ''}
                         </div>
                     </div>`;
             }
 
-            // 2. Logika Tampilan Data Anak
+            // Update Anak Data
             if (dataA) {
-                const sA = document.getElementById("statusA");
-                sA.innerText = "SIAP ✅";
-                sA.className = "text-[9px] px-2 py-1 rounded-full bg-blue-500 text-white font-bold uppercase";
-                document.getElementById("btnA").innerText = "Ubah Profil Anak";
+                const statusA = document.getElementById("statusA");
+                statusA.textContent = "SIAP ✅";
+                statusA.className = "data-status status-ready";
                 
-                // Konversi total bulan kembali ke tahun & bulan untuk display
+                const btnA = document.getElementById("btnA");
+                btnA.innerHTML = 'Ubah Profil <i class="fas fa-edit"></i>';
+                
+                // Convert months to years and months
                 const displayThn = Math.floor(dataA.usia / 12);
                 const displayBln = dataA.usia % 12;
 
                 document.getElementById("rekapA").innerHTML = `
-                    <div class="flex items-center gap-4 not-italic">
-                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl shrink-0">👶</div>
-                        <div class="text-left">
-                            <h4 class="font-bold text-slate-800 text-lg leading-tight">${dataA.namaAnak}</h4>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase mt-1">
-                                <span class="mr-1">👩</span> BUNDA: ${dataA.namaIbu}
-                            </p>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase">
-                                <span class="mr-1">⏳</span> USIA: ${displayThn} THN ${displayBln} BLN
-                            </p>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase">
-                                <span class="mr-1">🚻</span> JENIS: ${dataA.gender}
-                            </p>
+                    <div class="data-filled">
+                        <div class="data-icon">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <div class="data-info">
+                            <h4>${dataA.namaAnak || 'Nama Anak'}</h4>
+                            <p><i class="fas fa-user"></i> BUNDA: ${dataA.namaIbu || '-'}</p>
+                            <p><i class="fas fa-calendar-alt"></i> USIA: ${displayThn} THN ${displayBln} BLN</p>
+                            <p><i class="fas fa-venus-mars"></i> JENIS: ${dataA.gender || '-'}</p>
+                            ${dataA.beratBadan ? `<p><i class="fas fa-weight"></i> BERAT: ${dataA.beratBadan} kg | TINGGI: ${dataA.tinggiBadan || '-'} cm</p>` : ''}
                         </div>
                     </div>`;
             }
 
-            // 3. Tampilkan Tombol Lanjut jika kedua data ada
+            // Show confirmation if both data exist
             if (dataP && dataA) {
-                document.getElementById("areaKonfirmasi").classList.remove("hidden");
+                setTimeout(() => {
+                    const confirmationArea = document.getElementById("areaKonfirmasi");
+                    confirmationArea.classList.add("show");
+                }, 300);
             }
         }
 
+        // Reset all data
         function resetData() {
             if (confirm("Apakah Bunda yakin ingin menghapus semua data input?")) {
                 localStorage.removeItem("dataPosyandu");
                 localStorage.removeItem("dataAnak");
-                window.location.reload();
+                
+                // Reload page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 300);
             }
         }
 
-        window.onload = muatRekapan;
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', muatRekapan);
     </script>
 </body>
 </html>
