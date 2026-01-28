@@ -262,45 +262,7 @@
         <!-- Smart Advice Card -->
         <div id="smart-advice-card" class="mb-10 fade-in">
             <div class="glass-card rounded-3xl overflow-hidden border-l-8" id="advice-border">
-                <div class="p-6">
-                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-16 h-16 rounded-2xl flex items-center justify-center" id="advice-emoji">
-                                <span class="text-3xl">💬</span>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-800">Rekomendasi Konsultasi untuk 
-                                    <span id="display-child-name" class="text-blue-600">Si Kecil</span>
-                                </h2>
-                                <p class="text-sm text-slate-500">Saran ahli berdasarkan data terakhir</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="status-badge" id="status-badge">Status</span>
-                            <span class="text-sm font-bold text-slate-700" id="display-zscore">0.00 SD</span>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white/50 p-5 rounded-2xl border border-white/60">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-slate-800" id="display-status">Status Gizi Normal</h3>
-                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Prioritas</div>
-                        </div>
-                        
-                        <div id="status-advice" class="text-slate-700 mb-4">
-                            Rekomendasi konsultasi akan muncul di sini berdasarkan status gizi anak.
-                        </div>
-                        
-                        <!-- Consultation Type -->
-                        <div class="mt-4">
-                            <p class="text-sm font-bold text-slate-600 mb-2">Jenis Konsultasi Disarankan:</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium" id="consult-type-1">Konsultasi Rutin</span>
-                                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium" id="consult-type-2">Pola Makan</span>
-                                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium" id="consult-type-3">Monitor Berkala</span>
-                            </div>
-                        </div>
-                    </div>
+                
                 </div>
             </div>
         </div>
@@ -349,8 +311,8 @@
                     <p class="text-slate-600 mb-6 leading-relaxed">
                         Konsultasi langsung dengan ahli gizi kami via WhatsApp. Kirim foto menu atau KMS untuk analisis mendalam.
                     </p>
-                    <a href="https://wa.me/6281234567890?text=Halo%20NutriKids,%20saya%20ingin%20konsultasi%20tentang%20gizi%20anak" 
-                       target="_blank"
+                    <a href="https://wa.me/081353727786text=Halo%20NutriKids,%20saya%20ingin%20konsultasi%20tentang%20gizi%20anak" 
+                       target="_blank" rel="noopener noreferrer"
                        class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
                         <i class="fab fa-whatsapp"></i> Chat via WhatsApp
                     </a>
@@ -555,37 +517,57 @@
         
         // Initialize consultation page
         function initConsultationPage() {
-            const dataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
+            const rawDataAnak = JSON.parse(localStorage.getItem('dataAnak')) || null;
             const giziResult = JSON.parse(localStorage.getItem('lastNutriResult')) || null;
-            currentChildData = dataAnak;
-            
+
+            // Normalize dataAnak (accept object or single-item array)
+            const dataAnak = Array.isArray(rawDataAnak) ? (rawDataAnak[0] || null) : rawDataAnak;
+
+            // Merge into a convenient currentChildData object (prefer profile fields, fallback to giziResult)
+            const merged = Object.assign({}, dataAnak || {}, {
+                namaAnak: (dataAnak && (dataAnak.namaAnak || dataAnak.nama)) || giziResult?.namaAnak || giziResult?.nama || '',
+                namaIbu: (dataAnak && (dataAnak.namaIbu || dataAnak.ibu)) || giziResult?.namaIbu || giziResult?.ibu || '',
+                usia: (dataAnak && (dataAnak.usia || dataAnak.age)) || giziResult?.usia || '',
+                bb: giziResult?.bb || dataAnak?.beratBadan || dataAnak?.bb,
+                tb: giziResult?.tb || dataAnak?.tinggiBadan || dataAnak?.tb,
+                zscore: giziResult?.zscore || null,
+                status: giziResult?.status || null
+            });
+
+            currentChildData = merged;
+
             // Show smart advice card
             const adviceCard = document.getElementById('smart-advice-card');
-            adviceCard.classList.remove('hidden');
-            
-            // Fill child data
-            if (dataAnak && dataAnak.namaAnak) {
-                document.getElementById('display-child-name').textContent = dataAnak.namaAnak;
+            if (adviceCard) adviceCard.classList.remove('hidden');
+
+            // Fill child name
+            if (merged.namaAnak) {
+                document.getElementById('display-child-name').textContent = merged.namaAnak;
+            } else {
+                document.getElementById('display-child-name').textContent = 'Si Kecil';
             }
-            
+
             // Fill nutrition result data
-            if (giziResult) {
-                const zscore = parseFloat(giziResult.zscore) || 0;
-                const status = giziResult.status || 'Status Tidak Diketahui';
-                
+            if (giziResult || merged.status) {
+                const zscore = parseFloat(merged.zscore || giziResult?.zscore) || 0;
+                const statusRaw = (merged.status || giziResult?.status || 'Status Tidak Diketahui');
+                const status = statusRaw;
+
                 // Update display
                 document.getElementById('display-status').textContent = status;
                 document.getElementById('display-zscore').textContent = `${zscore.toFixed(2)} SD`;
-                
-                // Set colors and recommendations based on status
+
+                // Determine category (case-insensitive)
+                const s = (status || '').toUpperCase();
+
                 let borderColor = 'border-emerald-500';
                 let badgeClass = 'badge-green';
                 let badgeText = 'Optimal';
-                let emoji = '😊';
+                let emoji = '🎉';
                 let advice = '';
                 let consultTypes = [];
-                
-                if (status.includes('BURUK') || status.includes('KURANG')) {
+
+                if (s.includes('BURUK') || s.includes('KURANG')) {
                     borderColor = 'border-red-500';
                     badgeClass = 'badge-red';
                     badgeText = 'Perhatian';
@@ -602,7 +584,7 @@
                         </div>
                     `;
                     consultTypes = ['Konsultasi Mendesak', 'PMT Khusus', 'Monitoring Ketat'];
-                } else if (status.includes('LEBIH')) {
+                } else if (s.includes('LEBIH') || s.includes('OBES')) {
                     borderColor = 'border-blue-500';
                     badgeClass = 'badge-blue';
                     badgeText = 'Perhatian';
@@ -637,32 +619,44 @@
                     `;
                     consultTypes = ['Konsultasi Rutin', 'Variasi Menu', 'Optimalisasi'];
                 }
-                
-                // Apply changes
-                document.getElementById('advice-border').classList.add(borderColor);
-                document.getElementById('status-badge').className = `status-badge ${badgeClass}`;
-                document.getElementById('status-badge').textContent = badgeText;
-                document.getElementById('advice-emoji').innerHTML = `<span class="text-3xl">${emoji}</span>`;
-                document.getElementById('status-advice').innerHTML = advice;
-                
+
+                // Apply changes (remove previous border classes first)
+                const borderEl = document.getElementById('advice-border');
+                if (borderEl) {
+                    ['border-emerald-500','border-red-500','border-blue-500'].forEach(c => borderEl.classList.remove(c));
+                    borderEl.classList.add(borderColor);
+                }
+
+                const badgeEl = document.getElementById('status-badge');
+                if (badgeEl) badgeEl.className = `status-badge ${badgeClass}`;
+                if (badgeEl) badgeEl.textContent = badgeText;
+
+                const emojiEl = document.getElementById('advice-emoji');
+                if (emojiEl) emojiEl.innerHTML = `<span class="text-3xl">${emoji}</span>`;
+
+                const adviceEl = document.getElementById('status-advice');
+                if (adviceEl) adviceEl.innerHTML = advice;
+
                 // Set consultation types
                 const consultElements = [
                     document.getElementById('consult-type-1'),
                     document.getElementById('consult-type-2'),
                     document.getElementById('consult-type-3')
                 ];
-                
+
                 consultTypes.forEach((type, index) => {
                     if (consultElements[index]) {
                         consultElements[index].textContent = type;
                     }
                 });
             }
-            
+
             // Load initial chat message with child data if available
-            if (dataAnak && giziResult) {
+            if (merged.namaAnak || (giziResult && giziResult.status)) {
                 setTimeout(() => {
-                    addMessageToChat(`Halo! Saya melihat data ${dataAnak.namaAnak} (${dataAnak.usia || 0} bulan) dengan status gizi "${giziResult.status}". Ada yang bisa saya bantu spesifik tentang kondisi ini?`, false);
+                    const name = merged.namaAnak || giziResult?.namaAnak || giziResult?.nama || 'Si Kecil';
+                    const st = (giziResult?.status || merged.status) || 'Status Tidak Diketahui';
+                    addMessageToChat(`Halo! Saya melihat data ${name} (${merged.usia || 0} bulan) dengan status gizi "${st}". Ada yang bisa saya bantu spesifik tentang kondisi ini?`, false);
                 }, 1000);
             }
         }
@@ -856,9 +850,10 @@
         
         // Get recommendation based on status
         function getRecommendationBasedOnStatus(status) {
-            if (status.includes('BURUK') || status.includes('KURANG')) {
+            const s = (status || '').toUpperCase();
+            if (s.includes('BURUK') || s.includes('KURANG')) {
                 return "Kondisi ini perlu perhatian khusus. Saya sarankan konsultasi mendesak dengan ahli gizi untuk program perbaikan gizi.";
-            } else if (status.includes('LEBIH')) {
+            } else if (s.includes('LEBIH') || s.includes('OBES')) {
                 return "Perlu pengaturan pola makan dan porsi. Saya bisa bantu susun menu sehat yang seimbang.";
             } else {
                 return "Status gizi baik! Mari pertahankan dengan pola makan sehat dan variasi menu.";

@@ -205,6 +205,42 @@
             border-left: 4px solid;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -303,30 +339,26 @@
             </div>
         </div>
 
-        <!-- Posyandu Statistics -->
-        <div id="posyanduStatsSection" class="mb-8 fade-in hidden">
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-slate-800">Statistik Posyandu</h3>
-                    <span class="text-sm text-slate-500" id="selectedPosyanduName">-</span>
+        <!-- Quick Actions -->
+        <div class="glass-card p-6 mb-8 rounded-3xl">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Mulai Analisis Data</h3>
+                    <p class="text-slate-600">Pilih metode untuk mulai menganalisis data posyandu.</p>
                 </div>
-                <div class="posyandu-stats">
-                    <div class="posyandu-stat-card" style="border-left-color: #10b981;">
-                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Total Anak</p>
-                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChildren">0</p>
-                    </div>
-                    <div class="posyandu-stat-card" style="border-left-color: #1b6bec;">
-                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Pemeriksaan</p>
-                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChecks">0</p>
-                    </div>
-                    <div class="posyandu-stat-card" style="border-left-color: #f59e0b;">
-                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Status Baik</p>
-                        <p class="text-2xl font-bold text-slate-800" id="posyanduGoodStatus">0</p>
-                    </div>
-                    <div class="posyandu-stat-card" style="border-left-color: #ef4444;">
-                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Perlu Perhatian</p>
-                        <p class="text-2xl font-bold text-slate-800" id="posyanduWarningStatus">0</p>
-                    </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button onclick="importData()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-file-import"></i>
+                        <span>Import Data</span>
+                    </button>
+                    <button onclick="showLoadSampleModal()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-database"></i>
+                        <span>Gunakan Data Contoh</span>
+                    </button>
+                    <button onclick="showAddManualModal()" class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Tambah Data Manual</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -335,13 +367,13 @@
         <div class="glass-card p-6 mb-8 rounded-3xl">
             <!-- Search Tabs -->
             <div class="search-tabs">
-                <div class="search-tab active" onclick="setSearchMode('posyandu')">
+                <div class="search-tab active" data-mode="posyandu" onclick="setSearchMode('posyandu', this)">
                     <i class="fas fa-clinic-medical mr-1"></i> Cari Posyandu
                 </div>
-                <div class="search-tab" onclick="setSearchMode('anak')">
+                <div class="search-tab" data-mode="anak" onclick="setSearchMode('anak', this)">
                     <i class="fas fa-child mr-1"></i> Cari Nama Anak
                 </div>
-                <div class="search-tab" onclick="setSearchMode('status')">
+                <div class="search-tab" data-mode="status" onclick="setSearchMode('status', this)">
                     <i class="fas fa-chart-line mr-1"></i> Cari Status Gizi
                 </div>
             </div>
@@ -393,11 +425,39 @@
             
             <!-- Quick Filters -->
             <div class="flex flex-wrap gap-2 mt-4">
-                <div class="filter-pill active" onclick="setDateFilter('all')">Semua</div>
-                <div class="filter-pill" onclick="setDateFilter('today')">Hari Ini</div>
-                <div class="filter-pill" onclick="setDateFilter('week')">Minggu Ini</div>
-                <div class="filter-pill" onclick="setDateFilter('month')">Bulan Ini</div>
-                <div class="filter-pill" onclick="setDateFilter('year')">Tahun Ini</div>
+                <div class="filter-pill active" data-filter="all" onclick="setDateFilter('all', this)">Semua</div>
+                <div class="filter-pill" data-filter="today" onclick="setDateFilter('today', this)">Hari Ini</div>
+                <div class="filter-pill" data-filter="week" onclick="setDateFilter('week', this)">Minggu Ini</div>
+                <div class="filter-pill" data-filter="month" onclick="setDateFilter('month', this)">Bulan Ini</div>
+                <div class="filter-pill" data-filter="year" onclick="setDateFilter('year', this)">Tahun Ini</div>
+            </div>
+        </div>
+
+        <!-- Posyandu Statistics -->
+        <div id="posyanduStatsSection" class="mb-8 fade-in hidden">
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-slate-800">Statistik Posyandu</h3>
+                    <span class="text-sm text-slate-500" id="selectedPosyanduName">-</span>
+                </div>
+                <div class="posyandu-stats">
+                    <div class="posyandu-stat-card" style="border-left-color: #10b981;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Total Anak</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChildren">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #1b6bec;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Pemeriksaan</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduTotalChecks">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #f59e0b;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Status Baik</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduGoodStatus">0</p>
+                    </div>
+                    <div class="posyandu-stat-card" style="border-left-color: #ef4444;">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Perlu Perhatian</p>
+                        <p class="text-2xl font-bold text-slate-800" id="posyanduWarningStatus">0</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -590,10 +650,20 @@
                 <p class="text-slate-400 text-sm max-w-md mx-auto mb-6" id="emptyMessage">
                     Mulai dengan menginput data anak melalui kalkulator gizi untuk melihat rekapan di sini.
                 </p>
-                <a href="calculator.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
-                    <i class="fas fa-calculator"></i>
-                    <span>Input Data Baru</span>
-                </a>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="showLoadSampleModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-database"></i>
+                        <span>Gunakan Data Contoh</span>
+                    </button>
+                    <button onclick="importData()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-file-import"></i>
+                        <span>Import Data</span>
+                    </button>
+                    <a href="calculator.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-bold hover:shadow-xl transition-all shadow-lg">
+                        <i class="fas fa-calculator"></i>
+                        <span>Input Data Baru</span>
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -608,6 +678,10 @@
                     <i class="fas fa-file-import"></i>
                     <span>Import Data</span>
                 </button>
+                <button onclick="showImportGuide()" class="flex items-center gap-2 px-5 py-3 text-slate-600 hover:text-slate-800 font-medium rounded-xl hover:bg-slate-50 transition border border-slate-200">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Panduan Import</span>
+                </button>
             </div>
             
             <div class="flex gap-2">
@@ -619,6 +693,302 @@
         </div>
     </main>
     
+    <!-- Modal Load Sample Data -->
+    <div id="loadSampleModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-800">Gunakan Data Contoh</h3>
+                <button onclick="hideModal('loadSampleModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-slate-600 mb-4">Pilih dataset contoh untuk mulai analisis data posyandu:</p>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border-2 border-dashed border-blue-200 rounded-2xl p-6 text-center hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer" onclick="loadSampleData('posyandu')">
+                        <div class="text-4xl mb-4 text-blue-500">
+                            <i class="fas fa-clinic-medical"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">Data Posyandu Lengkap</h4>
+                        <p class="text-sm text-slate-600 mb-4">Data dari 5 posyandu dengan 50+ pemeriksaan</p>
+                        <div class="inline-flex items-center gap-2 text-blue-600 font-bold">
+                            <i class="fas fa-download"></i>
+                            <span>Load Dataset</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-2 border-dashed border-emerald-200 rounded-2xl p-6 text-center hover:border-emerald-400 hover:bg-emerald-50 transition cursor-pointer" onclick="loadSampleData('ibu_anak')">
+                        <div class="text-4xl mb-4 text-emerald-500">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">Data Ibu & Anak</h4>
+                        <p class="text-sm text-slate-600 mb-4">30+ data ibu dan anak dari berbagai status gizi</p>
+                        <div class="inline-flex items-center gap-2 text-emerald-600 font-bold">
+                            <i class="fas fa-download"></i>
+                            <span>Load Dataset</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 rounded-xl p-4">
+                <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    Informasi Dataset
+                </h4>
+                <ul class="text-sm text-slate-600 space-y-1">
+                    <li>• Data contoh akan ditambahkan ke data yang sudah ada</li>
+                    <li>• Data bersifat acak dan hanya untuk demonstrasi</li>
+                    <li>• Anda dapat menghapus data kapan saja</li>
+                    <li>• Data akan disimpan di localStorage browser Anda</li>
+                </ul>
+            </div>
+            
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="hideModal('loadSampleModal')" class="px-5 py-2.5 text-slate-600 hover:text-slate-800 font-medium">
+                    Batal
+                </button>
+                <button onclick="loadSampleData('combined')" class="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-xl transition-all">
+                    <i class="fas fa-database mr-2"></i>
+                    Load Semua Data Contoh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add Manual Data -->
+    <div id="addManualModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-3xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-800">Tambah Data Manual</h3>
+                <button onclick="hideModal('addManualModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="manualDataForm" onsubmit="return submitManualData()">
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <!-- Data Posyandu -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 border-l-4 border-blue-500 pl-3">Data Posyandu</h4>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Nama Posyandu</label>
+                            <input type="text" id="manualPosyandu" required 
+                                   class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                   placeholder="Contoh: Posyandu Mawar">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Lokasi</label>
+                            <input type="text" id="manualLokasi" 
+                                   class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                   placeholder="Contoh: Jl. Melati No. 10">
+                        </div>
+                    </div>
+                    
+                    <!-- Data Anak -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 border-l-4 border-emerald-500 pl-3">Data Anak</h4>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Nama Anak</label>
+                            <input type="text" id="manualNamaAnak" required 
+                                   class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                   placeholder="Contoh: Siti Aisyah">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Kelamin</label>
+                                <select id="manualJK" required 
+                                        class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700">
+                                    <option value="">Pilih</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Usia (bulan)</label>
+                                <input type="number" id="manualUsia" required min="0" max="60"
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                       placeholder="24">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Ibu & Pengukuran -->
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <!-- Data Ibu -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 border-l-4 border-purple-500 pl-3">Data Ibu</h4>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Nama Ibu</label>
+                            <input type="text" id="manualNamaIbu" required 
+                                   class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                   placeholder="Contoh: Ibu Siti">
+                        </div>
+                    </div>
+                    
+                    <!-- Pengukuran -->
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 border-l-4 border-orange-500 pl-3">Pengukuran</h4>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Berat Badan (kg)</label>
+                                <input type="number" id="manualBB" required step="0.1" min="1" max="50"
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                       placeholder="12.5">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Tinggi Badan (cm)</label>
+                                <input type="number" id="manualTB" required step="0.1" min="30" max="150"
+                                       class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none font-medium text-slate-700 transition-all"
+                                       placeholder="88.5">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Pemeriksaan</label>
+                            <input type="date" id="manualTanggal" required 
+                                   class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 outline-none font-medium text-slate-700 date-input">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="hideModal('addManualModal')" class="px-5 py-2.5 text-slate-600 hover:text-slate-800 font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold hover:shadow-xl transition-all">
+                        <i class="fas fa-save mr-2"></i>
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Import Guide -->
+    <div id="importGuideModal" class="modal-overlay">
+        <div class="modal-content w-full max-w-3xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-800">Panduan Import Data</h3>
+                <button onclick="hideModal('importGuideModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-file-excel text-emerald-500"></i>
+                        Format Excel yang Didukung
+                    </h4>
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <p class="text-sm text-slate-600 mb-3">Pastikan file Excel memiliki kolom berikut:</p>
+                        <table class="w-full text-sm text-slate-600">
+                            <thead class="bg-slate-100">
+                                <tr>
+                                    <th class="p-2 border">Kolom</th>
+                                    <th class="p-2 border">Contoh</th>
+                                    <th class="p-2 border">Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-2 border">namaAnak</td>
+                                    <td class="p-2 border">Siti Aisyah</td>
+                                    <td class="p-2 border">Nama lengkap anak</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">namaIbu</td>
+                                    <td class="p-2 border">Ibu Siti</td>
+                                    <td class="p-2 border">Nama ibu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">jk</td>
+                                    <td class="p-2 border">L atau P</td>
+                                    <td class="p-2 border">Jenis kelamin (L/P)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">usia</td>
+                                    <td class="p-2 border">24</td>
+                                    <td class="p-2 border">Usia dalam bulan</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">bb</td>
+                                    <td class="p-2 border">12.5</td>
+                                    <td class="p-2 border">Berat badan (kg)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">tb</td>
+                                    <td class="p-2 border">88.5</td>
+                                    <td class="p-2 border">Tinggi badan (cm)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">namaPosyandu</td>
+                                    <td class="p-2 border">Posyandu Mawar</td>
+                                    <td class="p-2 border">Nama posyandu</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">status</td>
+                                    <td class="p-2 border">Gizi Baik</td>
+                                    <td class="p-2 border">Status gizi</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border">zscore</td>
+                                    <td class="p-2 border">0.45</td>
+                                    <td class="p-2 border">Z-Score (opsional)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-file-code text-blue-500"></i>
+                        Format JSON
+                    </h4>
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <p class="text-sm text-slate-600 mb-2">Contoh format JSON:</p>
+                        <pre class="text-xs bg-slate-800 text-slate-200 p-3 rounded-lg overflow-auto">
+[
+    {
+        "namaAnak": "Siti Aisyah",
+        "namaIbu": "Ibu Siti",
+        "jk": "P",
+        "usia": "24",
+        "bb": "12.5",
+        "tb": "88.5",
+        "namaPosyandu": "Posyandu Mawar",
+        "status": "Gizi Baik",
+        "zscore": "0.45",
+        "timestamp": "1715596800000"
+    }
+]
+                        </pre>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end gap-3">
+                    <button onclick="hideModal('importGuideModal')" class="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-xl transition-all">
+                        <i class="fas fa-check mr-2"></i>
+                        Mengerti
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Action Button -->
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="floating-btn w-14 h-14 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition">
         <i class="fas fa-arrow-up text-white text-xl"></i>
@@ -702,9 +1072,49 @@
             }
         };
         
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function showLoadSampleModal() {
+            showModal('loadSampleModal');
+        }
+        
+        function showAddManualModal() {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('manualTanggal').value = today;
+            showModal('addManualModal');
+        }
+        
+        function showImportGuide() {
+            showModal('importGuideModal');
+        }
+        
         // Initialize page
         function initPage() {
             allData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+
+            // Merge data from other pages/localStorage keys
+            loadExternalData();
+
+            // Ensure timestamps are valid
+            fixExistingTimestamps();
+
+            // Enrich with anak profiles
+            const dataAnak = JSON.parse(localStorage.getItem("dataAnak")) || [];
+            enrichRecordsWithProfiles(allData, dataAnak);
+
+            // Ensure every record has an id and normalized gender
+            ensureIds();
+
             updateGlobalStats();
             populatePosyanduFilter();
             setupDefaultDates();
@@ -712,22 +1122,317 @@
             renderTable();
         }
         
-        // Set search mode
-        function setSearchMode(mode) {
-            currentSearchMode = mode;
+        // Load sample data
+        function loadSampleData(type) {
+            let sampleData = [];
             
+            if (type === 'posyandu' || type === 'combined') {
+                sampleData = sampleData.concat(generatePosyanduSampleData());
+            }
+            
+            if (type === 'ibu_anak' || type === 'combined') {
+                sampleData = sampleData.concat(generateIbuAnakSampleData());
+            }
+            
+            // Add to existing data
+            const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            const newData = [...existingData];
+            
+            sampleData.forEach(item => {
+                if (!existingData.some(existing => existing.timestamp === item.timestamp)) {
+                    newData.push(item);
+                }
+            });
+            
+            // Save to localStorage
+            localStorage.setItem("allNutriResults", JSON.stringify(newData));
+            allData = newData;
+
+            // Ensure ids for new items
+            ensureIds();
+            
+            // Update UI
+            updateGlobalStats();
+            populatePosyanduFilter();
+            renderTable();
+            
+            // Show success message
+            hideModal('loadSampleModal');
+            showNotification(`Berhasil menambahkan ${sampleData.length} data contoh!`, 'success');
+        }
+        
+        // Generate sample posyandu data
+        function generatePosyanduSampleData() {
+            const posyandus = [
+                { name: 'Posyandu Mawar', location: 'Jl. Melati No. 10' },
+                { name: 'Posyandu Melati', location: 'Jl. Anggrek No. 5' },
+                { name: 'Posyandu Anggrek', location: 'Jl. Kenanga No. 15' },
+                { name: 'Posyandu Kenanga', location: 'Jl. Mawar No. 8' },
+                { name: 'Posyandu Flamboyan', location: 'Jl. Flamboyan No. 3' }
+            ];
+            
+            const childrenNames = [
+                'Siti Aisyah', 'Budi Santoso', 'Rina Wati', 'Ahmad Hidayat', 'Dewi Lestari',
+                'Fajar Nugroho', 'Maya Sari', 'Rizki Ramadhan', 'Linda Permatasari', 'Agus Setiawan',
+                'Nina Fitriani', 'Dimas Prayogo', 'Cindy Amelia', 'Eko Prasetyo', 'Wulan Anggraini'
+            ];
+            
+            const ibuNames = [
+                'Ibu Siti', 'Ibu Budi', 'Ibu Rina', 'Ibu Ahmad', 'Ibu Dewi',
+                'Ibu Fajar', 'Ibu Maya', 'Ibu Rizki', 'Ibu Linda', 'Ibu Agus',
+                'Ibu Nina', 'Ibu Dimas', 'Ibu Cindy', 'Ibu Eko', 'Ibu Wulan'
+            ];
+            
+            const sampleData = [];
+            
+            posyandus.forEach((posyandu, posIndex) => {
+                // Generate 3-6 children per posyandu
+                const numChildren = 3 + Math.floor(Math.random() * 4);
+                
+                for (let i = 0; i < numChildren; i++) {
+                    const childIndex = (posIndex * 3 + i) % childrenNames.length;
+                    const ibuIndex = (posIndex * 3 + i) % ibuNames.length;
+                    
+                    // Generate multiple measurements for each child (1-3 times)
+                    const numMeasurements = 1 + Math.floor(Math.random() * 3);
+                    
+                    for (let j = 0; j < numMeasurements; j++) {
+                        const age = 12 + Math.floor(Math.random() * 36); // 12-48 months
+                        const gender = Math.random() > 0.5 ? 'L' : 'P';
+                        
+                        // Generate weight and height based on age and gender
+                        let weight, height;
+                        if (age <= 24) {
+                            weight = 8 + (age / 2) + (Math.random() * 3 - 1.5);
+                            height = 70 + (age * 0.5) + (Math.random() * 5 - 2.5);
+                        } else {
+                            weight = 10 + (age / 3) + (Math.random() * 4 - 2);
+                            height = 80 + (age * 0.4) + (Math.random() * 6 - 3);
+                        }
+                        
+                        // Calculate z-score and status
+                        const zscore = (Math.random() * 3 - 1.5).toFixed(2);
+                        let status;
+                        if (zscore < -3) status = 'Gizi Buruk';
+                        else if (zscore < -2) status = 'Gizi Kurang';
+                        else if (zscore > 2) status = 'Gizi Lebih';
+                        else status = 'Gizi Baik';
+                        
+                        // Generate random date within last year
+                        const daysAgo = Math.floor(Math.random() * 365);
+                        const timestamp = Date.now() - (daysAgo * 24 * 60 * 60 * 1000);
+                        
+                        sampleData.push({
+                            namaAnak: childrenNames[childIndex],
+                            namaIbu: ibuNames[ibuIndex],
+                            jk: gender,
+                            usia: age.toString(),
+                            bb: weight.toFixed(1),
+                            tb: height.toFixed(1),
+                            namaPosyandu: posyandu.name,
+                            lokasi: posyandu.location,
+                            status: status,
+                            zscore: zscore,
+                            timestamp: timestamp.toString()
+                        });
+                    }
+                }
+            });
+            
+            return sampleData;
+        }
+        
+        // Generate sample ibu & anak data
+        function generateIbuAnakSampleData() {
+            const childrenData = [
+                { anak: 'Rizky Pratama', ibu: 'Ibu Sinta', jk: 'L', usia: '18', bb: '10.5', tb: '78.2', status: 'Gizi Baik', zscore: '0.25' },
+                { anak: 'Salsa Putri', ibu: 'Ibu Dian', jk: 'P', usia: '24', bb: '12.8', tb: '86.5', status: 'Gizi Baik', zscore: '0.45' },
+                { anak: 'Arya Wijaya', ibu: 'Ibu Rina', jk: 'L', usia: '30', bb: '13.2', tb: '90.1', status: 'Gizi Kurang', zscore: '-2.15' },
+                { anak: 'Maya Sari', ibu: 'Ibu Lina', jk: 'P', usia: '36', bb: '14.5', tb: '95.3', status: 'Gizi Baik', zscore: '0.75' },
+                { anak: 'Dito Nugroho', ibu: 'Ibu Yuni', jk: 'L', usia: '42', bb: '15.8', tb: '100.2', status: 'Gizi Lebih', zscore: '2.35' },
+                { anak: 'Citra Dewi', ibu: 'Ibu Ani', jk: 'P', usia: '48', bb: '16.2', tb: '104.5', status: 'Gizi Baik', zscore: '1.15' },
+                { anak: 'Fajar Setiawan', ibu: 'Ibu Sari', jk: 'L', usia: '12', bb: '9.2', tb: '72.5', status: 'Gizi Kurang', zscore: '-2.45' },
+                { anak: 'Nina Fitri', ibu: 'Ibu Mira', jk: 'P', usia: '20', bb: '11.5', tb: '82.3', status: 'Gizi Baik', zscore: '0.85' },
+                { anak: 'Rizki Ramadhan', ibu: 'Ibu Tuti', jk: 'L', usia: '28', bb: '12.9', tb: '88.7', status: 'Gizi Buruk', zscore: '-3.25' },
+                { anak: 'Dewi Lestari', ibu: 'Ibu Rini', jk: 'P', usia: '32', bb: '13.8', tb: '92.4', status: 'Gizi Baik', zscore: '0.35' }
+            ];
+            
+            const posyandus = ['Posyandu Sehat', 'Posyandu Bahagia', 'Posyandu Ceria', 'Posyandu Makmur'];
+            
+            return childrenData.map((child, index) => {
+                const posyanduIndex = index % posyandus.length;
+                const daysAgo = index * 30; // Stagger dates
+                const timestamp = Date.now() - (daysAgo * 24 * 60 * 60 * 1000);
+                
+                return {
+                    namaAnak: child.anak,
+                    namaIbu: child.ibu,
+                    jk: child.jk,
+                    usia: child.usia,
+                    bb: child.bb,
+                    tb: child.tb,
+                    namaPosyandu: posyandus[posyanduIndex],
+                    lokasi: `Jl. Contoh No. ${index + 1}`,
+                    status: child.status,
+                    zscore: child.zscore,
+                    timestamp: timestamp.toString()
+                };
+            });
+        }
+        
+        // Submit manual data
+        function submitManualData() {
+            // Collect form data
+            const formData = {
+                namaPosyandu: document.getElementById('manualPosyandu').value.trim(),
+                lokasi: document.getElementById('manualLokasi').value.trim(),
+                namaAnak: document.getElementById('manualNamaAnak').value.trim(),
+                namaIbu: document.getElementById('manualNamaIbu').value.trim(),
+                jk: document.getElementById('manualJK').value,
+                usia: document.getElementById('manualUsia').value.trim(),
+                bb: parseFloat(document.getElementById('manualBB').value).toFixed(1),
+                tb: parseFloat(document.getElementById('manualTB').value).toFixed(1),
+                tanggal: document.getElementById('manualTanggal').value
+            };
+            
+            // Validate
+            if (!formData.namaPosyandu || !formData.namaAnak || !formData.namaIbu || 
+                !formData.jk || !formData.usia || !formData.bb || !formData.tb) {
+                alert('Harap isi semua field yang wajib diisi!');
+                return false;
+            }
+            
+            // Calculate status based on WHO standards (simplified)
+            const age = parseInt(formData.usia);
+            const bb = parseFloat(formData.bb);
+            const tb = parseFloat(formData.tb);
+            
+            // Simplified z-score calculation (for demo purposes)
+            const expectedWeight = age <= 24 ? 7 + (age * 0.25) : 10 + ((age - 24) * 0.15);
+            const zscore = ((bb - expectedWeight) / 2).toFixed(2);
+            
+            let status;
+            if (zscore < -3) status = 'Gizi Buruk';
+            else if (zscore < -2) status = 'Gizi Kurang';
+            else if (zscore > 2) status = 'Gizi Lebih';
+            else status = 'Gizi Baik';
+            
+            // Create timestamp from date
+            const date = new Date(formData.tanggal);
+            date.setHours(8 + Math.floor(Math.random() * 8)); // Random hour between 8 AM - 4 PM
+            date.setMinutes(Math.floor(Math.random() * 60));
+            const timestamp = date.getTime();
+            
+            // Create data object
+            const newData = {
+                ...formData,
+                status: status,
+                zscore: zscore,
+                timestamp: timestamp.toString()
+            };
+            
+            // Add to existing data
+            const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+            existingData.push(newData);
+            localStorage.setItem("allNutriResults", JSON.stringify(existingData));
+            allData = existingData;
+
+            // Ensure ids
+            ensureIds();
+            
+            // Update UI
+            updateGlobalStats();
+            populatePosyanduFilter();
+            renderTable();
+            
+            // Reset form and close modal
+            document.getElementById('manualDataForm').reset();
+            hideModal('addManualModal');
+            
+            // Show success notification
+            showNotification('Data berhasil ditambahkan!', 'success');
+            
+            return false; // Prevent form submission
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notification
+            const existingNotif = document.querySelector('.notification-toast');
+            if (existingNotif) {
+                existingNotif.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification-toast fixed top-4 right-4 px-6 py-3 rounded-xl shadow-xl z-50 transform transition-all duration-300 translate-x-full`;
+            
+            let bgColor = 'bg-blue-500';
+            let icon = 'fa-info-circle';
+            
+            if (type === 'success') {
+                bgColor = 'bg-emerald-500';
+                icon = 'fa-check-circle';
+            } else if (type === 'warning') {
+                bgColor = 'bg-orange-500';
+                icon = 'fa-exclamation-triangle';
+            } else if (type === 'error') {
+                bgColor = 'bg-red-500';
+                icon = 'fa-times-circle';
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center gap-3 text-white">
+                    <i class="fas ${icon} text-xl"></i>
+                    <div>
+                        <p class="font-bold">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            notification.classList.add(bgColor);
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+                notification.classList.add('translate-x-0');
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('translate-x-0');
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Set search mode
+        function setSearchMode(mode, el) {
+            currentSearchMode = mode;
+
             // Update active tab
             document.querySelectorAll('.search-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
-            
+
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const tab = document.querySelector(`.search-tab[data-mode="${mode}"]`);
+                if (tab) tab.classList.add('active');
+            }
+
             // Update placeholder
             updateSearchPlaceholder();
-            
+
             // Clear search
             document.getElementById('searchBox').value = '';
-            
+
             // Render table with new mode
             renderTable();
         }
@@ -768,7 +1473,7 @@
             ).length;
             
             // Count unique children
-            const uniqueChildren = new Set(allData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean));
+            const uniqueChildren = new Set(allData.map(item => item.namaAnak?.toLowerCase()).filter(Boolean)).size;
             
             // Count active posyandus
             const activePosyandus = new Set(allData.map(item => item.namaPosyandu).filter(Boolean)).size;
@@ -784,19 +1489,110 @@
         function setupDefaultDates() {
             const today = new Date();
             const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            
+
             document.getElementById('dateFrom').value = formatDate.toInputDate(firstDayOfMonth.getTime());
             document.getElementById('dateTo').value = formatDate.toInputDate(today.getTime());
         }
-        
-        // Populate posyandu filter dropdown
+
+        // Load external data sources and merge into allData
+        function loadExternalData() {
+            try {
+                // Merge lastNutriResult if present
+                const last = JSON.parse(localStorage.getItem('lastNutriResult'));
+                if (last) {
+                    if (!last.timestamp) last.timestamp = Date.now().toString();
+                    last.timestamp = String(last.timestamp);
+                    if (!allData.some(item => item.timestamp === last.timestamp)) {
+                        allData.push(last);
+                        localStorage.removeItem('lastNutriResult');
+                    }
+                }
+            } catch (e) { console.warn('loadExternalData lastNutriResult failed', e); }
+
+            try {
+                const history = JSON.parse(localStorage.getItem('nutriHistory')) || [];
+                history.forEach(item => {
+                    if (!item.timestamp) item.timestamp = Date.now().toString();
+                    item.timestamp = String(item.timestamp);
+                    if (!allData.some(existing => existing.timestamp === item.timestamp)) allData.push(item);
+                });
+            } catch (e) { console.warn('loadExternalData nutriHistory failed', e); }
+
+            try {
+                const rekap = JSON.parse(localStorage.getItem('nutrikids_rekap')) || [];
+                rekap.forEach(item => {
+                    if (!item.timestamp) item.timestamp = Date.now().toString();
+                    item.timestamp = String(item.timestamp);
+                    if (!allData.some(existing => existing.timestamp === item.timestamp)) allData.push(item);
+                });
+            } catch (e) { console.warn('loadExternalData rekap failed', e); }
+
+            // Persist merged dataset
+            localStorage.setItem('allNutriResults', JSON.stringify(allData));
+        }
+
+        // Enrich measurement records with anak profile info (dataAnak)
+        function normalizeGender(g) {
+            if (!g) return '';
+            const s = String(g).toLowerCase();
+            if (s === 'l' || s.includes('laki') || s.includes('male')) return 'L';
+            if (s === 'p' || s.includes('peremp') || s.includes('female')) return 'P';
+            return '';
+        }
+
+        function enrichRecordsWithProfiles(records, anakProfiles) {
+            if (!Array.isArray(anakProfiles) || anakProfiles.length === 0) return;
+            const byName = {};
+            anakProfiles.forEach(p => {
+                if (!p) return;
+                const name = (p.namaAnak || p.nama || p.childName || '').toLowerCase();
+                if (name) byName[name] = p;
+            });
+
+            records.forEach(r => {
+                const key = (r.namaAnak || '').toLowerCase();
+                const profile = byName[key];
+                if (profile) {
+                    r.namaIbu = r.namaIbu || profile.namaIbu || profile.ibu || profile.motherName || r.namaIbu;
+                    // Normalize gender to 'L' or 'P'
+                    const profileGender = profile.jk || profile.jenisKelamin || profile.gender || profile.sex || profile.gender;
+                    r.jk = r.jk || normalizeGender(profileGender) || r.jk;
+                    r.usia = r.usia || profile.usia || profile.age || r.usia;
+                } else {
+                    // try to normalize existing value
+                    if (r.jk) r.jk = normalizeGender(r.jk) || r.jk;
+                }
+            });
+
+            // Persist enriched records
+            localStorage.setItem('allNutriResults', JSON.stringify(records));
+        }
+
+        // Ensure every record has a unique id
+        function ensureIds() {
+            let changed = false;
+            allData.forEach(item => {
+                if (!item.id) {
+                    const base = item.timestamp || Date.now().toString();
+                    item.id = 'n' + base + '-' + Math.random().toString(36).slice(2,9);
+                    changed = true;
+                }
+            });
+            if (changed) localStorage.setItem('allNutriResults', JSON.stringify(allData));
+        }
+
+        // Populate posyandu filter dropdown (combine names from measurements and stored posyandu profiles)
         function populatePosyanduFilter() {
-            const posyandus = [...new Set(allData.map(item => item.namaPosyandu).filter(Boolean))];
+            const posyanduFromRecords = allData.map(item => item.namaPosyandu).filter(Boolean);
+            const posyanduProfiles = JSON.parse(localStorage.getItem('dataPosyandu')) || [];
+            const posyanduFromStore = posyanduProfiles.map(p => (p.namaPosyandu || p.nama || p.name || '').trim()).filter(Boolean);
+
+            const posyandus = [...new Set([...posyanduFromRecords, ...posyanduFromStore])];
             const select = document.getElementById('posyanduFilter');
-            
+
             select.innerHTML = '<option value="">Pilih Posyandu</option>';
-            
-            posyandus.sort().forEach(posyandu => {
+
+            posyandus.sort((a, b) => a.localeCompare(b)).forEach(posyandu => {
                 const option = document.createElement('option');
                 option.value = posyandu;
                 option.textContent = posyandu;
@@ -811,19 +1607,18 @@
             if (selectedPosyandu) {
                 // Set search mode to posyandu
                 currentSearchMode = 'posyandu';
-                
-                // Update search tabs
-                document.querySelectorAll('.search-tab').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.querySelectorAll('.search-tab')[0].classList.add('active');
-                
+
+                // Update search tabs (activate posyandu tab)
+                document.querySelectorAll('.search-tab').forEach(tab => tab.classList.remove('active'));
+                const posTab = document.querySelector('.search-tab[data-mode="posyandu"]');
+                if (posTab) posTab.classList.add('active');
+
                 // Update search box
                 document.getElementById('searchBox').value = selectedPosyandu;
-                
+
                 // Update placeholder
                 updateSearchPlaceholder();
-                
+
                 // Show posyandu detail
                 showPosyanduDetail(selectedPosyandu);
             }
@@ -845,14 +1640,25 @@
             if (query) {
                 switch(currentSearchMode) {
                     case 'posyandu':
-                        filteredData = filteredData.filter(item =>
-                            (item.namaPosyandu || "").toLowerCase().includes(query)
-                        );
+                        // Prefer exact/startsWith match when user types full name, otherwise include
+                        filteredData = filteredData.filter(item => {
+                            const name = (item.namaPosyandu || '').toLowerCase();
+                            if (!name) return false;
+                            if (query.includes(' ') || query.length > 3) {
+                                return name === query || name.startsWith(query);
+                            }
+                            return name.includes(query);
+                        });
                         break;
                     case 'anak':
-                        filteredData = filteredData.filter(item =>
-                            (item.namaAnak || "").toLowerCase().includes(query)
-                        );
+                        filteredData = filteredData.filter(item => {
+                            const name = (item.namaAnak || '').toLowerCase();
+                            if (!name) return false;
+                            if (query.includes(' ') || query.length > 3) {
+                                return name === query || name.startsWith(query);
+                            }
+                            return name.includes(query);
+                        });
                         break;
                     case 'status':
                         filteredData = filteredData.filter(item =>
@@ -947,12 +1753,15 @@
                 data.forEach(item => {
                     const dateStr = formatDate.toReadable(item.timestamp);
                     const timeStr = formatDate.toTime(item.timestamp);
-                    
+
                     let statusClass = 'badge-blue';
-                    if (item.status?.includes('Baik')) statusClass = 'badge-green';
-                    else if (item.status?.includes('Kurang') || item.status?.includes('Buruk')) statusClass = 'badge-yellow';
-                    else if (item.status?.includes('Lebih')) statusClass = 'badge-blue';
-                    
+                    const st = (item.status || '').toLowerCase();
+                    if (st.includes('baik')) statusClass = 'badge-green';
+                    else if (st.includes('kurang') || st.includes('buruk')) statusClass = 'badge-yellow';
+                    else if (st.includes('lebih') || st.includes('obes')) statusClass = 'badge-blue';
+
+                    const genderFull = item.jk === 'L' ? 'Laki-laki' : item.jk === 'P' ? 'Perempuan' : '';
+
                     html += `
                         <tr class="table-row">
                             <td class="p-6">
@@ -966,8 +1775,16 @@
                                 </div>
                             </td>
                             <td class="p-6">
-                                <div class="font-bold text-slate-800">${item.namaAnak || '-'}</div>
-                                <div class="text-xs text-slate-400 mt-1">${item.namaIbu || '-'}</div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="font-bold text-slate-800">${item.namaAnak || '-'}</div>
+                                        <div class="text-xs text-slate-400 mt-1">${item.namaIbu || '-'}</div>
+                                    </div>
+                                    <div class="text-xs text-slate-500 text-center">
+                                        <div class="font-bold">${item.jk || '-'}</div>
+                                        <div class="text-xs">${genderFull}</div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="p-6">
                                 <div class="space-y-1">
@@ -990,10 +1807,10 @@
                             </td>
                             <td class="p-6">
                                 <div class="flex gap-2">
-                                    <button onclick="viewDetails('${item.timestamp}')" class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 flex items-center justify-center transition">
+                                    <button onclick="viewDetailsById('${item.id}')" class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 flex items-center justify-center transition">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button onclick="deleteRow('${item.timestamp}')" class="w-10 h-10 rounded-xl bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition">
+                                    <button onclick="deleteRowById('${item.id}')" class="w-10 h-10 rounded-xl bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -1050,8 +1867,12 @@
             // Get latest timestamp
             const latestTimestamp = Math.max(...posyanduData.map(item => parseInt(item.timestamp) || 0));
             
+            // Get location from first record
+            const location = posyanduData[0].lokasi || '-';
+            
             // Update UI
             document.getElementById('posyanduName').textContent = posyanduName;
+            document.getElementById('posyanduLocation').textContent = location;
             document.getElementById('posyanduTotal').textContent = uniqueChildren;
             document.getElementById('posyanduGood').textContent = goodStatus;
             document.getElementById('posyanduWarning').textContent = warningStatus;
@@ -1176,7 +1997,7 @@
             XLSX.writeFile(workbook, `Data_Posyandu_${posyanduName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
         
-        // Show child detail (existing function with modifications)
+        // Show child detail
         function showChildDetail(childName) {
             const childRecords = allData
                 .filter(item => item.namaAnak?.toLowerCase() === childName.toLowerCase())
@@ -1186,7 +2007,7 @@
             
             const latest = childRecords[0];
             
-            // Update UI (existing code)
+            // Update UI
             document.getElementById('detNamaAnak').textContent = latest.namaAnak || '-';
             document.getElementById('detPosyandu').textContent = latest.namaPosyandu || 'Posyandu Umum';
             document.getElementById('detNamaIbu').textContent = latest.namaIbu || '-';
@@ -1236,19 +2057,25 @@
         }
         
         // Set date filter
-        function setDateFilter(filter) {
+        function setDateFilter(filter, el) {
             currentDateFilter = filter;
-            
+
             // Clear date inputs
             document.getElementById('dateFrom').value = '';
             document.getElementById('dateTo').value = '';
-            
+
             // Update active state
             document.querySelectorAll('.filter-pill').forEach(pill => {
                 pill.classList.remove('active');
             });
-            event.target.classList.add('active');
-            
+
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const pill = document.querySelector(`.filter-pill[data-filter="${filter}"]`);
+                if (pill) pill.classList.add('active');
+            }
+
             renderTable();
         }
         
@@ -1278,21 +2105,7 @@
             renderTable();
         }
         
-        // Reset date filters only
-        function resetDateFilters() {
-            document.getElementById('dateFrom').value = '';
-            document.getElementById('dateTo').value = '';
-            currentDateFilter = 'all';
-            
-            document.querySelectorAll('.filter-pill').forEach(pill => {
-                pill.classList.remove('active');
-            });
-            document.querySelectorAll('.filter-pill')[0].classList.add('active');
-            
-            renderTable();
-        }
-        
-        // Existing functions (unchanged)
+        // Toggle sort
         function toggleSort() {
             const sortIcon = document.getElementById('sortIcon');
             const sortText = document.getElementById('sortText');
@@ -1310,6 +2123,7 @@
             renderTable();
         }
         
+        // View details
         function viewDetails(timestamp) {
             const record = allData.find(item => item.timestamp == timestamp);
             if (record) {
@@ -1318,6 +2132,7 @@
             }
         }
         
+        // Delete row
         function deleteRow(timestamp) {
             if (!confirm('Yakin ingin menghapus data ini?')) return;
             
@@ -1327,14 +2142,51 @@
             updateGlobalStats();
             populatePosyanduFilter();
             renderTable();
+            showNotification('Data berhasil dihapus!', 'success');
+        }
+
+        // View details by unique id (prefer id, fallback to timestamp)
+        function viewDetailsById(id) {
+            const record = allData.find(item => item.id === id);
+            if (record) {
+                localStorage.setItem('lastNutriResult', JSON.stringify(record));
+                window.location.href = 'hasil.html';
+                return;
+            }
+            // Fallback: maybe id is a timestamp or older entries without id
+            const ts = String(id).replace(/^n/, '').split('-')[0];
+            viewDetails(ts);
+        }
+
+        // Delete row by unique id (prefer id, fallback to timestamp)
+        function deleteRowById(id) {
+            if (!confirm('Yakin ingin menghapus data ini?')) return;
+
+            const initialCount = allData.length;
+            allData = allData.filter(item => item.id !== id);
+
+            if (allData.length === initialCount) {
+                // fallback to timestamp behavior if id not found
+                const ts = String(id).replace(/^n/, '').split('-')[0];
+                allData = allData.filter(item => item.timestamp != ts && item.timestamp != id);
+            }
+
+            localStorage.setItem('allNutriResults', JSON.stringify(allData));
+
+            updateGlobalStats();
+            populatePosyanduFilter();
+            renderTable();
+            showNotification('Data berhasil dihapus!', 'success');
         }
         
+        // Close detail
         function tutupDetail() {
             hideDetailSections();
             document.getElementById('searchBox').value = '';
             renderTable();
         }
         
+        // Clear all data
         function clearAllData() {
             if (!confirm('Hapus SEMUA data rekapan? Tindakan ini tidak dapat dibatalkan.')) return;
             
@@ -1343,62 +2195,116 @@
             updateGlobalStats();
             populatePosyanduFilter();
             renderTable();
-            alert('Semua data telah berhasil dihapus.');
+            showNotification('Semua data telah berhasil dihapus.', 'success');
         }
         
+        // Import data
         function importData() {
             const input = document.createElement('input');
             input.type = 'file';
-            input.accept = '.json,.xlsx,.xls';
+            input.accept = '.json,.xlsx,.xls,.csv';
             
             input.onchange = function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
                 
-                if (file.name.endsWith('.json')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        try {
-                            const importedData = JSON.parse(e.target.result);
-                            const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        let importedData = [];
+                        
+                        if (file.name.endsWith('.json')) {
+                            importedData = JSON.parse(e.target.result);
+                        } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                            importedData = XLSX.utils.sheet_to_json(worksheet);
+                        } else if (file.name.endsWith('.csv')) {
+                            const csvText = e.target.result;
+                            const lines = csvText.split('\n');
+                            const headers = lines[0].split(',');
                             
-                            const validatedData = importedData.map(item => {
-                                if (!item.timestamp) {
-                                    item.timestamp = Date.now().toString();
-                                }
-                                item.timestamp = String(item.timestamp);
-                                return item;
-                            });
-                            
-                            const newData = [...existingData];
-                            validatedData.forEach(item => {
-                                if (!existingData.some(existing => existing.timestamp === item.timestamp)) {
-                                    newData.push(item);
-                                }
-                            });
-                            
-                            localStorage.setItem("allNutriResults", JSON.stringify(newData));
-                            allData = newData;
-                            updateGlobalStats();
-                            populatePosyanduFilter();
-                            renderTable();
-                            alert(`Berhasil mengimpor ${validatedData.length} data.`);
-                        } catch (error) {
-                            alert('Gagal membaca file JSON. Format tidak valid.');
+                            for (let i = 1; i < lines.length; i++) {
+                                if (lines[i].trim() === '') continue;
+                                
+                                const values = lines[i].split(',');
+                                const obj = {};
+                                
+                                headers.forEach((header, index) => {
+                                    obj[header.trim()] = values[index] ? values[index].trim() : '';
+                                });
+                                
+                                importedData.push(obj);
+                            }
                         }
-                    };
+                        
+                        // Validate and process imported data
+                        const validatedData = importedData.map(item => {
+                            const processedItem = { ...item };
+                            
+                            // Ensure timestamp exists
+                            if (!processedItem.timestamp) {
+                                processedItem.timestamp = Date.now().toString();
+                            }
+                            
+                            // Ensure string values
+                            processedItem.timestamp = String(processedItem.timestamp);
+                            if (processedItem.bb) processedItem.bb = String(processedItem.bb);
+                            if (processedItem.tb) processedItem.tb = String(processedItem.tb);
+                            if (processedItem.usia) processedItem.usia = String(processedItem.usia);
+                            
+                            return processedItem;
+                        });
+                        
+                        // Merge with existing data
+                        const existingData = JSON.parse(localStorage.getItem("allNutriResults")) || [];
+                        const newData = [...existingData];
+                        
+                        validatedData.forEach(item => {
+                            if (!existingData.some(existing => existing.timestamp === item.timestamp)) {
+                                newData.push(item);
+                            }
+                        });
+                        
+                        // Save to localStorage
+                        localStorage.setItem("allNutriResults", JSON.stringify(newData));
+                        allData = newData;
+
+                        // Ensure ids for imported items
+                        ensureIds();
+                        
+                        // Update UI
+                        updateGlobalStats();
+                        populatePosyanduFilter();
+                        renderTable();
+                        
+                        // Show success message
+                        showNotification(`Berhasil mengimpor ${validatedData.length} data dari ${file.name}`, 'success');
+                        
+                    } catch (error) {
+                        console.error('Import error:', error);
+                        showNotification(`Gagal mengimpor file: ${error.message}`, 'error');
+                    }
+                };
+                
+                if (file.name.endsWith('.json')) {
                     reader.readAsText(file);
+                } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                    reader.readAsArrayBuffer(file);
                 } else {
-                    alert('Fitur import Excel dalam pengembangan. Gunakan format JSON.');
+                    reader.readAsText(file);
                 }
             };
             
             input.click();
         }
         
+        // Export to Excel
         function exportToExcel() {
             if (allData.length === 0) {
-                alert('Tidak ada data untuk diexport.');
+                showNotification('Tidak ada data untuk diexport.', 'warning');
                 return;
             }
             
@@ -1414,6 +2320,7 @@
                 'Tinggi Badan (cm)': item.tb || '',
                 'Z-Score': item.zscore || '',
                 'Status Gizi': item.status || '',
+                'Lokasi': item.lokasi || '',
                 'Timestamp': item.timestamp || ''
             }));
             
@@ -1424,8 +2331,11 @@
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0].replace(/-/g, '');
             XLSX.writeFile(workbook, `Laporan_NutriKids_${dateStr}.xlsx`);
+            
+            showNotification('Data berhasil diexport ke Excel!', 'success');
         }
         
+        // Fix existing timestamps
         function fixExistingTimestamps() {
             let needsFix = false;
             
